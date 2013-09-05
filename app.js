@@ -6,7 +6,6 @@
 var express = require('express')
   , RedisStore = require('connect-redis')(express)
   , redis = require('redis').createClient()
-  , routes = require('./routes')
   , http = require('http')
   , path = require('path')
   , sockjs  = require('sockjs')
