@@ -7,8 +7,12 @@ lib-cov
 *.pid
 *.gz
 
+.DS_Store
+
 pids
 logs
 results
+node_modules
+coverage
 
 npm-debug.log

@@ -1,0 +1,35 @@
+{
+  "name": "sissyfight",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha test/*",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000",
+    "hello": "echo hello"
+  },
+  "dependencies": {
+    "express": "3.3.1",
+    "redis": "*", 
+    "connect-redis": "*",
+    "jade": "*",
+    "sockjs": "*",
+    "mysql" : ">= 2.0.0-alpha8",
+    "passport" : "*",
+    "sequelize" : "*",
+    "jugglingdb" : "*",
+    "jugglingdb-redis" :"*",
+    "lodash" : "*",
+    "bcrypt": "*"
+    
+  },
+  "devDependencies": {
+    "request": "*",
+    "should": "*",
+    "mocha": "*",	
+    "istanbul": "*",
+    "sockjs-client": "*",
+    "async": "*"
+  }
+
+}

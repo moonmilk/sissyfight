@@ -1,0 +1,122 @@
+extends layout
+
+block javascript
+	script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
+	script(src="http://cdn.sockjs.org/sockjs-0.3.min.js")
+	
+	script(type='text/javascript').
+		var token = '#{token}';
+		var session = '#{session}';
+		
+		var sockjs = new SockJS('/sox');
+		
+block content
+	h1 SiSSYFiGHT 2000&frac12;
+	
+	p: form(method='post',action='/user/logout')
+		input(type='submit', value='log out')
+			
+	
+	div
+		span Connected:
+		input#status no
+		
+	div#chat
+		div(style='width:600px; height:400px') 
+		form
+			input(autocomplete=off, size=50)
+	
+	
+	
+	script(type='text/javascript').
+		var chatInput = $('#chat input');
+		var chatLog = $('#chat div');
+		var chatForm = $('#chat form');
+	
+		chatInput.focus();
+		chatForm.submit(function() {
+			sockjs.send(JSON.stringify({event:'say', data:{text: chatInput.val()}}));
+			chatInput.val('');
+			return false;
+		});
+		
+		
+		function chat(text) {
+			chatLog.append($("<code>").text(text));
+			chatLog.append($("<br>"));
+			chatLog.scrollTop(chatLog.scrollTop()+10000);
+		}
+		
+		
+		
+		sockjs.onopen    = function()  {
+			$('#status').val(sockjs.protocol);
+			var m = JSON.stringify({event:'login', data:{token:token, session:session}});
+			console.log("connecting to session: " + m);
+			sockjs.send(m);
+		};
+		sockjs.onmessage = function(e) {
+			console.log(e.data);
+			var message;
+			try {
+				message = JSON.parse(e.data);
+			}
+			catch (err) {
+				// parse error - ignore message
+			}
+			
+			if (message && message.event && (typeof message.event) === 'string') {
+				dispatchMessage(message);
+			}
+		};
+		sockjs.onclose   = function()  {$('#status').val("no");};
+		
+		
+		function dispatchMessage(message) {
+			switch(message.event) {
+				case 'login': doLogin(message.data); break;
+				case 'say': doSay(message.data); break;
+				case 'join': doJoin(message.data); break;
+				case 'leave': doLeave(message.data); break;
+				case 'joined': doJoined(message.data); break;
+			}
+		}
+		
+		
+		function doLogin(message) {
+			if (!message.error) {
+				chat("Hello " + message.nickname + "!");
+			}
+			else {
+				chat("Couldn't log in.");
+			}
+		}
+		
+		function doSay(message) {
+			if (message.nickname && message.text) {
+				chat(message.nickname + ": " + message.text);
+			}
+		}
+		
+		function doJoin(message) {
+			if (message.nickname) {
+				chat(message.nickname + " arrived.");
+			}
+		}
+		
+		function doLeave(message) {
+			if (message.nickname) {
+				chat(message.nickname + " left.");
+			}
+		}
+		
+		function doJoined(message) {
+			if (message.error) {
+				chat("Couldn't enter " + message.roomName + " " + message.message);
+			}
+			else if (message.occupants && typeof message.occupants==='object') {
+				chat("You entered " + message.roomName + ".")
+				chat(message.occupants.join(" and ") + (message.occupants.length > 1 ? " are" : " is") + " here.");
+			}
+		}
+		
