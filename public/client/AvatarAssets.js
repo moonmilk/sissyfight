@@ -105,18 +105,18 @@ addons = [
 ];
 */
 
-createjs.Avatar.prepareSpritesheets = function() {
-	createjs.Avatar.sheet = {};
-	createjs.Avatar.sheet['faces'] = createjs.Avatar.makeColoredSpritesheets('faces');
-	createjs.Avatar.sheet['hairs'] = createjs.Avatar.makeColoredSpritesheets('hairs');
-	createjs.Avatar.sheet['bodies'] = createjs.Avatar.makeColoredSpritesheets('bodies');
-	createjs.Avatar.sheet['uniforms'] = createjs.Avatar.makeColoredSpritesheets('uniforms');
+sf.Avatar.prepareSpritesheets = function() {
+	sf.Avatar.sheet = {};
+	sf.Avatar.sheet['faces'] = sf.Avatar.makeColoredSpritesheets('faces');
+	sf.Avatar.sheet['hairs'] = sf.Avatar.makeColoredSpritesheets('hairs');
+	sf.Avatar.sheet['bodies'] = sf.Avatar.makeColoredSpritesheets('bodies');
+	sf.Avatar.sheet['uniforms'] = sf.Avatar.makeColoredSpritesheets('uniforms');
 	
-	createjs.Avatar.makeAddonSpritesheets();			
+	sf.Avatar.makeAddonSpritesheets();			
 }
 
 
-createjs.Avatar.makeColoredSpritesheets = function (assetID) {
+sf.Avatar.makeColoredSpritesheets = function (assetID) {
 	sheets = [];
 	
 	var image = g.load.preloader.getResult(assetID);
@@ -132,7 +132,7 @@ createjs.Avatar.makeColoredSpritesheets = function (assetID) {
 		
 		for (var i=0; i < colors.vars.length; i++) {
 			var img = new createjs.Bitmap(image);
-			img.filters = [new createjs.ColorSubstitutionFilter(colors.vars[colors.base], colors.vars[i])];
+			img.filters = [new sf.ColorSubstitutionFilter(colors.vars[colors.base], colors.vars[i])];
 			img.cache(0, 0, img.image.width, img.image.height);
 			
 			sheets[i] = new createjs.SpriteSheet({
@@ -156,7 +156,7 @@ createjs.Avatar.makeColoredSpritesheets = function (assetID) {
 }
 
 
-createjs.Avatar.makeAddonManifest = function() {
+sf.Avatar.makeAddonManifest = function() {
 	var manifest = [];
 	//var files = {};
 	
@@ -183,7 +183,7 @@ createjs.Avatar.makeAddonManifest = function() {
 	return manifest;
 }
 
-createjs.Avatar.makeAddonSpritesheets = function() {
+sf.Avatar.makeAddonSpritesheets = function() {
 	_.forEach(config.addons, function(item) {
 		var images = [];
 		_.forEach(item.files, function(filename) {	
@@ -198,7 +198,7 @@ createjs.Avatar.makeAddonSpritesheets = function() {
 			_.forEach(colors.vars, function(colorway) {
 				_.forEach(images, function(image) {
 					var img = new createjs.Bitmap(image);
-					img.filters = [new createjs.ColorSubstitutionFilter(colors.vars[colors.base], colorway)];
+					img.filters = [new sf.ColorSubstitutionFilter(colors.vars[colors.base], colorway)];
 					img.cache(0, 0, img.image.width, img.image.height);
 					colorized.push(img.cacheCanvas);
 				});
@@ -219,7 +219,7 @@ createjs.Avatar.makeAddonSpritesheets = function() {
 
 
 // check for conflict between 2 - returns true if they're all ok
-createjs.Avatar.checkCompatibility = function (id0, id1) {
+sf.Avatar.checkCompatibility = function (id0, id1) {
 	var items = _.map([id0, id1], function(id){return _.find(config.addons, {id:id})});
 		
 	// for each layer, check if conflict zones overlap
@@ -231,7 +231,7 @@ createjs.Avatar.checkCompatibility = function (id0, id1) {
 }
 
 
-createjs.Avatar.getAddonSprites = function (id, look) { // pose, direction, skincolor) {
+sf.Avatar.getAddonSprites = function (id, look) { // pose, direction, skincolor) {
 	var item = _.find(config.addons, {id:id});
 	if (!item) return undefined;
 	

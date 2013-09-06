@@ -36,7 +36,7 @@
 */
 
 // namespace:
-this.createjs = this.createjs||{};
+this.sf = this.sf||{};
 
 (function() {
 
@@ -106,7 +106,7 @@ var p = Avatar.prototype = new createjs.Container();
 		
 	
 		
-		this.sprites.face = new createjs.Sprite(createjs.Avatar.sheet.faces[this.look.skincolor]);
+		this.sprites.face = new createjs.Sprite(sf.Avatar.sheet.faces[this.look.skincolor]);
 		this.sprites.face.scaleX = -1;
 		this.layers[2].addChild(this.sprites.face);
 		
@@ -115,7 +115,7 @@ var p = Avatar.prototype = new createjs.Container();
 		this.setFace(this.look.face);
 		
 
-		this.sprites.hair = new createjs.Sprite(createjs.Avatar.sheet.hairs[this.look.haircolor]);
+		this.sprites.hair = new createjs.Sprite(sf.Avatar.sheet.hairs[this.look.haircolor]);
 		this.sprites.hair.scaleX = -1;		
 		this.layers[4].addChild(this.sprites.hair);
 		
@@ -125,14 +125,14 @@ var p = Avatar.prototype = new createjs.Container();
 		
 		
 		
-		this.sprites.body = new createjs.Sprite(createjs.Avatar.sheet.bodies[this.look.skincolor]);
+		this.sprites.body = new createjs.Sprite(sf.Avatar.sheet.bodies[this.look.skincolor]);
 		this.layers[6].addChild(this.sprites.body);
 	
 		//this.sprites.body.gotoAndStop(this.look.pose); // NO, done in applyPose
 		
 		
 
-		this.sprites.uniform = new createjs.Sprite(createjs.Avatar.sheet.uniforms[this.look.uniformcolor]);
+		this.sprites.uniform = new createjs.Sprite(sf.Avatar.sheet.uniforms[this.look.uniformcolor]);
 		this.sprites.uniform.scaleX = 1;
 		this.layers[7].addChild(this.sprites.uniform);
 	
@@ -231,15 +231,6 @@ var p = Avatar.prototype = new createjs.Container();
 		this.sprites.uniform.gotoAndStop(this.look.pose + config.avatar.numPoses * uniform);
 	}
 	
-	/*
-	p.setSkinColor = function(skincolor) {
-		this.look.skincolor = skincolor;
-		this.removeChild(this.sprites.face, this.sprites.body);
-		this.sprites.face = this.layers[2] = new createjs.Sprite(createjs.Avatar.sheet.faces[skincolor]);
-		this.sprites.body = this.layers[6] = new createjs.Sprite(createjs.Avatar.sheet.bodies[skincolor]);
-		this.addChild(this.sprites.face, this.sprites.body);
-	}
-	*/
 
 
 	// "static" stuff
@@ -290,7 +281,7 @@ var p = Avatar.prototype = new createjs.Container();
 	
 	
 	
-	createjs.Avatar = Avatar;
+	sf.Avatar = Avatar;
 	
 	
 

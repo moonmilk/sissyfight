@@ -29,7 +29,7 @@
 */
 
 // namespace:
-this.createjs = this.createjs||{};
+this.sf = this.sf||{};
 
 (function() {
 
@@ -141,6 +141,6 @@ var p = ColorSubstitutionFilter.prototype = new createjs.Filter();
 		return new ColorSubstitutionFilter(this.matchColors, this.substituteColors);
 	}
 
-	createjs.ColorSubstitutionFilter = ColorSubstitutionFilter;
+	sf.ColorSubstitutionFilter = ColorSubstitutionFilter;
 
 }());

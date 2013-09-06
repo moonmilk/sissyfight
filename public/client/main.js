@@ -41,16 +41,22 @@ function loadStage2() {
 		g.stage.update();
 	});
 	g.load.preloader.loadManifest(config.manifest, false, config.assetPath);
-	g.load.preloader.loadManifest(createjs.Avatar.makeAddonManifest(), false, config.assetPath);
+	g.load.preloader.loadManifest(sf.Avatar.makeAddonManifest(), false, config.assetPath);
 	g.load.preloader.load();
 }
 
 
 function loaded() {
 	// ####TODO: prepareSpritesheets can be slow, add a callback for the progress bar
-	createjs.Avatar.prepareSpritesheets();
+	sf.Avatar.prepareSpritesheets();
 	
-	g.stage.removeChild(g.progressbar);
+	g.stage.removeChild(g.load.progressbar);
+	
+	
+	
+	g.stage.removeChild(g.load.preloadBG);
+	
+	
 	g.stage.update();
 	
 	g['background'] = new createjs.Bitmap(g.load.preloader.getResult('bg-angel'));
@@ -60,7 +66,7 @@ function loaded() {
 	
 		
 	/*
-	createjs.Polaroid.prepareAssets();
+	sf.Polaroid.prepareAssets();
 	
 	g['polaroid'] = {'frame':null, 'bg':null};
 	g.polaroid.frame = new createjs.Bitmap(g.load.preloader.getResult('p-polaroid-frame'));
@@ -74,8 +80,8 @@ function loaded() {
 	g.stage.addChild(g.polaroid.bg);
 	*/
 	
-	var avatar = g['avatar'] = new createjs.Avatar(null, {x:0,y:0}); 
-	avatar.setLook(createjs.Avatar.randomLook());//{face:0,skincolor:0,expression:0,hairstyle:0,haircolor:0,pose:0,headdir:0,bodydir:0,uniform:0,uniformcolor:0,addons:[]});
+	var avatar = g['avatar'] = new sf.Avatar(null, {x:0,y:0}); 
+	avatar.setLook(sf.Avatar.randomLook());//{face:0,skincolor:0,expression:0,hairstyle:0,haircolor:0,pose:0,headdir:0,bodydir:0,uniform:0,uniformcolor:0,addons:[]});
 	avatar.x = 137;
 	avatar.y = 105;
 	g.stage.addChild(avatar);
