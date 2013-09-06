@@ -14,6 +14,7 @@ block javascript
 	script(src="../client/Avatar.js")
 	script(src="../client/AvatarAssets.js")
 	script(src="../client/Polaroid.js")
+	script(src="../client/Comm.js")
 	script(src="../client/main.js")
 	
 	script(type='text/javascript').
@@ -29,14 +30,14 @@ block content
 			
 	script(type='text/javascript').
 		window.onload = function() {
-			start(SockJS, {token:token, session:session});
+			start(SockJS, {token:token, session:session, endpoint:'/sox'});
 		}
 		
 	div
 		span Connected:
 		input#status no
 		
-	style
+	style.
 		/*	attempt to scale up canvas while preserving pixels - 
 			fails to prevent blurring on firefox and chrome, but works on safari and ios 5 and 6 browser 
 			https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering

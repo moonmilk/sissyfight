@@ -19,11 +19,11 @@ module.exports = function(app, sockjs) {
 		/* NATIVE SOCKET EVENTS */
 	
 		// add json writer with event name (string) and data payload (json)
-		conn.writeEvent = function(event, data) {
-			if (conn.writable) conn.write(JSON.stringify({event: event, data: data}));
+		conn.writeEvent = function(type, data) {
+			if (conn.writable) conn.write(JSON.stringify({type: type, data: data}));
 		}
 		
-		// Decode incoming messages of form {event:'event name', data: {event data or null}} and ignore others.
+		// Decode incoming messages of form {type:'event name', data: {event data or null}} and ignore others.
 		// Dispatch good messages as events, except ones that could be confused with sockjs events.
 		conn.on("data", function(data) {
 			//socketListener(conn, message);
@@ -37,9 +37,9 @@ module.exports = function(app, sockjs) {
 			catch (err) {
 				return;
 			};
-			if ((typeof message)==='object' && (typeof message.event)==='string' && (message.data===undefined || typeof message.data==='object')) {
-				if (EVENT_BLACKLIST.indexOf(message.event)==-1) {
-					conn.emit(message.event, message.data);
+			if ((typeof message)==='object' && (typeof message.type)==='string' && (message.data===undefined || typeof message.data==='object')) {
+				if (EVENT_BLACKLIST.indexOf(message.type)==-1) {
+					conn.emit(message.type, message.data);
 				}
 			}
 		});
