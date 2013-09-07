@@ -45,16 +45,19 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		// UI elements
 		this.addChild(this.assets.dressing_ptr_skincolor);
-		this.assets.dressing_ptr_skincolor.x = this.skinPtrX();
-		this.assets.dressing_ptr_skincolor.y = 167;
+		var rect = this.skincolorPos();
+		this.assets.dressing_ptr_skincolor.x = rect.x;
+		this.assets.dressing_ptr_skincolor.y = rect.y;
 		
+		// touch areas
+		this.touch = new createjs.Container()
+		this.addChild(this.touch);
+		
+		this.prepareButtons();
 	}
 	
 	
-	// figure out where UI pointers go
-	p.skinPtrX = function() {
-		return 10 + 25 * (this.look.skincolor ? this.look.skincolor : 0);
-	}
+
 	
 	
 	p.setFeature = function(feature, value) {
@@ -75,9 +78,10 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		if (feature==='skincolor') {
 			this.showFaces();
+			var destX = this.skincolorPos().x;
 			var slide = createjs.Tween
 				.get(this.assets.dressing_ptr_skincolor)
-				.to({x:this.skinPtrX()}, 200, createjs.Ease.quadOut)
+				.to({x:this.skincolorPos().x}, 100+2*Math.abs(destX - this.assets.dressing_ptr_skincolor.x), createjs.Ease.quadOut)
 				.addEventListener('change', function(e) {g.stage.update()});
 		}
 		
@@ -95,7 +99,31 @@ var p = DressingRoom.prototype = new createjs.Container();
 			this.faces.addChild(face);
 		}
 	}
+	
+	p.prepareButtons = function() {
+		// skin color swatches
+		var room = this; // for binding in event handlers
+		for (var i=0; i<config.number.of.skincolors; i++) {
+			// make invisible hit areas, technique from http://community.createjs.com/discussions/easeljs/626-invisible-button
+			var rect = this.skincolorPos(i);
+			var hit = new createjs.Shape();
+			hit.graphics.beginFill('#ffffff').drawRect(rect.x,rect.y,rect.width,rect.height);
+			var box = new createjs.Shape();
+			box.hitArea = hit;
+			this.touch.addChild(box);
+			box.info = {feature:'skincolor', value:i};
+			box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
+		}
+		
+		
+	}
 
+	// figure out where UI elements go
+	p.skincolorPos = function(skincolor) {
+		if (skincolor===undefined) skincolor = this.look.skincolor || 0;
+		//return 10 + 25 * (skincolor ? skincolor : 0);
+		return new createjs.Rectangle(19+25*skincolor, 179, 22, 27);
+	}
 
 	p.prepareAssets = function() {
 		this.assets = {};

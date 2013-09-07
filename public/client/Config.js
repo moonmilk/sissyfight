@@ -44,7 +44,7 @@ config['manifest'] = [
 	 		pieces: {
 	 			dressing_btn_ok_active: 	[39,2,  36,23,  0, 0,0], 
 	 			dressing_btn_ok_disabled:	[39,29, 36,23,  0, 0,0], 
-	 			dressing_ptr_skincolor: 	[79,2,  40,45,  0, 0,0], 
+	 			dressing_ptr_skincolor: 	[79,2,  40,45,  0, 9,12], 
 	 			dressing_ptr_haircolor:		[122,2, 26,26,  0, 0,0], 
 	 			dressing_ptr_addon:			[0, 54, 75,22,  0, 0,0], 
 	 			dressing_ptr_addon_disabled:[75,54, 75,22,  0, 0,0], 
