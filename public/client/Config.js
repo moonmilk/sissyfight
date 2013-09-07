@@ -108,12 +108,12 @@ config['colors'] = {
 // handy shortcuts for number of options of various parameters 
 config.number = {};
 config.number.of = {
-	faces: 			8,
-	skincolors: 	config.colors.skin.vars.length,
-	hairstyles: 	13,
-	haircolors: 	config.colors.hair.vars.length,
-	uniforms: 		5,
-	uniformcolors: config.colors.uniforms.vars.length
+	face: 			8,
+	skincolor: 	config.colors.skin.vars.length,
+	hairstyle: 	13,
+	haircolor: 	config.colors.hair.vars.length,
+	uniform: 		5,
+	uniformcolor: config.colors.uniforms.vars.length
 }
 
 config.avatar['addonsDims'] = {width:81, height:115, regX:40, regY:9}; // they're all the same size

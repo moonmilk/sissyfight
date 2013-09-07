@@ -18,8 +18,8 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.look = look;
 		
 		// set up random defaults if this is a new character
-		if (this.look.skincolor === undefined) this.look.skincolor = Math.floor(Math.random()*config.number.of.skincolors);
-		if (this.look.haircolor === undefined) this.look.haircolor = Math.floor(Math.random()*config.number.of.haircolors);
+		if (this.look.skincolor === undefined) this.look.skincolor = Math.floor(Math.random()*config.number.of.skincolor);
+		if (this.look.haircolor === undefined) this.look.haircolor = Math.floor(Math.random()*config.number.of.haircolor);
 		
 		
 		this.prepareAssets();
@@ -99,7 +99,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	p.showFaces = function() {
 		// empty out any previous faces
 		this.faces.removeAllChildren();
-		for (var f=0; f<config.number.of.faces; f++) {
+		for (var f=0; f<config.number.of.face; f++) {
 			var face = sf.Avatar.getFaceExemplarSprite(f, this.look.skincolor||0);
 			var rect = this.facePos(f);
 			face.x = rect.x + 11; // 34 + 37 * (f % 4);
@@ -112,7 +112,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		var room = this; // for binding in event handlers
 		
 		// skin color swatches
-		for (var i=0; i<config.number.of.skincolors; i++) {
+		for (var i=0; i<config.number.of.skincolor; i++) {
 			// make invisible hit areas, technique from http://community.createjs.com/discussions/easeljs/626-invisible-button
 			var rect = this.skincolorPos(i);
 			var hit = new createjs.Shape();
@@ -126,7 +126,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		}
 		
 		// faces
-		for (var i=0; i<config.number.of.faces; i++) {
+		for (var i=0; i<config.number.of.face; i++) {
 			var rect = this.facePos(i);
 			var hit = new createjs.Shape();
 			hit.graphics.beginFill('#ffffff').drawRect(rect.x, rect.y, rect.width, rect.height);

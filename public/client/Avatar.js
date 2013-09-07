@@ -276,11 +276,11 @@ var p = Avatar.prototype = new createjs.Container();
 	// make up a random look for testing
 	Avatar.randomLook = function() {
 		var look = {};
-		look.face = Math.floor(Math.random() * config.number.of.faces);
-		look.skincolor = Math.floor(Math.random() * config.number.of.skincolors);
-		look.hairstyle = Math.floor(Math.random() * config.number.of.hairstyles);
-		look.haircolor = Math.floor(Math.random() * config.number.of.haircolors);
-		look.uniform = Math.floor(Math.random() * config.number.of.uniforms);
+		look.face = Math.floor(Math.random() * config.number.of.face);
+		look.skincolor = Math.floor(Math.random() * config.number.of.skincolor);
+		look.hairstyle = Math.floor(Math.random() * config.number.of.hairstyle);
+		look.haircolor = Math.floor(Math.random() * config.number.of.haircolor);
+		look.uniform = Math.floor(Math.random() * config.number.of.uniform);
 		
 		return look;
 	}
