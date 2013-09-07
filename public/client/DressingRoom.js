@@ -50,11 +50,15 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.assets.dressing_frame);
 		
 		// UI elements
-		this.addChild(this.assets.dressing_ptr_skincolor);
-		var rect = this.buttonPos('skincolor');
-		this.assets.dressing_ptr_skincolor.x = rect.x;
-		this.assets.dressing_ptr_skincolor.y = rect.y;
-		
+		_.each(['skincolor','haircolor'], function(feature) {
+			var ptr = this.assets['ptr_'+feature];
+			this.addChild(ptr);
+			var rect = this.buttonPos(feature, this.look[feature]);
+			ptr.x = rect.x;
+			ptr.y = rect.y;
+		}, this);
+			
+			
 		// touch areas
 		this.touch = new createjs.Container()
 		this.addChild(this.touch);
@@ -86,9 +90,18 @@ var p = DressingRoom.prototype = new createjs.Container();
 			this.showFaces();
 			var destX = this.buttonPos('skincolor', value).x;
 			var slide = createjs.Tween
-				.get(this.assets.dressing_ptr_skincolor)
-				.to({x:destX}, 100+2*Math.abs(destX - this.assets.dressing_ptr_skincolor.x), createjs.Ease.quadOut)
+				.get(this.assets.ptr_skincolor)
+				.to({x:destX}, 100+2*Math.abs(destX - this.assets.ptr_skincolor.x), createjs.Ease.quadOut)
 				.addEventListener('change', function(e) {g.stage.update()}); //TODO: don't call update from tweens! Maybe switch to framerate-based updates
+		}
+		else if (feature==='haircolor') {
+			var dest = this.buttonPos('haircolor', value);
+			var dx = this.assets.ptr_haircolor.x - dest.x;
+			var dy = this.assets.ptr_haircolor.y - dest.y;
+			var slide = createjs.Tween
+				.get(this.assets.ptr_haircolor)
+				.to({x:dest.x, y:dest.y}, 100+2*Math.abs(Math.sqrt(dx*dx+dy*dy)), createjs.Ease.quadOut)
+				.addEventListener('change', function(e) {g.stage.update()});
 		}
 		
 		g.stage.update();
@@ -110,7 +123,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	p.prepareButtons = function() {
 		var room = this; // for binding in event handlers
 		
-		_.each(['skincolor', 'face'],function(feature) {
+		_.each(['skincolor', 'face', 'haircolor'],function(feature) {
 			for (var i=0; i<config.number.of[feature]; i++) {
 				// make invisible hit areas, technique from http://community.createjs.com/discussions/easeljs/626-invisible-button
 				var rect = this.buttonPos(feature,i);
@@ -132,6 +145,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		switch(feature) {
 			case 'skincolor': 	return new createjs.Rectangle(19+25*value, 179, 22, 27);
 			case 'face': 		return new createjs.Rectangle(23 + 37*(value%4), 63 + 49*Math.floor(value/4), 28, 28);
+			case 'haircolor': 	return new createjs.Rectangle(191 + 26*(value%2), 113 + 25*Math.floor(value/2), 22, 21);
 		}
 		return undefined;
 	}
