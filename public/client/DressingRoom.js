@@ -103,7 +103,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 			var slide = createjs.Tween
 				.get(this.assets.ptr_skincolor)
 				.to({x:destX}, 100+2*Math.abs(destX - this.assets.ptr_skincolor.x), createjs.Ease.quadOut)
-				.addEventListener('change', function(e) {g.stage.update()}); //TODO: don't call update from tweens! Maybe switch to framerate-based updates
+				.addEventListener('change', function(e) {g.stage.maybeUpdate()}); //TODO: don't call update from tweens! Maybe switch to framerate-based updates
 		}
 		else if (feature==='haircolor') {
 			var dest = this.buttonPos('haircolor', value);
@@ -112,11 +112,11 @@ var p = DressingRoom.prototype = new createjs.Container();
 			var slide = createjs.Tween
 				.get(this.assets.ptr_haircolor)
 				.to({x:dest.x, y:dest.y}, 100+2*Math.abs(Math.sqrt(dx*dx+dy*dy)), createjs.Ease.quadOut)
-				.addEventListener('change', function(e) {g.stage.update()});
+				.addEventListener('change', function(e) {g.stage.maybeUpdate()});
 			this.showHair();
 		}
 		
-		g.stage.update();
+		g.stage.maybeUpdate();
 	}
 	
 	
@@ -138,7 +138,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		wig.x = 222;
 		wig.y = 32;
 		this.hair.addChild(wig);
-		g.stage.update();
+		g.stage.maybeUpdate();
 	}
 	
 	p.prepareButtons = function() {
