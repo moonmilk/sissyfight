@@ -79,6 +79,11 @@ var p = DressingRoom.prototype = new createjs.Container();
 	}
 	
 	
+	// save look back to server
+	p.persistLook = function(look) {
+		g.comm.writeEvent('setAvatar', {avatar:look});
+		// should check for error returns and all that.
+	}
 
 	
 	
@@ -117,6 +122,8 @@ var p = DressingRoom.prototype = new createjs.Container();
 		}
 		
 		g.stage.maybeUpdate();
+		
+		this.persistLook(this.look);
 	}
 	
 	
