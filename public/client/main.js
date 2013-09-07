@@ -15,6 +15,12 @@ function start(sockjs, auth) {
 	g.stage = new createjs.Stage("appCanvas");
 	g.stage.enableMouseOver();
 	
+	// set up tick-based update
+	g.stage.maybeUpdate = function() { }; // can alias this to g.stage.update if i decide to switch back to on-demand updates
+	createjs.Ticker.addEventListener('tick', function(event) {
+		g.stage.update();
+	});
+	
 	// set up prepreloader to load the loading screen
 	g.load.prepreloader = new createjs.LoadQueue();
 	g.load.prepreloader.addEventListener("complete", loadStage2);
@@ -52,20 +58,35 @@ function start(sockjs, auth) {
 
 // pre-preload is done
 function loadStage2() {	
-	g.load.preloadBG = new createjs.Bitmap(g.load.prepreloader.getResult('preload_bg'));
-	g.stage.addChild(g.load.preloadBG);
-
+	// loading screen and progress bar
 	g.load.progressbar = new createjs.Shape();
 	g.stage.addChild(g.load.progressbar);
 	g.load.progressbar.x = 244;
 	g.load.progressbar.y = 44;
 	
+	g.load.preloadBG = new createjs.Bitmap(g.load.prepreloader.getResult('preload_bg'));
+	g.stage.addChild(g.load.preloadBG);
+	
+	// tapping fingers
+	var tapsheet = g.load.prepreloader.getItem('preload_tapping').data.sheet;
+	console.log(tapsheet);
+	tapsheet.images = [g.load.prepreloader.getResult('preload_tapping')]; 
+	var tapping = new createjs.Sprite(new createjs.SpriteSheet(tapsheet));
+	g.stage.addChild(tapping);
+	tapping.x = 472;
+	tapping.y = 222;
+	tapping.gotoAndPlay('tap');
+	
+
+	
 	g.load.preloader = new createjs.LoadQueue();//false);
 	g.load.preloader.addEventListener("complete", loaded);
 	g.load.preloader.addEventListener("progress", function(e){
 		// placeholder progress bar
-		g.load.progressbar.graphics.ss(0).f('#ffa').r(0,0,171*(e.loaded),7).ef();
-		g.stage.update();
+		g.load.progressbar.graphics
+			.f('#99a').r(0,0,171,7).ef()
+			.f('#ffa').r(0,0,171*e.loaded,7).ef();
+		//g.stage.maybeUpdate();
 	});
 	g.load.preloader.loadManifest(config.manifest, false, config.assetPath);
 	g.load.preloader.loadManifest(sf.Avatar.makeAddonManifest(), false, config.assetPath);
@@ -96,7 +117,7 @@ function loginEstablished(event) {
 		g.stage.addChild(g.dressing.room);
 	}
 
-	g.stage.update();
+	g.stage.maybeUpdate();
 	
 	
 }

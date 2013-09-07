@@ -8,7 +8,18 @@ config['assetPath'] = '../client/assets/';
 config['preloadManifest'] = [
 	{
 		id: 	'preload_bg',
-		src:	'placeholder/loading_placeholder.png'
+		src:	'loading/loading_main.png'
+	},
+	{
+		id:		'preload_tapping',
+		src:	'loading/tapping.png',
+		data:	{
+			sheet: {
+				frames: {width:50, height:54},
+				animations: {'tap': {frames: [0,0,0,0,1,2,3,4,5,6,7], frequency:2 }}
+			}
+			
+		}
 	}
 ]
 
