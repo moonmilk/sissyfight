@@ -17,8 +17,10 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.Container_initialize();	
 		this.look = look;
 		
+		this.prepareAssets();
+		
 		// backdrop layer: white bg for face previews, blue bg for mirror
-		this.addChild(DressingRoom.assets.dressing_behind);
+		this.addChild(this.assets.dressing_behind);
 		
 		// layer for face previews
 		this.faces = new createjs.Container();
@@ -39,12 +41,12 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.avatar);
 
 		// framing layer
-		this.addChild(DressingRoom.assets.dressing_frame);
+		this.addChild(this.assets.dressing_frame);
 		
 		// UI elements
-		this.addChild(DressingRoom.assets.dressing_ptr_skincolor);
-		DressingRoom.assets.dressing_ptr_skincolor.x = this.skinPtrX();
-		DressingRoom.assets.dressing_ptr_skincolor.y = 167;
+		this.addChild(this.assets.dressing_ptr_skincolor);
+		this.assets.dressing_ptr_skincolor.x = this.skinPtrX();
+		this.assets.dressing_ptr_skincolor.y = 167;
 		
 	}
 	
@@ -72,10 +74,9 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.avatar.setLook(this.look, undressed);
 		
 		if (feature==='skincolor') {
-			//DressingRoom.assets.dressing_ptr_skincolor.x = this.skinPtrX();
 			this.showFaces();
 			var slide = createjs.Tween
-				.get(DressingRoom.assets.dressing_ptr_skincolor)
+				.get(this.assets.dressing_ptr_skincolor)
 				.to({x:this.skinPtrX()}, 200, createjs.Ease.quadOut)
 				.addEventListener('change', function(e) {g.stage.update()});
 		}
@@ -96,14 +97,11 @@ var p = DressingRoom.prototype = new createjs.Container();
 	}
 
 
-	// 'static' methods
-	DressingRoom.prepareAssets = function() {
-		DressingRoom.assets = {};
-		//DressingRoom.assets.behind = new createjs.Bitmap(g.load.preloader.getResult('dressing_behind'));
-		//DressingRoom.assets.frame = new createjs.Bitmap(g.load.preloader.getResult('dressing_frame'));
+	p.prepareAssets = function() {
+		this.assets = {};
 		_.each(['dressing_behind', 'dressing_frame', 'dressing_items'], function(s) {
-			g.load.unpack(s, DressingRoom.assets);
-		});
+			g.load.unpack(s, this.assets);
+		}, this);
 	}
 
 

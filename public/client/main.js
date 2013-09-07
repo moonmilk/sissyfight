@@ -75,7 +75,6 @@ function loadStage2() {
 function loaded() {
 	// ####TODO: prepareSpritesheets can be slow, add a callback for the progress bar
 	sf.Avatar.prepareSpritesheets();
-	sf.DressingRoom.prepareAssets();
 	
 	// maybe socket connection should be tracked in progress bar too?  
 	g.comm = new sf.Comm(g.sockjs, g.auth);
