@@ -1,6 +1,42 @@
 config.addons = [
     {
         "conflicts": {
+            "2": [
+                "F"
+            ]
+        },
+        "files": [
+            "001"
+        ],
+        "flippable": 1,
+        "id": 1,
+        "layers": [
+            2
+        ],
+        "name": "Mud Mask",
+        "poses": 1,
+        "tier": -1
+    },
+    {
+        "conflicts": {
+            "4": [
+                "H"
+            ]
+        },
+        "files": [
+            "002"
+        ],
+        "flippable": 1,
+        "id": 2,
+        "layers": [
+            4
+        ],
+        "name": "Towel",
+        "poses": 1,
+        "tier": -1
+    },
+    {
+        "conflicts": {
             "1": [
                 "H"
             ],
@@ -1603,7 +1639,7 @@ config.addons = [
             4,
             7
         ],
-        "name": "Custom 1 - Fox", 
+        "name": "Custom 1 - Fox",
         "poses": 9,
         "tier": 4
     }
