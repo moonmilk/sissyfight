@@ -7,7 +7,7 @@ config['assetPath'] = '../client/assets/';
 
 config['preloadManifest'] = [
 	{
-		id: 	'preloadBG',
+		id: 	'preload_bg',
 		src:	'placeholder/loading_placeholder.png'
 	}
 ]
@@ -35,12 +35,31 @@ config['manifest'] = [
 	},
 	
 	
+	
+	{ 	id: 	'dressing_behind', 	src: 'dressing/dressing_behind.png' },
+	{ 	id: 	'dressing_frame', 	src: 'dressing/dressing_frame.png' },
+	{
+	 	id: 	'dressing_items', 	src: 'dressing/dressing_items.png',
+	 	data: {
+	 		pieces: {
+	 			dressing_btn_ok_active: 	[39,2,  36,23,  0, 0,0], 
+	 			dressing_btn_ok_disabled:	[39,29, 36,23,  0, 0,0], 
+	 			dressing_ptr_skincolor: 	[79,2,  40,45,  0, 0,0], 
+	 			dressing_ptr_haircolor:		[122,2, 26,26,  0, 0,0], 
+	 			dressing_ptr_addon:			[0, 54, 75,22,  0, 0,0], 
+	 			dressing_ptr_addon_disabled:[75,54, 75,22,  0, 0,0], 
+	 			dressing_lever: 			[21, 1, 16,47,  0, 0,0], 
+	 			dressing_lever_pulled:		[0,  1, 19,47,  0, 1,0]  
+	 		}
+	 	}
+	 },
+	
+	
 	{
 		id:		'bg-angel',
 		src:	'background/angel.png'
 	},
-	{ id: 'p-polaroid-frame', src: 'placeholder/placeholder_polaroid_frame.png' },
-	{ id: 'p-polaroid-bg', src: 'placeholder/placeholder_polaroid_bg.png' }
+	
 		
 ];
 

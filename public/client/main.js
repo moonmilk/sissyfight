@@ -6,7 +6,7 @@
 createjs.Sprite = createjs.BitmapAnimation;
 
 // one big global variable to keep useful stuff in
-var g = {};
+var g = {load:{}, dressing:{}, homeroom:{}, game:{}};
 
 function start(sockjs, auth) {
 	g.sockjs = sockjs;
@@ -14,18 +14,44 @@ function start(sockjs, auth) {
 	
 	g.stage = new createjs.Stage("appCanvas");
 	
-	g.load = {};
-	
 	// set up prepreloader to load the loading screen
 	g.load.prepreloader = new createjs.LoadQueue();
 	g.load.prepreloader.addEventListener("complete", loadStage2);
 	g.load.prepreloader.loadManifest(config.preloadManifest, true, config.assetPath);
+	
+	// function to import single or collage-packed assets from loader id images into destination object
+	g.load.unpack = function(id, destination) {
+		var image = g.load.preloader.getResult(id);
+		var item  = g.load.preloader.getItem(id);	
+		if (!image) return;
+		if (item.data && item.data.pieces) {
+			// collage-packed item with spritesheet-format frames - chop it up into individual Sprites
+			var sheet = {images:[image], frames:[], animations:{}};
+			var n=0;
+			_.forOwn(item.data.pieces,function(frameInfo, frameId) {
+				sheet.frames.push(frameInfo);
+				sheet.animations[frameId] = {frames:[n]};
+				++n;
+			});
+			var spritesheet = new createjs.SpriteSheet(sheet);
+			_.forOwn(item.data.pieces,function(frameInfo, frameId) {
+				destination[frameId] = new createjs.Sprite(spritesheet);
+				destination[frameId].gotoAndStop(frameId);
+			})
+		}
+		else {
+			// single item can be a single Bitmap
+			destination[id] = new createjs.Bitmap(image);
+			if (item.data && item.data.regX) destination[id].regX = item.data.regX;
+			if (item.data && item.data.regY) destination[id].regY = item.data.regY;
+		}
+	}
 }
 
 
 // pre-preload is done
 function loadStage2() {	
-	g.load.preloadBG = new createjs.Bitmap(g.load.prepreloader.getResult('preloadBG'));
+	g.load.preloadBG = new createjs.Bitmap(g.load.prepreloader.getResult('preload_bg'));
 	g.stage.addChild(g.load.preloadBG);
 
 	g.load.progressbar = new createjs.Shape();
@@ -49,48 +75,27 @@ function loadStage2() {
 function loaded() {
 	// ####TODO: prepareSpritesheets can be slow, add a callback for the progress bar
 	sf.Avatar.prepareSpritesheets();
-	g.stage.removeChild(g.load.progressbar);
+	sf.DressingRoom.prepareAssets();
 	
 	// maybe socket connection should be tracked in progress bar too?  
 	g.comm = new sf.Comm(g.sockjs, g.auth);
+	comm.addEventListener('login', loginEstablished);
 	
+}
 	
-	
+function loginEstablished(event) {
+	g.stage.removeChild(g.load.progressbar);	
 	g.stage.removeChild(g.load.preloadBG);
 	
-	
-	g.stage.update();
-	
-	g['background'] = new createjs.Bitmap(g.load.preloader.getResult('bg-angel'));
-	g.stage.addChild(g.background);
+	if (event.data.error) {
+		// TODO: what to do?
+		console.log("Login trouble! " + event.data.error)
+	}
+	else {
+		g.dressing.room = new sf.DressingRoom(event.data.avatar);
+		g.stage.addChild(g.dressing.room);
+	}
 
-	
-	
-		
-	/*
-	sf.Polaroid.prepareAssets();
-	
-	g['polaroid'] = {'frame':null, 'bg':null};
-	g.polaroid.frame = new createjs.Bitmap(g.load.preloader.getResult('p-polaroid-frame'));
-	g.polaroid.bg = new createjs.Bitmap(g.load.preloader.getResult('p-polaroid-bg'));
-	g.polaroid.frame.y = 86;
-	g.polaroid.bg.x = g.polaroid.frame.x + 11;
-	g.polaroid.bg.y = g.polaroid.frame.y + 7;
-	
-	g.polaroid.bg.visible = g.polaroid.frame.visible = false;
-	
-	g.stage.addChild(g.polaroid.bg);
-	*/
-	
-	var avatar = g['avatar'] = new sf.Avatar(null, {x:0,y:0}); 
-	avatar.setLook(sf.Avatar.randomLook());//{face:0,skincolor:0,expression:0,hairstyle:0,haircolor:0,pose:0,headdir:0,bodydir:0,uniform:0,uniformcolor:0,addons:[]});
-	avatar.x = 137;
-	avatar.y = 105;
-	g.stage.addChild(avatar);
-	
-	//g.stage.addChild(g.polaroid.frame);
-	
-	
 	g.stage.update();
 	
 	

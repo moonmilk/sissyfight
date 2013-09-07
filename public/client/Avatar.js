@@ -94,7 +94,7 @@ var p = Avatar.prototype = new createjs.Container();
 	}
 	
 	//p.setLook = function(face, skincolor, hairstyle, haircolor, uniform, uniformcolor, addons) {
-	p.setLook = function(look) {	
+	p.setLook = function(look, dressingRoom) {	
 		this.clear();
 		
 		_.assign(this.look, look);
@@ -142,9 +142,15 @@ var p = Avatar.prototype = new createjs.Container();
 
 		this.applyDir();
 		this.applyPose();
-
 		
-		_.forEach(this.look.addons, function(addonID) {
+		// for dressing room, if face and hairstyle aren't set yet, use the mudmask (1) and towel (2) addons
+		var dressingRoomAddons = [];
+		if (dressingRoom.faceless) dressingRoomAddons.push(1);
+		if (dressingRoom.hairless) dressingRoomAddons.push(2);
+		
+		var useAddons = (dressingRoomAddons.length > 0) ? dressingRoomAddons : this.look.addons;
+		
+		_.forEach(useAddons, function(addonID) {
 			var sprites = Avatar.getAddonSprites(addonID, this.look); // this.look.pose, this.look.dir, this.look.skincolor);
 			_.forEach(sprites,  function(spriteInfo) {
 				// get rid of default avatar sprites that conflict with addon sprites, but don't get rid of sprites belonging to other addons
@@ -277,6 +283,13 @@ var p = Avatar.prototype = new createjs.Container();
 		look.uniform = Math.floor(Math.random() * config.number.of.uniforms);
 		
 		return look;
+	}
+	
+	// make a sprite with a particular face and skin color for the dressing room
+	Avatar.getFaceExemplarSprite = function(face, skincolor) {
+		var sprite = new createjs.Sprite(sf.Avatar.sheet.faces[skincolor]);
+		sprite.gotoAndStop(config.avatar.numExpressions * face + Avatar.expressions.NEUTRAL);
+		return sprite;
 	}
 	
 	

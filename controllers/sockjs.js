@@ -74,12 +74,12 @@ module.exports = function(app, sockjs) {
 		if (data.session && data.token) {
 			app.get('sessionStore').get(data.session, function(err, session) {
 				if (err) {
-					console.log("Socket login: couldn't retrieve session " + data.session + ": " + err);
-					conn.writeEvent("login", {error:"nostore", message: "Couldn't access sessions: " + err.toString()});
+					console.log("Socket login: couldn't access session store for session id " + data.session + ": " + err);
+					conn.writeEvent("login", {error:"nostore", message: "Couldn't access session store: " + err.toString()});
 				}
 				else if (!session) {
 					console.log("Socket login: no such session " + data.session);
-					conn.writeEvent("login", {error:"badsession", message: "No such session"});
+					conn.writeEvent("login", {error:"nosession", message: "No such session"});
 				}
 				else if (!session.user) {
 					console.log("Socket login: session's not logged in " + data.session);	
@@ -97,7 +97,7 @@ module.exports = function(app, sockjs) {
 					// everything is good: socket corresponds to a logged-in session - connect the user
 					conn.removeListener("login", loginListener);
 					
-					// grab fresh user object (deserialized user from session may be out of date and doesn't have ORM methods)
+					// grab fresh user object (deserialized user from session may be out of date, and it doesn't have ORM methods)
 					User.find(session.user.id).complete( function(err, user) {
 						if (err) {
 							console.log("Socket login: couldn't find user object due to database problem: " + err);
@@ -115,7 +115,10 @@ module.exports = function(app, sockjs) {
 							userConnections[conn.user.id] = {conn:conn};
 							
 							console.log("Socket login: found session for socket, user " + session.user.nickname);
-							conn.writeEvent("login", {error:false, nickname:conn.user.nickname});
+							
+							if (!conn.user.avatar) conn.user.avatar={};
+							
+							conn.writeEvent("login", {error:false, nickname:conn.user.nickname, avatar:conn.user.avatar});
 							
 							// #### go into the lobby chat
 							var room = app.get("lobby").join(conn);
@@ -165,15 +168,25 @@ module.exports = function(app, sockjs) {
 	
 	function setAvatarListener(data) {
 		conn = this;
-		// should do sanity testing on avatar here or in model ####
+		if (false) {
+			// TODO: should do sanity testing on avatar here or in model ####
+			conn.writeEvent("avatar", {error:'badavatar', message:"Badly formatted avatar object or item out of range"});
+			console.log("setAvatar: Badly formatted avatar object or item out of range");
+			return;
+		}
+		if (!conn.user) {
+			conn.writeEvent("avatar", {error:"notlogged", message:"Socket's not logged in"});
+			console.log("setAvatar:: socket not logged in");
+			return;
+		}
 		conn.user.avatar = data.avatar;
 		conn.user.save().complete(function(err){
 			if (err) {
 				console.log("setAvatarListener: trouble saving user " + conn.user.nickname + ": " + error);
-				conn.writeEvent("avatar", {error:"saving", message:"Trouble saving the avatar"});
+				conn.writeEvent("avatar", {error:"dbaverr", message:"Trouble saving the avatar"});
 			}
 			else {
-				console.log("setAvatarListener: avatar set...");
+				console.log("setAvatar: avatar set...");
 				sendAvatar(conn);
 			}
 		});
