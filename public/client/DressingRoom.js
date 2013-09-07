@@ -17,6 +17,11 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.Container_initialize();	
 		this.look = look;
 		
+		// set up random defaults if this is a new character
+		if (this.look.skincolor === undefined) this.look.skincolor = Math.floor(Math.random()*config.number.of.skincolors);
+		if (this.look.haircolor === undefined) this.look.haircolor = Math.floor(Math.random()*config.number.of.haircolors);
+		
+		
 		this.prepareAssets();
 		
 		// backdrop layer: white bg for face previews, blue bg for mirror
@@ -25,6 +30,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		// layer for face previews
 		this.faces = new createjs.Container();
 		this.addChild(this.faces);
+		this.showFaces();
 		
 		// avatar in mirror
 		this.avatar = new sf.Avatar();
@@ -54,6 +60,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.touch);
 		
 		this.prepareButtons();
+		
 	}
 	
 	
@@ -82,7 +89,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 			var slide = createjs.Tween
 				.get(this.assets.dressing_ptr_skincolor)
 				.to({x:this.skincolorPos().x}, 100+2*Math.abs(destX - this.assets.dressing_ptr_skincolor.x), createjs.Ease.quadOut)
-				.addEventListener('change', function(e) {g.stage.update()});
+				.addEventListener('change', function(e) {g.stage.update()}); //TODO: don't call update from tweens! Maybe switch to framerate-based updates
 		}
 		
 		g.stage.update();
@@ -94,15 +101,17 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.faces.removeAllChildren();
 		for (var f=0; f<config.number.of.faces; f++) {
 			var face = sf.Avatar.getFaceExemplarSprite(f, this.look.skincolor||0);
-			face.x = 34 + 37 * (f % 4);
-			face.y = 34 + 49 * (Math.floor(f/4));
+			var rect = this.facePos(f);
+			face.x = rect.x + 11; // 34 + 37 * (f % 4);
+			face.y = rect.y - 29; // 34 + 49 * (Math.floor(f/4));
 			this.faces.addChild(face);
 		}
 	}
 	
 	p.prepareButtons = function() {
-		// skin color swatches
 		var room = this; // for binding in event handlers
+		
+		// skin color swatches
 		for (var i=0; i<config.number.of.skincolors; i++) {
 			// make invisible hit areas, technique from http://community.createjs.com/discussions/easeljs/626-invisible-button
 			var rect = this.skincolorPos(i);
@@ -110,20 +119,37 @@ var p = DressingRoom.prototype = new createjs.Container();
 			hit.graphics.beginFill('#ffffff').drawRect(rect.x,rect.y,rect.width,rect.height);
 			var box = new createjs.Shape();
 			box.hitArea = hit;
+			box.cursor = 'pointer';
 			this.touch.addChild(box);
 			box.info = {feature:'skincolor', value:i};
 			box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
 		}
 		
-		
+		// faces
+		for (var i=0; i<config.number.of.faces; i++) {
+			var rect = this.facePos(i);
+			var hit = new createjs.Shape();
+			hit.graphics.beginFill('#ffffff').drawRect(rect.x, rect.y, rect.width, rect.height);
+			var box = new createjs.Shape();
+			box.hitArea = hit;
+			box.cursor = 'pointer';
+			this.touch.addChild(box);
+			box.info = {feature:'face', value:i};
+			box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
+		}
 	}
 
 	// figure out where UI elements go
 	p.skincolorPos = function(skincolor) {
 		if (skincolor===undefined) skincolor = this.look.skincolor || 0;
-		//return 10 + 25 * (skincolor ? skincolor : 0);
 		return new createjs.Rectangle(19+25*skincolor, 179, 22, 27);
 	}
+	
+	p.facePos = function(face) {
+		if (face===undefined) face = this.look.face || 0;
+		return new createjs.Rectangle(23 + 37*(face%4), 63 + 49*Math.floor(face/4), 28, 28);
+	}
+	
 
 	p.prepareAssets = function() {
 		this.assets = {};

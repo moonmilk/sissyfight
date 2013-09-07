@@ -13,6 +13,7 @@ function start(sockjs, auth) {
 	g.auth = auth;
 	
 	g.stage = new createjs.Stage("appCanvas");
+	g.stage.enableMouseOver();
 	
 	// set up prepreloader to load the loading screen
 	g.load.prepreloader = new createjs.LoadQueue();
