@@ -51,7 +51,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		// UI elements
 		this.addChild(this.assets.dressing_ptr_skincolor);
-		var rect = this.skincolorPos();
+		var rect = this.buttonPos('skincolor');
 		this.assets.dressing_ptr_skincolor.x = rect.x;
 		this.assets.dressing_ptr_skincolor.y = rect.y;
 		
@@ -81,14 +81,13 @@ var p = DressingRoom.prototype = new createjs.Container();
 			delete this.look['hairstyle'];
 		}
 		this.avatar.setLook(this.look, undressed);
-		this.avatar.setLook(this.look, undressed);
 		
 		if (feature==='skincolor') {
 			this.showFaces();
-			var destX = this.skincolorPos().x;
+			var destX = this.buttonPos('skincolor', value).x;
 			var slide = createjs.Tween
 				.get(this.assets.dressing_ptr_skincolor)
-				.to({x:this.skincolorPos().x}, 100+2*Math.abs(destX - this.assets.dressing_ptr_skincolor.x), createjs.Ease.quadOut)
+				.to({x:destX}, 100+2*Math.abs(destX - this.assets.dressing_ptr_skincolor.x), createjs.Ease.quadOut)
 				.addEventListener('change', function(e) {g.stage.update()}); //TODO: don't call update from tweens! Maybe switch to framerate-based updates
 		}
 		
@@ -101,7 +100,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.faces.removeAllChildren();
 		for (var f=0; f<config.number.of.face; f++) {
 			var face = sf.Avatar.getFaceExemplarSprite(f, this.look.skincolor||0);
-			var rect = this.facePos(f);
+			var rect = this.buttonPos('face',f);
 			face.x = rect.x + 11; // 34 + 37 * (f % 4);
 			face.y = rect.y - 29; // 34 + 49 * (Math.floor(f/4));
 			this.faces.addChild(face);
@@ -111,43 +110,30 @@ var p = DressingRoom.prototype = new createjs.Container();
 	p.prepareButtons = function() {
 		var room = this; // for binding in event handlers
 		
-		// skin color swatches
-		for (var i=0; i<config.number.of.skincolor; i++) {
-			// make invisible hit areas, technique from http://community.createjs.com/discussions/easeljs/626-invisible-button
-			var rect = this.skincolorPos(i);
-			var hit = new createjs.Shape();
-			hit.graphics.beginFill('#ffffff').drawRect(rect.x,rect.y,rect.width,rect.height);
-			var box = new createjs.Shape();
-			box.hitArea = hit;
-			box.cursor = 'pointer';
-			this.touch.addChild(box);
-			box.info = {feature:'skincolor', value:i};
-			box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
-		}
-		
-		// faces
-		for (var i=0; i<config.number.of.face; i++) {
-			var rect = this.facePos(i);
-			var hit = new createjs.Shape();
-			hit.graphics.beginFill('#ffffff').drawRect(rect.x, rect.y, rect.width, rect.height);
-			var box = new createjs.Shape();
-			box.hitArea = hit;
-			box.cursor = 'pointer';
-			this.touch.addChild(box);
-			box.info = {feature:'face', value:i};
-			box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
-		}
+		_.each(['skincolor', 'face'],function(feature) {
+			for (var i=0; i<config.number.of[feature]; i++) {
+				// make invisible hit areas, technique from http://community.createjs.com/discussions/easeljs/626-invisible-button
+				var rect = this.buttonPos(feature,i);
+				var hit = new createjs.Shape();
+				hit.graphics.beginFill('#ffffff').drawRect(rect.x,rect.y,rect.width,rect.height);
+				var box = new createjs.Shape();
+				box.hitArea = hit;
+				box.cursor = 'pointer';
+				this.touch.addChild(box);
+				box.info = {feature:feature, value:i};
+				box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
+			}			
+		}, this);
 	}
 
 	// figure out where UI elements go
-	p.skincolorPos = function(skincolor) {
-		if (skincolor===undefined) skincolor = this.look.skincolor || 0;
-		return new createjs.Rectangle(19+25*skincolor, 179, 22, 27);
-	}
-	
-	p.facePos = function(face) {
-		if (face===undefined) face = this.look.face || 0;
-		return new createjs.Rectangle(23 + 37*(face%4), 63 + 49*Math.floor(face/4), 28, 28);
+	p.buttonPos = function(feature, value) {
+		if (value===undefined) value = this.look[value] || 0;
+		switch(feature) {
+			case 'skincolor': 	return new createjs.Rectangle(19+25*value, 179, 22, 27);
+			case 'face': 		return new createjs.Rectangle(23 + 37*(value%4), 63 + 49*Math.floor(value/4), 28, 28);
+		}
+		return undefined;
 	}
 	
 
