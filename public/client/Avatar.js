@@ -292,6 +292,14 @@ var p = Avatar.prototype = new createjs.Container();
 		return sprite;
 	}
 	
+	// make a sprite with a particular hairstyle and hair color for the dressing room
+	Avatar.getHairExemplarSprite = function(hairstyle, haircolor) {
+		var sprite = new createjs.Sprite(sf.Avatar.sheet.hairs[haircolor]);
+		// sprite.scaleX = -1;		
+		sprite.gotoAndStop(hairstyle); 
+		return sprite;
+	}
+	
 	
 	
 	sf.Avatar = Avatar;

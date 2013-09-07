@@ -32,6 +32,11 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.faces);
 		this.showFaces();
 		
+		// layer for hair previews
+		this.hair = new createjs.Container();
+		this.addChild(this.hair);
+		this.showHair();
+		
 		// avatar in mirror
 		this.avatar = new sf.Avatar();
 		this.look.headdir = this.look.bodydir = 0; // face left
@@ -102,6 +107,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 				.get(this.assets.ptr_haircolor)
 				.to({x:dest.x, y:dest.y}, 100+2*Math.abs(Math.sqrt(dx*dx+dy*dy)), createjs.Ease.quadOut)
 				.addEventListener('change', function(e) {g.stage.update()});
+			this.showHair();
 		}
 		
 		g.stage.update();
@@ -120,9 +126,19 @@ var p = DressingRoom.prototype = new createjs.Container();
 		}
 	}
 	
+	p.showHair = function() {
+		this.hair.removeAllChildren();
+		var wig = sf.Avatar.getHairExemplarSprite(this.look.hairstyle || 0, this.look.haircolor || 0);
+		wig.x = 222;
+		wig.y = 32;
+		this.hair.addChild(wig);
+		g.stage.update();
+	}
+	
 	p.prepareButtons = function() {
 		var room = this; // for binding in event handlers
 		
+		// skin, face, and haircolor choosers
 		_.each(['skincolor', 'face', 'haircolor'],function(feature) {
 			for (var i=0; i<config.number.of[feature]; i++) {
 				// make invisible hit areas, technique from http://community.createjs.com/discussions/easeljs/626-invisible-button
@@ -137,6 +153,35 @@ var p = DressingRoom.prototype = new createjs.Container();
 				box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
 			}			
 		}, this);
+		
+		// hairstyle chooser
+		_.each([
+			{click:room.incrementHairstyle, rect:new createjs.Rectangle(199,38,44,62)},
+			{click:room.decrementHairstyle, rect:new createjs.Rectangle(176,35,22,66)}
+		], function(item) {
+			var hit = new createjs.Shape();
+			hit.graphics.beginFill('#ffffff').drawRect(item.rect.x, item.rect.y, item.rect.width, item.rect.height);
+			var box = new createjs.Shape();
+			box.hitArea = hit;
+			box.cursor = 'pointer';
+			this.touch.addChild(box);
+			box.room = room;
+			box.addEventListener("click", item.click.bind(room));
+		}, this);
+	}
+	
+	p.incrementHairstyle = function() {
+		if (this.look.hairstyle===undefined) this.look.hairstyle = 0;
+		else this.look.hairstyle = (this.look.hairstyle + 1) % config.number.of.hairstyle;
+		this.showHair();
+		this.setFeature('hairstyle', this.look.hairstyle);
+	}	
+	p.decrementHairstyle = function() {
+		if (this.look.hairstyle===undefined) this.look.hairstyle = 0;
+		else this.look.hairstyle = this.look.hairstyle - 1;
+		if (this.look.hairstyle < 0) this.look.hairstyle = config.number.of.hairstyle - 1;
+		this.showHair();
+		this.setFeature('hairstyle', this.look.hairstyle);
 	}
 
 	// figure out where UI elements go
