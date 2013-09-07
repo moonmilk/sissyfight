@@ -92,7 +92,7 @@ function loginEstablished(event) {
 		console.log("Login trouble! " + event.data.error)
 	}
 	else {
-		g.dressing.room = new sf.DressingRoom(event.data.avatar);
+		g.dressing.room = new sf.DressingRoom(event.data.avatar, event.data.nickname);
 		g.stage.addChild(g.dressing.room);
 	}
 

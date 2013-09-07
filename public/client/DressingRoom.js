@@ -5,15 +5,15 @@ this.sf = this.sf||{};
 
 (function() {
 
-var DressingRoom = function(look) {
-  this.initialize(look);
+var DressingRoom = function(look, nickname) {
+  this.initialize(look, nickname);
 }
 
 var p = DressingRoom.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(look) {
+	p.initialize = function(look, nickname) {
 		this.Container_initialize();	
 		this.look = look;
 		
@@ -50,6 +50,12 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.avatar.x = 460;
 		this.avatar.y = 55;
 		this.addChild(this.avatar);
+		
+		// nickname display
+		this.nickname = new createjs.Text(nickname, "12px Arial", '#000000');
+		this.nickname.x = 458 - this.nickname.getMeasuredWidth()/2;
+		this.nickname.y = 202;
+		this.addChild(this.nickname);
 
 		// framing layer
 		this.addChild(this.assets.dressing_frame);
