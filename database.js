@@ -8,7 +8,7 @@
 
 var Sequelize = require('sequelize');
 var sissyfight_db_str = process.env.SISSYFIGHT_DB;  // dialect|hostname|database name|username|password
-if (!sissyfight_db_str) console.log("Missing environment variable SISSYFIGHT_SQL");
+if (!sissyfight_db_str) console.log("Missing environment variable SISSYFIGHT_DB");
 var sissyfight_db = sissyfight_db_str.split('|');
 
 var sequelize = new Sequelize(sissyfight_db[2], sissyfight_db[3], sissyfight_db[4], {
