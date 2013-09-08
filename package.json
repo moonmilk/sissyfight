@@ -1,6 +1,6 @@
 {
   "name": "sissyfight",
-  "version": "0.0.1",
+  "version": "0.0.1-1",
   "private": true,
   "scripts": {
     "start": "node app.js",
@@ -10,26 +10,28 @@
   },
   "dependencies": {
     "express": "3.3.1",
-    "redis": "*", 
+    "redis": "*",
     "connect-redis": "*",
     "jade": "*",
     "sockjs": "*",
-    "mysql" : ">= 2.0.0-alpha8",
-    "passport" : "*",
-    "sequelize" : "*",
-    "jugglingdb" : "*",
-    "jugglingdb-redis" :"*",
-    "lodash" : "*",
+    "mysql": ">= 2.0.0-alpha8",
+    "passport": "*",
+    "sequelize": "*",
+    "jugglingdb": "*",
+    "jugglingdb-redis": "*",
+    "lodash": "*",
     "bcrypt": "*"
-    
   },
   "devDependencies": {
     "request": "*",
     "should": "*",
-    "mocha": "*",	
+    "mocha": "*",
     "istanbul": "*",
     "sockjs-client": "*",
     "async": "*"
+  },
+  "subdomain": "sissyfight",
+  "engines": {
+    "node": "0.10.x"
   }
-
 }
