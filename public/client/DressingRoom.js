@@ -41,12 +41,6 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.avatar = new sf.Avatar();
 		//this.look.headdir = this.look.bodydir = 0; // face left
 		
-		//   signal to Avatar if face and hair are not yet defined
-		var undressed = {};
-		if (this.look.face === undefined) undressed.faceless = true;
-		if (this.look.hairstyle === undefined) undressed.hairless = true;
-		this.avatar.setLook(this.look, undressed);
-		
 		this.avatar.x = 460;
 		this.avatar.y = 55;
 		this.addChild(this.avatar);
@@ -78,6 +72,11 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.assets.lever.x = 507;
 		this.assets.lever.y = 130;
 		
+		this.okbtn = this.addChild(this.assets.btn_ok_disabled);
+		this.addChild(this.okbtn);
+		this.okbtn.x = 487;
+		this.okbtn.y = 250;
+		
 
 			
 		// touch areas
@@ -85,6 +84,12 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.touch);
 		
 		this.prepareButtons();
+		
+		
+				
+		// update avatar
+		this.setFeature();
+		
 		
 		
 		// EXPERIMENTAL!  catch scroll events
@@ -106,14 +111,27 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 	// save look back to server
 	p.persistLook = function(look) {
+		if (!look) look = this.look;
+		if (!look) {
+			console.log('DressingRoom.persistLook: my this is messed up');
+			return;
+		}
+		
 		var sendLook = _.pick(look, ['face', 'skincolor', 'hairstyle', 'haircolor', 'uniform', 'uniformcolor', 'addons'] );
 		
 		g.comm.writeEvent('setAvatar', {avatar:sendLook});
 		// should check for error returns and all that.
+		g.comm.addEventListener('avatar', this.avatarDone.bind(this));
+	}
+	
+	p.avatarDone = function(event) {
+		g.comm.removeEventListener(this.avatarDone);
+		console.log("Avatar saved!");
 	}
 
 	
 	
+	// can call with no args to refresh the avatar
 	p.setFeature = function(feature, value) {
 		if (feature) this.look[feature] = value;
 		
@@ -128,6 +146,10 @@ var p = DressingRoom.prototype = new createjs.Container();
 			delete this.look['hairstyle'];
 		}
 		this.avatar.setLook(this.look, undressed);
+		if (!undressed.faceless && !undressed.hairless) {
+			// unlock the OK button when hair and face are chosen
+			this.unlockOKButton();
+		}
 		
 		if (feature==='skincolor') {
 			this.showFaces();
@@ -239,6 +261,13 @@ var p = DressingRoom.prototype = new createjs.Container();
 		});
 		//this.assets.lever.cursor = 'pointer';
 		this.leverHelper = new createjs.ButtonHelper(this.assets.lever, "lever", "lever", "lever_pulled");
+	}
+	
+	p.unlockOKButton = function() {
+		if (!this.okHelper) {
+			this.okHelper = new createjs.ButtonHelper(this.okbtn, 'btn_ok_active', 'btn_ok_active', 'btn_ok_pressed');
+			this.okbtn.addEventListener("click", function(event){this.persistLook()}.bind(this));
+		}
 	}
 	
 	p.incrementHairstyle = function() {

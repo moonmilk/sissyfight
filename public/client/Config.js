@@ -55,6 +55,7 @@ config['manifest'] = [
 	 		pieces: {
 	 			btn_ok_active: 		[39,2,  36,23,  0, 0,0], 
 	 			btn_ok_disabled:	[39,29, 36,23,  0, 0,0], 
+	 			btn_ok_pressed:		[39,2,  36,23,  0, -1,-1],
 	 			ptr_skincolor: 		[79,2,  40,45,  0, 9,12], 
 	 			ptr_haircolor:		[86,50, 26,26,  0, -8,10], 
 	 			ptr_addon:			[0, 54, 75,22,  0, 8,6], 
