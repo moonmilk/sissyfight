@@ -1642,5 +1642,163 @@ config.addons = [
         "name": "Custom 1 - Fox",
         "poses": 9,
         "tier": 4
+    },
+    {
+        "conflicts": {
+            "5": [
+                "H"
+            ],
+            "7": [
+                "B",
+                "L"
+            ]
+        },
+        "files": [
+            "403-5",
+            "403-7"
+        ],
+        "flippable": 1,
+        "id": 403,
+        "layers": [
+            5,
+            7
+        ],
+        "name": "Custom 3 - Hawaiian",
+        "poses": 2,
+        "tier": 4
+    },
+    {
+        "conflicts": {
+            "5": [
+                "H"
+            ]
+        },
+        "files": [
+            "404"
+        ],
+        "flippable": 1,
+        "id": 404,
+        "layers": [
+            5
+        ],
+        "name": "Custom 4 - Crab Hat",
+        "poses": 1,
+        "tier": 4
+    },
+    {
+        "conflicts": {
+            "4": [
+                "H"
+            ],
+            "8": [
+                "L"
+            ]
+        },
+        "files": [
+            "405-4",
+            "405-8"
+        ],
+        "flippable": 1,
+        "id": 405,
+        "layers": [
+            4,
+            8
+        ],
+        "name": "Custom 5 - Tin Helmet",
+        "poses": 2,
+        "tier": 4
+    },
+    {
+        "conflicts": {
+            "1": [
+                "H"
+            ],
+            "4": [
+                "H",
+                "E"
+            ],
+            "7": [
+                "B",
+                "L"
+            ],
+            "8": [
+                "L"
+            ]
+        },
+        "files": [
+            "406-1",
+            "406-4",
+            "406-7",
+            "406-8"
+        ],
+        "flippable": 1,
+        "id": 406,
+        "layers": [
+            1,
+            4,
+            7,
+            8
+        ],
+        "name": "Custom 6 - Judith",
+        "poses": 9,
+        "tier": 4
+    },
+    {
+        "conflicts": {
+            "1": [
+                "H"
+            ],
+            "4": [
+                "H",
+                "E"
+            ],
+            "7": [
+                "B",
+                "L"
+            ]
+        },
+        "files": [
+            "407-1",
+            "407-4",
+            "407-7"
+        ],
+        "flippable": 1,
+        "id": 407,
+        "layers": [
+            1,
+            4,
+            7
+        ],
+        "name": "Custom 7 - Pink Dress",
+        "poses": 9,
+        "tier": 4
+    },
+    {
+        "conflicts": {
+            "1": [
+                "H"
+            ],
+            "6": [
+                "H"
+            ],
+            "8": [
+                "B"
+            ]
+        },
+        "files": [
+            "410-1",
+            "410-6",
+            "410-8"
+        ],
+        "flippable": 1,
+        "id": 410,
+        "layers": [
+            1,
+            6,
+            8
+        ],
+        "name": "Staff Gibbon",
+        "poses": 9,
+        "tier": 5
     }
 ];
