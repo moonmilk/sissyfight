@@ -145,8 +145,8 @@ var p = Avatar.prototype = new createjs.Container();
 		
 		// for dressing room, if face and hairstyle aren't set yet, use the mudmask (1) and towel (2) addons
 		var dressingRoomAddons = [];
-		if (dressingRoom.faceless) dressingRoomAddons.push(1);
-		if (dressingRoom.hairless) dressingRoomAddons.push(2);
+		if (dressingRoom && dressingRoom.faceless) dressingRoomAddons.push(1);
+		if (dressingRoom && dressingRoom.hairless) dressingRoomAddons.push(2);
 		
 		var useAddons = (dressingRoomAddons.length > 0) ? dressingRoomAddons : this.look.addons;
 		

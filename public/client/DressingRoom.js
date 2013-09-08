@@ -39,7 +39,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		// avatar in mirror
 		this.avatar = new sf.Avatar();
-		this.look.headdir = this.look.bodydir = 0; // face left
+		//this.look.headdir = this.look.bodydir = 0; // face left
 		
 		//   signal to Avatar if face and hair are not yet defined
 		var undressed = {};
@@ -68,6 +68,9 @@ var p = DressingRoom.prototype = new createjs.Container();
 			ptr.x = rect.x;
 			ptr.y = rect.y;
 		}, this);
+		this.addChild(this.assets.lever);
+		this.assets.lever.x = 507;
+		this.assets.lever.y = 130;
 			
 			
 		// touch areas
@@ -81,7 +84,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 	// save look back to server
 	p.persistLook = function(look) {
-		var sendLook = _.pick(look, ['face', 'skincolor', 'hair', 'haircolor', 'uniform', 'addons'] );
+		var sendLook = _.pick(look, ['face', 'skincolor', 'hairstyle', 'haircolor', 'uniform', 'addons'] );
 		
 		g.comm.writeEvent('setAvatar', {avatar:sendLook});
 		// should check for error returns and all that.
@@ -183,6 +186,14 @@ var p = DressingRoom.prototype = new createjs.Container();
 			box.room = room;
 			box.addEventListener("click", item.click.bind(room));
 		}, this);
+		
+		// randomizer lever
+		this.assets.lever.addEventListener("click", function(event) {
+			room.look = sf.Avatar.randomLook();
+			room.avatar.setLook(room.look);
+		});
+		//this.assets.lever.cursor = 'pointer';
+		this.leverHelper = new createjs.ButtonHelper(this.assets.lever, "lever", "lever", "lever_pulled");
 	}
 	
 	p.incrementHairstyle = function() {

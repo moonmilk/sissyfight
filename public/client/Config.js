@@ -59,7 +59,7 @@ config['manifest'] = [
 	 			ptr_haircolor:		[86,50, 26,26,  0, -8,10], 
 	 			ptr_addon:			[0, 54, 75,22,  0, 0,0], 
 	 			ptr_addon_disabled:	[75,54, 75,22,  0, 0,0], 
-	 			lever: 				[21, 1, 16,47,  0, 0,0], 
+	 			lever: 				[20, 1, 19,47,  0, 1,0], 
 	 			lever_pulled:		[0,  1, 19,47,  0, 1,0]  
 	 		}
 	 	}
