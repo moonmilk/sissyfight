@@ -69,13 +69,12 @@ function loadStage2() {
 	
 	// tapping fingers
 	var tapsheet = g.load.prepreloader.getItem('preload_tapping').data.sheet;
-	console.log(tapsheet);
 	tapsheet.images = [g.load.prepreloader.getResult('preload_tapping')]; 
-	var tapping = new createjs.Sprite(new createjs.SpriteSheet(tapsheet));
-	g.stage.addChild(tapping);
-	tapping.x = 472;
-	tapping.y = 222;
-	tapping.gotoAndPlay('tap');
+	g.load.tapping = new createjs.Sprite(new createjs.SpriteSheet(tapsheet));
+	g.stage.addChild(g.load.tapping);
+	g.load.tapping.x = 472;
+	g.load.tapping.y = 222;
+	g.load.tapping.gotoAndPlay('tap');
 	
 
 	
@@ -107,6 +106,7 @@ function loaded() {
 function loginEstablished(event) {
 	g.stage.removeChild(g.load.progressbar);	
 	g.stage.removeChild(g.load.preloadBG);
+	g.stage.removeChild(g.load.tapping);
 	
 	if (event.data.error) {
 		// TODO: what to do?

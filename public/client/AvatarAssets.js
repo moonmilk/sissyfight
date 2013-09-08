@@ -230,6 +230,21 @@ sf.Avatar.checkCompatibility = function (id0, id1) {
 	return true;
 }
 
+// return list of ids of all addons that are not compatible with the given list of ids
+sf.Avatar.listConflicts = function(myAddonIDs) {
+	var conflicts = [];
+	_(myAddonIDs).each(function(myAddonID) {
+		_(config.addons).each(function(otherAddon){
+			if (myAddonID != otherAddon.id) {
+				if (!sf.Avatar.checkCompatibility(myAddonID, otherAddon.id)) {
+					conflicts.push(otherAddon.id);
+				}
+			}
+		}, this);
+	}, this);
+	return conflicts;
+}
+
 
 sf.Avatar.getAddonSprites = function (id, look) { // pose, direction, skincolor) {
 	var item = _.find(config.addons, {id:id});

@@ -135,4 +135,7 @@ config.avatar['numAvatarLayers'] = 10;
 config.avatar['numPoses'] = 9;
 config.avatar['numExpressions'] = 7;
 
+config.dressing = {};
+config.dressing.uniformNames = ['Skirt+Blouse', 'Sweater', 'Jacket', 'Tracksuit', 'Pants'];
+
 

@@ -71,6 +71,8 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.assets.lever);
 		this.assets.lever.x = 507;
 		this.assets.lever.y = 130;
+		
+		this.addChild(new sf.AddonsList(this, this.look, config.addons));
 			
 			
 		// touch areas
