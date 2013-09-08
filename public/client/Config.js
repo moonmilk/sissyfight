@@ -57,8 +57,8 @@ config['manifest'] = [
 	 			btn_ok_disabled:	[39,29, 36,23,  0, 0,0], 
 	 			ptr_skincolor: 		[79,2,  40,45,  0, 9,12], 
 	 			ptr_haircolor:		[86,50, 26,26,  0, -8,10], 
-	 			ptr_addon:			[0, 54, 75,22,  0, 0,0], 
-	 			ptr_addon_disabled:	[75,54, 75,22,  0, 0,0], 
+	 			ptr_addon:			[0, 54, 75,22,  0, 8,6], 
+	 			ptr_addon_disabled:	[0, 85, 75,8,   0, 0,0], 
 	 			lever: 				[20, 1, 19,47,  0, 1,0], 
 	 			lever_pulled:		[0,  1, 19,47,  0, 1,0]  
 	 		}
@@ -135,7 +135,14 @@ config.avatar['numAvatarLayers'] = 10;
 config.avatar['numPoses'] = 9;
 config.avatar['numExpressions'] = 7;
 
+config.avatar['MAX_ADDONS'] = 3;
+
 config.dressing = {};
 config.dressing.uniformNames = ['Skirt+Blouse', 'Sweater', 'Jacket', 'Tracksuit', 'Pants'];
+config.dressing.addons = {
+	COL_WIDTH: 70, 
+	COL_HEIGHT: 10,
+	NUM_COLS: 2
+}
 
 

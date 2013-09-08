@@ -57,6 +57,12 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.nickname.y = 202;
 		this.addChild(this.nickname);
 
+		// layer to hold addons list
+		this.addonsLayer = new createjs.Container();
+		this.addChild(this.addonsLayer);
+		this.showAddonsList();
+					
+			
 		// framing layer
 		this.addChild(this.assets.dressing_frame);
 		
@@ -72,8 +78,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.assets.lever.x = 507;
 		this.assets.lever.y = 130;
 		
-		this.addChild(new sf.AddonsList(this, this.look, config.addons));
-			
+
 			
 		// touch areas
 		this.touch = new createjs.Container()
@@ -140,8 +145,8 @@ var p = DressingRoom.prototype = new createjs.Container();
 		for (var f=0; f<config.number.of.face; f++) {
 			var face = sf.Avatar.getFaceExemplarSprite(f, this.look.skincolor||0);
 			var rect = this.buttonPos('face',f);
-			face.x = rect.x + 11; // 34 + 37 * (f % 4);
-			face.y = rect.y - 29; // 34 + 49 * (Math.floor(f/4));
+			face.x = rect.x + 11;
+			face.y = rect.y - 29;
 			this.faces.addChild(face);
 		}
 	}
@@ -154,6 +159,22 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.hair.addChild(wig);
 		g.stage.maybeUpdate();
 	}
+	
+	p.showAddonsList = function() {
+		// throw away and make a new addons list (inefficient but easy)
+		this.addonsLayer.removeAllChildren();
+		
+		// placeholder filtering - for now, just get rid of the tier -1 items (mud mask and towel) 
+		var filteredAddons = _.filter(config.addons, function(addon){return addon.tier >= 0});
+		
+		this.addonsList = new sf.AddonsList(this, this.look, filteredAddons);
+		this.addonsLayer.addChild(this.addonsList);
+		this.addonsList.x = 249;
+		this.addonsList.y = 22;
+		
+	}
+	
+	
 	
 	p.prepareButtons = function() {
 		var room = this; // for binding in event handlers
@@ -191,7 +212,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		// randomizer lever
 		this.assets.lever.addEventListener("click", function(event) {
-			room.look = sf.Avatar.randomLook();
+			_.assign(room.look, sf.Avatar.randomLook());
 			room.avatar.setLook(room.look);
 		});
 		//this.assets.lever.cursor = 'pointer';
@@ -211,6 +232,26 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.showHair();
 		this.setFeature('hairstyle', this.look.hairstyle);
 	}
+	
+	p.addonsListClick = function(item) {
+		//console.log(item);
+		if (item.feature=='uniform') this.look.uniform = item.value;
+		else if (item.feature=='addon') {
+			if (item.selected) {
+				// remove item from addons list
+				this.look.addons = _.difference(this.look.addons, [item.id]);
+			}
+			else {
+				// add item to list
+				if (!this.look.addons) this.look.addons = [];
+				this.look.addons.push(item.id);
+			}
+		}
+		this.avatar.setLook(this.look);
+		this.showAddonsList();
+	}
+	
+	
 
 	// figure out where UI elements go
 	p.buttonPos = function(feature, value) {
