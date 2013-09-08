@@ -67,6 +67,14 @@ var p = AddonsList.prototype = new createjs.Container();
 							disabled:conflicts=='all' || _(conflicts).contains(addon.id)})
 		}, this);
 		
+		// pad out the end of the paper a bit
+		this.addItem({text:" ", width:'double'});
+		this.addItem({text:" ", width:'double'});
+		this.addItem({text:" ", width:'double'});
+	}
+	
+	p.getScrollHeight = function() {
+		return (this.row * config.dressing.addons.ROW_HEIGHT);
 	}
 
 
@@ -101,7 +109,7 @@ var p = AddonsList.prototype = new createjs.Container();
 		button.hitArea = new createjs.Shape(new createjs.Graphics().f('#fff').r(0,0,70,9));
 		
 		button.x = 13 + this.column * config.dressing.addons.COL_WIDTH;
-		button.y = this.row * config.dressing.addons.COL_HEIGHT;
+		button.y = this.row * config.dressing.addons.ROW_HEIGHT;
 		
 		button.item = item;
 		
@@ -121,12 +129,12 @@ var p = AddonsList.prototype = new createjs.Container();
 			
 	p.decorateRow = function() {	
 		// draw fanfold paper stripes and punches
-		var yy = this.row * config.dressing.addons.COL_HEIGHT;
+		var yy = this.row * config.dressing.addons.ROW_HEIGHT;
 		this.background.graphics.f(config.dressing.addons.hole_color).de(3,yy, 5,5).de(152,yy, 5,5);
 		if (this.row % 2 == 0) {
 			this.background.graphics
 				.f(config.dressing.addons.stripe_color)
-				.r(11, yy, 139, config.dressing.addons.COL_HEIGHT);
+				.r(11, yy, 139, config.dressing.addons.ROW_HEIGHT);
 		}
 	}
 

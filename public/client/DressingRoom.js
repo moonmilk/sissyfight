@@ -86,6 +86,20 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		this.prepareButtons();
 		
+		
+		// EXPERIMENTAL!  catch scroll events
+		var addonsList = this.addonsList;
+		var addonsLayer = this.addonsLayer;
+		g.stage.canvas.onmousewheel = function(event) {
+			addonsLayer.y += event.wheelDeltaY;
+			if (addonsLayer.y > 0) addonsLayer.y = 0;
+			if (addonsLayer.y < (config.dressing.addons.TALL_PX-addonsList.getScrollHeight())) {
+				addonsLayer.y = config.dressing.addons.TALL_PX-addonsList.getScrollHeight();
+			}
+			event.preventDefault(); 
+			return false;
+		};
+		
 	}
 	
 	
