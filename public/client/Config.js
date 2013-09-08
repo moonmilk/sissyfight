@@ -142,7 +142,10 @@ config.dressing.uniformNames = ['Skirt+Blouse', 'Sweater', 'Jacket', 'Tracksuit'
 config.dressing.addons = {
 	COL_WIDTH: 70, 
 	COL_HEIGHT: 10,
-	NUM_COLS: 2
+	NUM_COLS: 2,
+	TALL_PX: 213, // height in pixels of scroll window
+	stripe_color: '#52EC7E',
+	hole_color: '#222'
 }
 
 

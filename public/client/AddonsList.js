@@ -18,6 +18,8 @@ var p = AddonsList.prototype = new createjs.Container();
 	p.initialize = function(dressingRoom, look, addons) {
 		this.Container_initialize();
 		
+		this.background = this.addChild(new createjs.Shape());
+		
 		
 		this.dressingRoom = dressingRoom;
 		
@@ -40,16 +42,16 @@ var p = AddonsList.prototype = new createjs.Container();
 		}
 		
 		this.addItem({text:"APPROVED SCHOOLWEAR", width:'double'});
-		this.addItem({text:"", width:'double'});
+		this.addItem({text:" ", width:'double'});
 		
 		
 		for (var u=0; u<config.number.of.uniform; u++) {
 			this.addItem({text:config.dressing.uniformNames[u], feature:'uniform', value:u, selected:(u==look.uniform)});
 		}
 		
-		this.addItem({text:"", width:'double'});
+		this.addItem({text:" ", width:'double'});
 		this.addItem({text:"* FORBIDDEN ITEMS!!! *"});
-		this.addItem({text:"", width:'double'});
+		this.addItem({text:" ", width:'double'});
 		
 		// show custom items first
 		_(addons).filter(this.availableAddonIsCustom(true)).each(function(addon) {
@@ -79,6 +81,7 @@ var p = AddonsList.prototype = new createjs.Container();
 		var dressingRoom = this.dressingRoom;
 		
 		if (item.width=='double' && this.column == 1) {
+			this.decorateRow();
 			this.row ++;
 			this.column = 0;
 		}
@@ -107,11 +110,28 @@ var p = AddonsList.prototype = new createjs.Container();
 		
 		this.column = this.column + (item.width=='double') ? 2 : 1;
 		if (this.column >= config.dressing.addons.NUM_COLS) {
+			this.decorateRow();
 			this.row ++;
 			this.column = 0;
 		}
+
 	}
 	
+
+			
+	p.decorateRow = function() {	
+		// draw fanfold paper stripes and punches
+		var yy = this.row * config.dressing.addons.COL_HEIGHT;
+		this.background.graphics.f(config.dressing.addons.hole_color).de(3,yy, 5,5).de(152,yy, 5,5);
+		if (this.row % 2 == 0) {
+			this.background.graphics
+				.f(config.dressing.addons.stripe_color)
+				.r(11, yy, 139, config.dressing.addons.COL_HEIGHT);
+		}
+	}
+
+
+
 
 
 
