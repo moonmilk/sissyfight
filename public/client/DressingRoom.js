@@ -88,6 +88,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		
 		// EXPERIMENTAL!  catch scroll events
+		// http://stackoverflow.com/questions/10313142/javascript-capture-mouse-wheel-event-and-do-not-scroll-the-page
 		var addonsList = this.addonsList;
 		var addonsLayer = this.addonsLayer;
 		g.stage.canvas.onmousewheel = function(event) {
