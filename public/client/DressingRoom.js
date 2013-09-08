@@ -106,7 +106,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 	// save look back to server
 	p.persistLook = function(look) {
-		var sendLook = _.pick(look, ['face', 'skincolor', 'hairstyle', 'haircolor', 'uniform', 'addons'] );
+		var sendLook = _.pick(look, ['face', 'skincolor', 'hairstyle', 'haircolor', 'uniform', 'uniformcolor', 'addons'] );
 		
 		g.comm.writeEvent('setAvatar', {avatar:sendLook});
 		// should check for error returns and all that.

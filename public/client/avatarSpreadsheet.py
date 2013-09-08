@@ -72,25 +72,26 @@ for row in rows:
 			
 		# infer list of files:
 		item['files'] = []
-		if item['flippable'] > 0:
-			if len(item['layers']) > 1:
-				for l in item['layers']:
-					#item['files'].append(str(item['id']) + "-" + str(l))
-					item['files'].append('%(id)03d-%(layer)d' % {'id':item['id'], 'layer':l})
-			else:
-				#item['files'].append(str(item['id']))
-				item['files'].append('%(id)03d' % {'id':item['id']})
-				
-		else:
-			for f in ['L', 'R']:
+		if len(item['layers']) > 0:
+			if item['flippable'] > 0:
 				if len(item['layers']) > 1:
 					for l in item['layers']:
-						#item['files'].append(str(item['id']) + "-" + f + str(l))
-						item['files'].append('%(id)03d-%(dir)c%(layer)d' % {'id':item['id'], 'dir':f, 'layer':l})
+						#item['files'].append(str(item['id']) + "-" + str(l))
+						item['files'].append('%(id)03d-%(layer)d' % {'id':item['id'], 'layer':l})
 				else:
-					#item['files'].append(str(item['id']) + "-" + f)
-					item['files'].append('%(id)03d-%(dir)c' % {'id':item['id'], 'dir':f})
-							
+					#item['files'].append(str(item['id']))
+					item['files'].append('%(id)03d' % {'id':item['id']})
+					
+			else:
+				for f in ['L', 'R']:
+					if len(item['layers']) > 1:
+						for l in item['layers']:
+							#item['files'].append(str(item['id']) + "-" + f + str(l))
+							item['files'].append('%(id)03d-%(dir)c%(layer)d' % {'id':item['id'], 'dir':f, 'layer':l})
+					else:
+						#item['files'].append(str(item['id']) + "-" + f)
+						item['files'].append('%(id)03d-%(dir)c' % {'id':item['id'], 'dir':f})
+								
 		
 		# add to list		
 		addons.append(item)

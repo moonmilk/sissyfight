@@ -99,12 +99,12 @@ var p = Avatar.prototype = new createjs.Container();
 		
 		_.assign(this.look, look);
 		
-		//this.look.skincolor = skincolor;
-		//this.look.hairstyle = hairstyle;
-		//this.look.haircolor = haircolor;
-		//this.look.addons = addons || [];
-		
-	
+		// special case for addon 402, MadBetty's grayscale, which should always be one more than the highest regular color number
+		if (this.look.addons.indexOf(402) != -1) {
+			this.look.skincolor = config.number.of.skincolor;
+			this.look.haircolor = config.number.of.haircolor;
+			this.look.uniformcolor = config.number.of.uniformcolor;
+		}
 		
 		this.sprites.face = new createjs.Sprite(sf.Avatar.sheet.faces[this.look.skincolor]);
 		this.sprites.face.scaleX = -1;

@@ -1644,6 +1644,16 @@ config.addons = [
         "tier": 4
     },
     {
+        "conflicts": {},
+        "files": [],
+        "flippable": 1,
+        "id": 402,
+        "layers": [],
+        "name": "Custom 2 - Greyscale",
+        "poses": 0,
+        "tier": 4
+    },
+    {
         "conflicts": {
             "5": [
                 "H"

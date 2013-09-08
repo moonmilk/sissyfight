@@ -132,7 +132,13 @@ sf.Avatar.makeColoredSpritesheets = function (assetID) {
 		
 		for (var i=0; i < colors.vars.length; i++) {
 			var img = new createjs.Bitmap(image);
-			img.filters = [new sf.ColorSubstitutionFilter(colors.vars[colors.base], colors.vars[i])];
+			if (colors.vars[i]=='grayscale') { // special case for MadBetty's custom avatar - thanks for your support!
+				var gray = new createjs.ColorMatrix().adjustSaturation(-100);
+				img.filters = [new createjs.ColorMatrixFilter(gray)];
+			}
+			else {
+				img.filters = [new sf.ColorSubstitutionFilter(colors.vars[colors.base], colors.vars[i])];
+			}
 			img.cache(0, 0, img.image.width, img.image.height);
 			
 			sheets[i] = new createjs.SpriteSheet({
@@ -198,7 +204,13 @@ sf.Avatar.makeAddonSpritesheets = function() {
 			_.forEach(colors.vars, function(colorway) {
 				_.forEach(images, function(image) {
 					var img = new createjs.Bitmap(image);
-					img.filters = [new sf.ColorSubstitutionFilter(colors.vars[colors.base], colorway)];
+					if (colorway=='grayscale') { // special case for MadBetty's custom avatar - thanks for your support!
+						var gray = new createjs.ColorMatrix().adjustSaturation(-100);
+						img.filters = [new createjs.ColorMatrixFilter(gray)];
+					}
+					else {
+						img.filters = [new sf.ColorSubstitutionFilter(colors.vars[colors.base], colorway)];
+					}
 					img.cache(0, 0, img.image.width, img.image.height);
 					colorized.push(img.cacheCanvas);
 				});
@@ -209,11 +221,16 @@ sf.Avatar.makeAddonSpritesheets = function() {
 
 		// inconsistent that main avatar images are stored in Avatar, but addon images are stored in config.addons
 		// ... maybe fix it someday.
-		item['sheet'] = new createjs.SpriteSheet({
-			images: images,
-			frames: config.avatar.addonsDims
-		});
-		item['sheet']["info"] = "spritesheet for addon " + item.id + " from " + _.pluck(images, 'src').join(", ");
+		if (images && images.length > 0) {
+			item['sheet'] = new createjs.SpriteSheet({
+				images: images,
+				frames: config.avatar.addonsDims
+			});
+			item['sheet']["info"] = "spritesheet for addon " + item.id + " from " + _.pluck(images, 'src').join(", ");
+		}
+		else {
+			// addon with no images might be used to signal a special case 
+		}
 	});
 }
 
