@@ -58,6 +58,8 @@ function start(sockjs, auth) {
 
 // pre-preload is done
 function loadStage2() {	
+	g.load.prepreloader.removeAllEventListeners();
+	
 	// loading screen and progress bar
 	g.load.progressbar = new createjs.Shape();
 	g.stage.addChild(g.load.progressbar);
@@ -77,7 +79,9 @@ function loadStage2() {
 	g.load.tapping.gotoAndPlay('tap');
 	
 
-	
+	// get rid of the prepre.
+	delete g.load['prepreloader'];
+		
 	g.load.preloader = new createjs.LoadQueue();//false);
 	g.load.preloader.addEventListener("complete", loaded);
 	g.load.preloader.addEventListener("progress", function(e){
