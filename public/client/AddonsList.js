@@ -96,17 +96,22 @@ var p = AddonsList.prototype = new createjs.Container();
 		var button = new createjs.Container();
 		button.text = button.addChild(new createjs.Text(item.text, "9px Courier"));
 		if (item.selected) {
-			button.addChild(this.assets.ptr_addon.clone());
+			var selected = button.addChild(this.assets.ptr_addon.clone());
+			if (item.width=='double') selected.scaleX = 1.7;
 			button.cursor = "pointer";
 			button.addEventListener("click", function(event) { dressingRoom.addonsListClick(event.target.item) });
 		} else if (item.disabled) {
-			button.addChild(this.assets.ptr_addon_disabled.clone());
+			var disabled = button.addChild(this.assets.ptr_addon_disabled.clone());
+			if (item.width=='double') disabled.scaleX = 1.7;
 		} else if (item.feature) {
 			button.cursor = "pointer";
 			button.addEventListener("click", function(event) { dressingRoom.addonsListClick(event.target.item) });
 		}
 		
-		button.hitArea = new createjs.Shape(new createjs.Graphics().f('#fff').r(0,0,70,9));
+		var hitWidth = 70;
+		if (item.width=='double') hitWidth = 140;
+		
+		button.hitArea = new createjs.Shape(new createjs.Graphics().f('#fff').r(0,0,hitWidth,9));
 		
 		button.x = 13 + this.column * config.dressing.addons.COL_WIDTH;
 		button.y = this.row * config.dressing.addons.ROW_HEIGHT;
