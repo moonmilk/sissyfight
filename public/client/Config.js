@@ -84,7 +84,8 @@ config['colors'] = {
 				[[255,206,156], [206,156,99],  [156,99,49],  [99,49,0]],
 				[[255,255,153], [204,204,102], [153,153,51], [102,102,0]],
 				[[204,204,153], [153,153,102], [102,102,51], [51,51,0]],
-				[[207,200,96],  [159,152,48],  [96, 96, 0],  [48,48,0]]
+				[[207,200,96],  [159,152,48],  [96, 96, 0],  [48,48,0]],
+				'grayscale'
 			]
 	},
 	
@@ -98,7 +99,8 @@ config['colors'] = {
 				[[204,153,153], [153,102,102], [102,51,51],   [51,0,0]],	// pink-brown
 				[[124,197,118], [57,180,74],   [25,122,48],   [0,94,32]],	// bright green
 				[[153,204,204], [102,153,153], [51,102,102],  [0,51,51]],	// light blue
-				[[240,110,169], [236,0,140],   [158,0,93],    [123,0,70]]	// bright magenta
+				[[240,110,169], [236,0,140],   [158,0,93],    [123,0,70]],	// bright magenta
+				'grayscale'
 			]
 	},
 	
@@ -110,7 +112,8 @@ config['colors'] = {
 				[[206,206,255], [99,99,156],  [49,49,99], [0,0,49]],
 				[[156,255,156], [49,156,49],  [0,99,0],   [0,49,0]],
 				[[255,255,156], [156,156,49], [99,99,0],  [49,49,0]],
-				[[255,206,156], [156,99,49],  [99,49,0],  [49,0,0]]
+				[[255,206,156], [156,99,49],  [99,49,0],  [49,0,0]],
+				'grayscale'
 			]	
 	}
 
@@ -120,11 +123,11 @@ config['colors'] = {
 config.number = {};
 config.number.of = {
 	face: 			8,
-	skincolor: 	config.colors.skin.vars.length,
-	hairstyle: 	13,
-	haircolor: 	config.colors.hair.vars.length,
+	skincolor: 		6, 	// can't trust config.colors.skin.vars.length now that we have the extra grayscale
+	hairstyle: 		13,
+	haircolor: 		8, 	// ditto config.colors.hair.vars.length,
 	uniform: 		5,
-	uniformcolor: config.colors.uniforms.vars.length
+	uniformcolor: 	6	// ditto config.colors.uniforms.vars.length
 }
 
 config.avatar['addonsDims'] = {width:81, height:115, regX:40, regY:9}; // they're all the same size
