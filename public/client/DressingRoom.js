@@ -147,10 +147,13 @@ var p = DressingRoom.prototype = new createjs.Container();
 				.addEventListener('change', function(e) {g.stage.maybeUpdate()});
 			this.showHair();
 		}
+		else if (feature==='uniform') {
+			this.showAddonsList();
+		}
 		
 		g.stage.maybeUpdate();
 		
-		this.persistLook(this.look);
+		//this.persistLook(this.look);
 	}
 	
 	
@@ -227,8 +230,12 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		// randomizer lever
 		this.assets.lever.addEventListener("click", function(event) {
-			_.assign(room.look, sf.Avatar.randomLook());
-			room.avatar.setLook(room.look);
+			//_.assign(room.look, sf.Avatar.randomLook());
+			var look = sf.Avatar.randomLook();
+			_.each(['face','skincolor','hairstyle','haircolor','uniform'], function(feature) {
+				room.setFeature(feature, look[feature]);
+			});
+			//room.avatar.setLook(room.look);
 		});
 		//this.assets.lever.cursor = 'pointer';
 		this.leverHelper = new createjs.ButtonHelper(this.assets.lever, "lever", "lever", "lever_pulled");
