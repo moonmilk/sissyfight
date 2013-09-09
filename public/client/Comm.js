@@ -29,6 +29,7 @@ var p = Comm.prototype;
 		
 		this.sockjs.onclose = function() {
 			// not sure what to do about this yet!
+			console.log('lost socket connection');
 		}
 		
 		// decode incoming messages in {type, data} style for dispatch
