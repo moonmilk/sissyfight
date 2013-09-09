@@ -109,7 +109,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		// FOR TESTING AVATAR POSES
 		var room = this;
 		document.onkeypress = function(e) {
-			console.log(this, e.charCode);
+			//console.log(this, e.charCode);
 			switch(e.charCode) {
 				case 104: // h
 					room.look.headdir = !room.look.headdir; 
