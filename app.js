@@ -5,7 +5,7 @@
 
 var express = require('express')
   , RedisStore = require('connect-redis')(express)
-  , redis = require('redis').createClient()
+  , redis = require('redis')
   , http = require('http')
   , path = require('path')
   , sockjs  = require('sockjs')
@@ -20,31 +20,6 @@ var db = require('./database');
 // ORM setup
 var User = require('./models/user');
 
-// let sequelize make tables
-db.sequelize.sync().success( function() {
-
-	/* 
-	// test!
-	User.findOrCreate({nickname: 'cassie'}, {password: 'dent', avatar:{face:3,something:'i like bananas'}})
-		.success(function(newuser, created){
-			//console.log(newuser.values)
-			//console.log(newuser.avatar)
-		});
-	
-	
-	User.findOrCreate({nickname: 'dorcas'}, {password: 'bump', avatar:{face:2,hair:5,addons:[102],something:'peaches are yummy'}})
-		.success(function(newuser, created){
-
-			console.log("before inc", newuser.points);
-			newuser.increment('points', 10).success(function(newuser) {
-				console.log("before reload", newuser.points);
-				newuser.reload().success(function(newuser) {
-					console.log("reloaded", newuser.points);	
-				});
-			})
-		});
-	*/
-});
 
 
 // socksjs setup
@@ -55,8 +30,29 @@ var sockjs = sockjs.createServer(sockjs_opts);
 // app setup
 var app = express();
 
+
 // session store
-var sessionStore = new RedisStore({ host: 'localhost', port: 6379, client: redis }); //new express.session.MemoryStore();
+var redisClient;
+var sissyfight_redis_str = process.env.SISSYFIGHT_REDIS;
+if (sissyfight_redis_str) {
+	var sissyfight_redis = sissyfight_redis_str.split('|'); // redis|host|database|auth
+	redisClient = redis.createClient(6379, sissyfight_redis[1]);
+	redisClient.auth(sissyfight_redis[3], function (err) {
+		if (err) {
+			console.log('redis connection trouble');
+			throw(err);
+		}
+		else {
+			console.log('remote redis authenticated');
+		}
+	});
+}
+else {
+	redis.createClient(6379, 'localhost')
+	console.log('connected to local redis');
+}
+//var sessionStore = new RedisStore({ host: 'localhost', port: 6379, client: redis }); //new express.session.MemoryStore();
+var sessionStore = new RedisStore({client:redisClient});
 app.set('sessionStore', sessionStore);
 
 // all environments

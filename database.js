@@ -23,12 +23,12 @@ exports.sequelize = sequelize;
 
 
 var Schema = require('jugglingdb').Schema;
-var jugglingRedis = new Schema('redis', {port: 6379});
+//var jugglingRedis = new Schema('redis', {port: 6379});
 
 
 // if i move User records to juggling, they will go under juggling.persistent
-var juggling = {ephemeral: jugglingRedis};
+//var juggling = {ephemeral: jugglingRedis};
 
 
-exports.orm = juggling;
+//exports.orm = juggling;
 
