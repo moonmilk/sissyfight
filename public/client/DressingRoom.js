@@ -106,7 +106,37 @@ var p = DressingRoom.prototype = new createjs.Container();
 			return false;
 		};
 		
+		// FOR TESTING AVATAR POSES
+		var room = this;
+		document.onkeypress = function(e) {
+			console.log(this, e.charCode);
+			switch(e.charCode) {
+				case 104: // h
+					room.look.headdir = !room.look.headdir; 
+					break;
+				case 98: // b
+					room.look.bodydir = !room.look.bodydir;
+					break;
+				case 102: // f
+					if (!room.look.expression) room.look.expression = 0;
+					room.look.expression = (room.look.expression + 1) % config.number.of.expression;
+					break;
+				case 112: // p
+					if (!room.look.pose) room.look.pose = 0;
+					room.look.pose = (room.look.pose + 1) % config.number.of.pose;
+					break;
+			}
+			room.setFeature();
+		}
+		
 	}
+	
+	// cleanup
+	p.destroy = function() {
+		g.stage.canvas.onmousewheel = null;
+		document.onkeypress = null;
+	}
+	
 	
 	
 	// save look back to server

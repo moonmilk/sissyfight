@@ -128,7 +128,9 @@ config.number.of = {
 	hairstyle: 		13,
 	haircolor: 		8, 	// ditto config.colors.hair.vars.length,
 	uniform: 		5,
-	uniformcolor: 	6	// ditto config.colors.uniforms.vars.length
+	uniformcolor: 	6,	// ditto config.colors.uniforms.vars.length
+	expression:		7,
+	pose:			9
 }
 
 config.avatar['addonsDims'] = {width:81, height:115, regX:40, regY:9}; // they're all the same size
