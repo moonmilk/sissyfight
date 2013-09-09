@@ -59,6 +59,9 @@ app.set('sessionStore', sessionStore);
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
@@ -71,7 +74,7 @@ app.use(express.session({store: sessionStore // http://stackoverflow.com/questio
 						, expires: new Date(Date.now() + (12*60*1000))
 						, cookie:{maxAge:12*60*1000}})); // http://www.senchalabs.org/connect/session.html    http://stackoverflow.com/a/11827382
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 app.locals.pretty = true; // make jade output more readable
