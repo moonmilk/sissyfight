@@ -20,7 +20,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		// set up random defaults if this is a new character
 		if (this.look.skincolor === undefined) this.look.skincolor = Math.floor(Math.random()*config.number.of.skincolor);
 		if (this.look.haircolor === undefined) this.look.haircolor = Math.floor(Math.random()*config.number.of.haircolor);
-		
+		if (this.look.uniformcolor === undefined) this.look.uniformcolor = 0;
 		
 		this.prepareAssets();
 		
