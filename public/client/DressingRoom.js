@@ -23,7 +23,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		if (this.look.uniformcolor === undefined) this.look.uniformcolor = 0;
 		
 		this.prepareAssets();
-		
+	
 		// backdrop layer: white bg for face previews, blue bg for mirror
 		this.addChild(this.assets.dressing_behind);
 		
@@ -89,14 +89,14 @@ var p = DressingRoom.prototype = new createjs.Container();
 				
 		// update avatar
 		this.setFeature();
-		
-		
-		
+	}
+
+	p.start = function() {
 		// EXPERIMENTAL!  catch scroll events
 		// http://stackoverflow.com/questions/10313142/javascript-capture-mouse-wheel-event-and-do-not-scroll-the-page
 		var addonsList = this.addonsList;
 		var addonsLayer = this.addonsLayer;
-		g.stage.canvas.onmousewheel = function(event) {
+		this.getStage().canvas.onmousewheel = function(event) {
 			addonsLayer.y += event.wheelDeltaY;
 			if (addonsLayer.y > 0) addonsLayer.y = 0;
 			if (addonsLayer.y < (config.dressing.addons.TALL_PX-addonsList.getScrollHeight())) {
@@ -186,8 +186,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 			var destX = this.buttonPos('skincolor', value).x;
 			var slide = createjs.Tween
 				.get(this.assets.ptr_skincolor)
-				.to({x:destX}, 100+2*Math.abs(destX - this.assets.ptr_skincolor.x), createjs.Ease.quadOut)
-				.addEventListener('change', function(e) {g.stage.maybeUpdate()}); //TODO: don't call update from tweens! Maybe switch to framerate-based updates
+				.to({x:destX}, 100+2*Math.abs(destX - this.assets.ptr_skincolor.x), createjs.Ease.quadOut);
 		}
 		else if (feature==='haircolor') {
 			var dest = this.buttonPos('haircolor', value);
@@ -195,17 +194,13 @@ var p = DressingRoom.prototype = new createjs.Container();
 			var dy = this.assets.ptr_haircolor.y - dest.y;
 			var slide = createjs.Tween
 				.get(this.assets.ptr_haircolor)
-				.to({x:dest.x, y:dest.y}, 100+2*Math.abs(Math.sqrt(dx*dx+dy*dy)), createjs.Ease.quadOut)
-				.addEventListener('change', function(e) {g.stage.maybeUpdate()});
+				.to({x:dest.x, y:dest.y}, 100+2*Math.abs(Math.sqrt(dx*dx+dy*dy)), createjs.Ease.quadOut);
 			this.showHair();
 		}
 		else if (feature==='uniform') {
 			this.showAddonsList();
 		}
 		
-		g.stage.maybeUpdate();
-		
-		//this.persistLook(this.look);
 	}
 	
 	
@@ -227,7 +222,6 @@ var p = DressingRoom.prototype = new createjs.Container();
 		wig.x = 222;
 		wig.y = 32;
 		this.hair.addChild(wig);
-		g.stage.maybeUpdate();
 	}
 	
 	p.showAddonsList = function() {

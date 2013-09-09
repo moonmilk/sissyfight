@@ -7,6 +7,7 @@ block javascript
 	
 	script(src="http://code.createjs.com/createjs-2013.05.14.min.js")
 	
+	script(src="../client/Loader.js")
 	script(src="../client/ColorSubstitutionFilter.js")
 	script(src="../client/ColorMatrix.js")
 	script(src="../client/ColorMatrixFilter.js")
@@ -23,6 +24,23 @@ block javascript
 	script(type='text/javascript').
 		var token = '#{token}';
 		var session = '#{session}';
+		
+		// big global variable for remembering stuff 
+		var g = {load:{}, dressing:{}, homeroom:{}, game:{}};
+		
+		// sissyfight namespace
+		this.sf = this.sf||{};
+				
+		// createJS says they'll change the name in next release.  Meanwhile:
+		createjs.Sprite = createjs.BitmapAnimation;
+
+		sf.start = function(SockJS, auth) {
+			var stage = new createjs.Stage("appCanvas");
+			var main = new sf.Main();
+			stage.addChild(main);
+			main.start(SockJS, auth);
+		}
+
 
 		
 block content
@@ -33,9 +51,10 @@ block content
 			
 	script(type='text/javascript').
 		window.onload = function() {
-			start(SockJS, {token:token, session:session, endpoint:'/sox'});
+			sf.start(SockJS, {token:token, session:session, endpoint:'/sox'});
 		}
 		
+			
 		
 	style.
 		/*	attempt to scale up canvas while preserving pixels - 
@@ -66,101 +85,3 @@ block content
 		canvas(id="appCanvas", class="doubleCanvas", width="528", height="276")
 		
 	
-	//	
-		div#chat
-			div(style='width:600px; height:400px') 
-			form
-				input(autocomplete=off, size=50)
-		
-		script(type='text/javascript').
-			var chatInput = $('#chat input');
-			var chatLog = $('#chat div');
-			var chatForm = $('#chat form');
-		
-			chatInput.focus();
-			chatForm.submit(function() {
-				sockjs.send(JSON.stringify({event:'say', data:{text: chatInput.val()}}));
-				chatInput.val('');
-				return false;
-			});
-			
-			
-			function chat(text) {
-				chatLog.append($("<code>").text(text));
-				chatLog.append($("<br>"));
-				chatLog.scrollTop(chatLog.scrollTop()+10000);
-			}
-			
-			
-			
-			sockjs.onopen    = function()  {
-				$('#status').val(sockjs.protocol);
-				var m = JSON.stringify({event:'login', data:{token:token, session:session}});
-				console.log("connecting to session: " + m);
-				sockjs.send(m);
-			};
-			sockjs.onmessage = function(e) {
-				console.log(e.data);
-				var message;
-				try {
-					message = JSON.parse(e.data);
-				}
-				catch (err) {
-					// parse error - ignore message
-				}
-				
-				if (message && message.event && (typeof message.event) === 'string') {
-					dispatchMessage(message);
-				}
-			};
-			sockjs.onclose   = function()  {$('#status').val("no");};
-			
-			
-			function dispatchMessage(message) {
-				switch(message.event) {
-					case 'login': doLogin(message.data); break;
-					case 'say': doSay(message.data); break;
-					case 'join': doJoin(message.data); break;
-					case 'leave': doLeave(message.data); break;
-					case 'joined': doJoined(message.data); break;
-				}
-			}
-			
-			
-			function doLogin(message) {
-				if (!message.error) {
-					chat("Hello " + message.nickname + "!");
-				}
-				else {
-					chat("Couldn't log in.");
-				}
-			}
-			
-			function doSay(message) {
-				if (message.nickname && message.text) {
-					chat(message.nickname + ": " + message.text);
-				}
-			}
-			
-			function doJoin(message) {
-				if (message.nickname) {
-					chat(message.nickname + " arrived.");
-				}
-			}
-			
-			function doLeave(message) {
-				if (message.nickname) {
-					chat(message.nickname + " left.");
-				}
-			}
-			
-			function doJoined(message) {
-				if (message.error) {
-					chat("Couldn't enter " + message.roomName + " " + message.message);
-				}
-				else if (message.occupants && typeof message.occupants==='object') {
-					chat("You entered " + message.roomName + ".")
-					chat(message.occupants.join(" and ") + (message.occupants.length > 1 ? " are" : " is") + " here.");
-				}
-			}
-			
