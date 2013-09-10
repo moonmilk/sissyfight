@@ -53,7 +53,10 @@ var p = DressingRoom.prototype = new createjs.Container();
 					
 			
 		// framing layer
-		this.addChild(this.assets.dressing_frame);
+		this.addChild(this.assets.dressing_frame)
+			.addEventListener("click", function() {
+				// don't do anything with clicks, just block them from parts of addon list that have scrolled underneath the frame
+			});
 		
 				
 		// layer for hair previews
@@ -70,16 +73,9 @@ var p = DressingRoom.prototype = new createjs.Container();
 			ptr.x = rect.x;
 			ptr.y = rect.y;
 		}, this);
-		this.addChild(this.assets.lever);
-		this.assets.lever.x = 507;
-		this.assets.lever.y = 130;
 		
-		this.okbtn = this.addChild(this.assets.btn_ok_disabled);
-		this.addChild(this.okbtn);
-		this.okbtn.x = 487;
-		this.okbtn.y = 250;
+		this.addGenericButtons();
 		
-
 			
 		// touch areas
 		this.touch = new createjs.Container()
@@ -96,17 +92,11 @@ var p = DressingRoom.prototype = new createjs.Container();
 	p.start = function() {
 		// EXPERIMENTAL!  catch scroll events
 		// http://stackoverflow.com/questions/10313142/javascript-capture-mouse-wheel-event-and-do-not-scroll-the-page
-		var addonsList = this.addonsList;
-		var addonsLayer = this.addonsLayer;
 		this.getStage().canvas.onmousewheel = function(event) {
-			addonsLayer.y += event.wheelDeltaY;
-			if (addonsLayer.y > 0) addonsLayer.y = 0;
-			if (addonsLayer.y < (config.dressing.addons.TALL_PX-addonsList.getScrollHeight())) {
-				addonsLayer.y = config.dressing.addons.TALL_PX-addonsList.getScrollHeight();
-			}
+			this.scrollAddons(event.wheelDeltaY);
 			event.preventDefault(); 
 			return false;
-		};
+		}.bind(this);
 		
 		// FOR TESTING AVATAR POSES
 		var room = this;
@@ -241,6 +231,53 @@ var p = DressingRoom.prototype = new createjs.Container();
 	}
 	
 	
+	p.addGenericButtons = function() {
+		this.buttons = {};
+		_.forOwn({
+			lever: 				[507,130],
+			btn_ok: 			[487,250,'btn_ok_disabled'],
+			btn_scroll_up:		[365,233],
+			btn_scroll_down:	[385,233]
+		}, function(what,who) {
+			this.buttons[who] = this.addChild(this.assets[who]);
+			this.buttons[who].x = what[0];
+			this.buttons[who].y = what[1];
+			if (what[2]) this.buttons[who].gotoAndStop(what[2]);
+		}, this);
+		
+
+	}
+	
+		
+	p.scrollAddons = function(how) {
+		if (how=='up') {
+			var destY = this.addonsLayer.y + 120;
+			if (destY > 0) destY = 0;
+			var slide = createjs.Tween
+				.get(this.addonsLayer)
+				.to({y:destY}, 100+2*Math.abs(this.addonsLayer.y-destY), createjs.Ease.quadOut);
+		}
+	
+		else if (how=='down') {
+			var destY = this.addonsLayer.y - 120;
+			if (destY < (config.dressing.addons.TALL_PX - this.addonsList.getScrollHeight())) {
+				destY = config.dressing.addons.TALL_PX - this.addonsList.getScrollHeight();
+			}
+			var slide = createjs.Tween
+				.get(this.addonsLayer)
+				.to({y:destY}, 100+2*Math.abs(this.addonsLayer.y-destY), createjs.Ease.quadOut);
+		}
+		else {
+			// deltaY from mouse wheel
+			this.addonsLayer.y += how;
+		}
+		if (this.addonsLayer.y > 0) this.addonsLayer.y = 0;
+		if (this.addonsLayer.y < (config.dressing.addons.TALL_PX - this.addonsList.getScrollHeight())) {
+			this.addonsLayer.y = config.dressing.addons.TALL_PX - this.addonsList.getScrollHeight();
+		}
+	}
+	
+	
 	
 	p.prepareButtons = function() {
 		var room = this; // for binding in event handlers
@@ -277,22 +314,26 @@ var p = DressingRoom.prototype = new createjs.Container();
 		}, this);
 		
 		// randomizer lever
-		this.assets.lever.addEventListener("click", function(event) {
-			//_.assign(room.look, sf.Avatar.randomLook());
+		this.buttons.lever.addEventListener("click", function(event) {
 			var look = sf.Avatar.randomLook();
 			_.each(['face','skincolor','hairstyle','haircolor','uniform'], function(feature) {
 				room.setFeature(feature, look[feature]);
 			});
-			//room.avatar.setLook(room.look);
 		});
-		//this.assets.lever.cursor = 'pointer';
-		this.leverHelper = new createjs.ButtonHelper(this.assets.lever, "lever", "lever", "lever_pulled");
+		this.buttons.lever.helper = new createjs.ButtonHelper(this.buttons.lever, "lever", "lever", "lever_pulled");
+		
+		this.buttons.btn_scroll_up.addEventListener("click", function() { this.scrollAddons("up") }.bind(this));
+		this.buttons.btn_scroll_down.addEventListener("click", function() { this.scrollAddons("down") }.bind(this));
+		this.buttons.btn_scroll_up.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_up, "btn_scroll_up", "btn_scroll_up", "btn_scroll_up");
+		this.buttons.btn_scroll_down.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_down, "btn_scroll_down", "btn_scroll_down", "btn_scroll_down");
 	}
+	
+
 	
 	p.unlockOKButton = function() {
 		if (!this.okHelper) {
-			this.okHelper = new createjs.ButtonHelper(this.okbtn, 'btn_ok_active', 'btn_ok_active', 'btn_ok_pressed');
-			this.okbtn.addEventListener("click", function(event){this.persistLook()}.bind(this));
+			this.buttons.btn_ok.helper = new createjs.ButtonHelper(this.buttons.btn_ok, 'btn_ok', 'btn_ok', 'btn_ok_pressed');
+			this.buttons.btn_ok.addEventListener("click", function(event){this.persistLook()}.bind(this));
 		}
 	}
 	
