@@ -63,7 +63,9 @@ config['manifest'] = [
 	 			lever: 				[20, 1, 19,47,  0, 1,0], 
 	 			lever_pulled:		[0,  1, 19,47,  0, 1,0],
 	 			btn_scroll_up:		[79,80, 21,18,  0, 0,0],
-	 			btn_scroll_down:	[101,80,21,18,  0, 0,0]
+	 			btn_scroll_up_pressed:		[79,80, 21,18,  0, -1,-1],
+	 			btn_scroll_down:	[101,80,21,18,  0, 0,0],
+	 			btn_scroll_down_pressed:	[101,80,21,18,  0, -1,-1]
 	 		}
 	 	}
 	 },

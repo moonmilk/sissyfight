@@ -324,8 +324,8 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		this.buttons.btn_scroll_up.addEventListener("click", function() { this.scrollAddons("up") }.bind(this));
 		this.buttons.btn_scroll_down.addEventListener("click", function() { this.scrollAddons("down") }.bind(this));
-		this.buttons.btn_scroll_up.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_up, "btn_scroll_up", "btn_scroll_up", "btn_scroll_up");
-		this.buttons.btn_scroll_down.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_down, "btn_scroll_down", "btn_scroll_down", "btn_scroll_down");
+		this.buttons.btn_scroll_up.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_up, "btn_scroll_up", "btn_scroll_up", "btn_scroll_up_pressed");
+		this.buttons.btn_scroll_down.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_down, "btn_scroll_down", "btn_scroll_down", "btn_scroll_down_pressed");
 	}
 	
 
