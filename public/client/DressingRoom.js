@@ -32,11 +32,6 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.faces);
 		this.showFaces();
 		
-		// layer for hair previews
-		this.hair = new createjs.Container();
-		this.addChild(this.hair);
-		this.showHair();
-		
 		// avatar in mirror
 		this.avatar = new sf.Avatar();
 		//this.look.headdir = this.look.bodydir = 0; // face left
@@ -59,6 +54,13 @@ var p = DressingRoom.prototype = new createjs.Container();
 			
 		// framing layer
 		this.addChild(this.assets.dressing_frame);
+		
+				
+		// layer for hair previews
+		this.hair = new createjs.Container();
+		this.addChild(this.hair);
+		this.showHair();
+		
 		
 		// UI elements
 		_.each(['skincolor','haircolor'], function(feature) {
@@ -220,7 +222,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.hair.removeAllChildren();
 		var wig = sf.Avatar.getHairExemplarSprite(this.look.hairstyle || 0, this.look.haircolor || 0);
 		wig.x = 222;
-		wig.y = 32;
+		wig.y = 36;
 		this.hair.addChild(wig);
 	}
 	
