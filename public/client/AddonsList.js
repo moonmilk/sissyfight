@@ -67,10 +67,17 @@ var p = AddonsList.prototype = new createjs.Container();
 							disabled:conflicts=='all' || _(conflicts).contains(addon.id)})
 		}, this);
 		
-		// pad out the end of the paper a bit
-		this.addItem({text:" ", width:'double'});
-		this.addItem({text:" ", width:'double'});
-		this.addItem({text:" ", width:'double'});
+		// pad out the end of the paper a bit:
+		//   if shorter than one screen, extend paper to almost fill the screen
+		if (!this.getScrollable()) {
+			while (!this.getAlmostScrollable()) {
+				this.addItem({text:" ", width:'double'});
+			}
+		}
+		//   if already scrollable, just add a few extra lines to make the scrolling more pleasant
+		else {
+			for (var i=0; i<4; i++) this.addItem({text:" ", width:'double'});
+		}
 	}
 	
 	p.getScrollHeight = function() {
@@ -78,6 +85,9 @@ var p = AddonsList.prototype = new createjs.Container();
 	}
 	p.getScrollable = function() {
 		return (config.dressing.addons.TALL_PX <= this.getScrollHeight());
+	}
+	p.getAlmostScrollable = function() {
+		return (config.dressing.addons.TALL_PX <= this.getScrollHeight() + 10);
 	}
 
 
