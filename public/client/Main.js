@@ -46,10 +46,50 @@ var p = Main.prototype = new createjs.Container();
 		this.loader.removeAllEventListeners();
 		this.loader = null;
 		
-		g.dressing.room = new sf.DressingRoom(event.data.avatar, event.data.nickname);
-		this.addChild(g.dressing.room);
-		g.dressing.room.start();
+		this.openDressingRoom(event.data);
 	}
+	
+	
+	p.openDressingRoom = function(data)	{
+		console.log("Opening dressing room");
+		this.dressing = new sf.DressingRoom(data.avatar, data.nickname);
+		this.addChild(this.dressing);
+		this.dressing.start();
+		
+		this.dressing.addEventListener("done", function(event) {
+			this.closeDressingRoom();
+			this.openHomeroom(event.data);
+		}.bind(this));
+	}
+	
+	p.closeDressingRoom = function(event) {
+		console.log("Closing dressing room");
+		this.dressing.destroy();
+		this.removeChild(this.dressing);
+		this.dressing.removeAllEventListeners();
+		this.dressing = null;
+	}
+	
+	
+	
+	p.openHomeroom = function(data) {
+		console.log("Opening homeroom");
+		this.homeroom = new sf.Homeroom();
+		this.addChild(this.homeroom);
+		this.homeroom.start();
+		
+		this.homeroom.addEventListener("dressing", function(event) {
+			this.closeHomeroom();
+			this.openDressingRoom(event.data);
+		});
+		/* not yet
+		this.homeroom.addEventListener("game", function(event) {
+			this.closeHomeroom();
+			this.openGameRoom(event.data);
+		});
+		*/
+	}
+	
 
 	sf.Main = Main;
 

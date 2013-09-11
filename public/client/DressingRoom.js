@@ -127,7 +127,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 	// cleanup
 	p.destroy = function() {
-		g.stage.canvas.onmousewheel = null;
+		this.getStage().canvas.onmousewheel = null;
 		document.onkeypress = null;
 	}
 	
@@ -145,13 +145,13 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		g.comm.writeEvent('setAvatar', {avatar:sendLook});
 		// should check for error returns and all that.
-		g.comm.addEventListener('avatar', this.avatarDone.bind(this));
+		g.comm.addEventListener('avatar', this.avatarDoneBound);
 	}
 	
-	p.avatarDone = function(event) {
+	p.avatarDoneBound = function(event) {
 		g.comm.removeEventListener(this.avatarDone);
 		console.log("Avatar saved!");
-	}
+	}.bind(this)
 
 	
 	
@@ -340,9 +340,14 @@ var p = DressingRoom.prototype = new createjs.Container();
 
 	
 	p.unlockOKButton = function() {
-		if (!this.okHelper) {
+		if (!this.buttons.btn_ok.unlocked) {
+			this.buttons.btn_ok.unlocked = true;
 			this.buttons.btn_ok.helper = new createjs.ButtonHelper(this.buttons.btn_ok, 'btn_ok', 'btn_ok', 'btn_ok_pressed');
-			this.buttons.btn_ok.addEventListener("click", function(event){this.persistLook()}.bind(this));
+			this.buttons.btn_ok.addEventListener("click", function(event){
+				this.persistLook()
+				console.log("DressingRoom (", this, "): dispatching done event");
+				this.dispatchEvent({type:"done", data:{avatar:this.look, nickname:this.nickname}});
+			}.bind(this));
 		}
 	}
 	

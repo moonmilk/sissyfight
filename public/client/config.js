@@ -24,6 +24,7 @@ config['preloadManifest'] = [
 ]
 
 config['manifest'] = [
+	// avatar
 	{
 		id: 	'faces',
 		src:	'avatar/all_faces.png',
@@ -46,31 +47,34 @@ config['manifest'] = [
 	},
 	
 	
-	
+	// dressing room
 	{ 	id: 	'dressing_behind', 	src: 'dressing/dressing_behind.png' },
 	{ 	id: 	'dressing_frame', 	src: 'dressing/dressing_frame.png' },
 	{
-	 	id: 	'dressing_items', 	src: 'dressing/dressing_items.png',
-	 	data: {
-	 		pieces: {
-	 			btn_ok: 			[39,2,  36,23,  0, 0,0], 
-	 			btn_ok_disabled:	[39,29, 36,23,  0, 0,0], 
-	 			btn_ok_pressed:		[39,2,  36,23,  0, -1,-1],
-	 			ptr_skincolor: 		[79,2,  40,45,  0, 9,12], 
-	 			ptr_haircolor:		[86,50, 26,26,  0, -8,10], 
-	 			ptr_addon:			[0, 54, 75,22,  0, 8,6], 
-	 			ptr_addon_disabled:	[0, 85, 75,8,   0, 0,0], 
-	 			lever: 				[20, 1, 19,47,  0, 1,0], 
-	 			lever_pulled:		[0,  1, 19,47,  0, 1,0],
-	 			btn_scroll_up:		[79,80, 21,18,  0, 0,0],
-	 			btn_scroll_up_pressed:		[79,80, 21,18,  0, -1,-1],
-	 			btn_scroll_down:	[101,80,21,18,  0, 0,0],
-	 			btn_scroll_down_pressed:	[101,80,21,18,  0, -1,-1]
-	 		}
-	 	}
-	 },
+		id: 	'dressing_items', 	src: 'dressing/dressing_items.png',
+		data: {
+			pieces: {
+				btn_ok: 			[39,2,  36,23,  0, 0,0], 
+				btn_ok_disabled:	[39,29, 36,23,  0, 0,0], 
+				btn_ok_pressed:		[39,2,  36,23,  0, -1,-1],
+				ptr_skincolor: 		[79,2,  40,45,  0, 9,12], 
+				ptr_haircolor:		[86,50, 26,26,  0, -8,10], 
+				ptr_addon:			[0, 54, 75,22,  0, 8,6], 
+				ptr_addon_disabled:	[0, 85, 75,8,   0, 0,0], 
+				lever: 				[20, 1, 19,47,  0, 1,0], 
+				lever_pulled:		[0,  1, 19,47,  0, 1,0],
+				btn_scroll_up:		[79,80, 21,18,  0, 0,0],
+				btn_scroll_up_pressed:		[79,80, 21,18,  0, -1,-1],
+				btn_scroll_down:	[101,80,21,18,  0, 0,0],
+				btn_scroll_down_pressed:	[101,80,21,18,  0, -1,-1]
+			}
+		}
+	},
+	 
+	// homeroom 
+	{	id:		'homeroom_bg',		src: 'homeroom/homeroom_bg.png'},
 	
-	
+	// placeholder
 	{
 		id:		'bg-angel',
 		src:	'background/angel.png'
