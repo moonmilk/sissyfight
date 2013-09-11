@@ -92,12 +92,14 @@ var p = DressingRoom.prototype = new createjs.Container();
 	p.start = function() {
 		// EXPERIMENTAL!  catch scroll events
 		// http://stackoverflow.com/questions/10313142/javascript-capture-mouse-wheel-event-and-do-not-scroll-the-page
-		this.getStage().canvas.onmousewheel = function(event) {
-			this.scrollAddons(event.wheelDeltaY);
-			event.preventDefault(); 
-			return false;
-		}.bind(this);
-		
+		if (this.addonsList.getScrollable()) {
+			this.getStage().canvas.onmousewheel = function(event) {
+				this.scrollAddons(event.wheelDeltaY);
+				event.preventDefault(); 
+				return false;
+			}.bind(this);
+		}
+					
 		// FOR TESTING AVATAR POSES
 		var room = this;
 		document.onkeypress = function(e) {
@@ -232,13 +234,18 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 	
 	p.addGenericButtons = function() {
-		this.buttons = {};
-		_.forOwn({
+		var someButtons = {
 			lever: 				[507,130],
-			btn_ok: 			[487,250,'btn_ok_disabled'],
-			btn_scroll_up:		[365,233],
-			btn_scroll_down:	[385,233]
-		}, function(what,who) {
+			btn_ok: 			[487,250,'btn_ok_disabled'],			
+		};
+		// show scroll buttons only if addons list is tall enough to scroll
+		if (this.addonsList.getScrollable()) {
+			someButtons.btn_scroll_up =	[365,233];
+			someButtons.btn_scroll_down = [385,233];
+		}
+		
+		this.buttons = {};
+		_.forOwn(someButtons, function(what,who) {
 			this.buttons[who] = this.addChild(this.assets[who]);
 			this.buttons[who].x = what[0];
 			this.buttons[who].y = what[1];
@@ -322,10 +329,12 @@ var p = DressingRoom.prototype = new createjs.Container();
 		});
 		this.buttons.lever.helper = new createjs.ButtonHelper(this.buttons.lever, "lever", "lever", "lever_pulled");
 		
-		this.buttons.btn_scroll_up.addEventListener("click", function() { this.scrollAddons("up") }.bind(this));
-		this.buttons.btn_scroll_down.addEventListener("click", function() { this.scrollAddons("down") }.bind(this));
-		this.buttons.btn_scroll_up.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_up, "btn_scroll_up", "btn_scroll_up", "btn_scroll_up_pressed");
-		this.buttons.btn_scroll_down.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_down, "btn_scroll_down", "btn_scroll_down", "btn_scroll_down_pressed");
+		if (this.addonsList.getScrollable()) {
+			this.buttons.btn_scroll_up.addEventListener("click", function() { this.scrollAddons("up") }.bind(this));
+			this.buttons.btn_scroll_up.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_up, "btn_scroll_up", "btn_scroll_up", "btn_scroll_up_pressed");
+			this.buttons.btn_scroll_down.addEventListener("click", function() { this.scrollAddons("down") }.bind(this));
+			this.buttons.btn_scroll_down.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_down, "btn_scroll_down", "btn_scroll_down", "btn_scroll_down_pressed");
+		}
 	}
 	
 

@@ -76,6 +76,9 @@ var p = AddonsList.prototype = new createjs.Container();
 	p.getScrollHeight = function() {
 		return (this.row * config.dressing.addons.ROW_HEIGHT);
 	}
+	p.getScrollable = function() {
+		return (config.dressing.addons.TALL_PX <= this.getScrollHeight());
+	}
 
 
 	// helper function: get list of available addons that are / aren't custom
