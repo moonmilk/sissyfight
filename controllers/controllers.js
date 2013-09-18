@@ -80,7 +80,7 @@ module.exports = function(app) {
 			// send a token to the page that can be used to associate the socket with the user session
 			var token = req.session.user.nickname + Math.random();
 			req.session.token = token;
-			res.render('game', {user:req.session.user, token:req.session.token, session:req.session.id});
+			res.render('game', {user:req.session.user, token:req.session.token, session:req.session.id, school:0});
 		}
 		else {
 			req.session.flash = {login: "Please log in"};

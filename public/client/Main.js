@@ -21,7 +21,7 @@ var p = Main.prototype = new createjs.Container();
 		this.Container_initialize();
 	}
 	
-	p.start = function(SockJS, auth) {
+	p.start = function(SockJS, auth, school) {
 		this.getStage().enableMouseOver();
 		
 		// set up tick-based update
@@ -32,7 +32,7 @@ var p = Main.prototype = new createjs.Container();
 		
 		this.loader = new sf.Loader();
 		this.addChild(this.loader);
-		this.loader.start(SockJS, auth);
+		this.loader.start(SockJS, auth, school);
 		
 		this.loader.addEventListener("error", this.loadError.bind(this));
 		this.loader.addEventListener("complete", this.loaded.bind(this));

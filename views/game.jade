@@ -27,9 +27,12 @@ block javascript
 	script(type='text/javascript').
 		var token = '#{token}';
 		var session = '#{session}';
+		var school = '#{school}';
 		
 		// big global variable for remembering stuff 
 		var g = {load:{}, dressing:{}, homeroom:{}, game:{}};
+		
+		g.gameScale = '#{gameScale}' || 1;
 		
 		// sissyfight namespace
 		this.sf = this.sf||{};
@@ -37,11 +40,20 @@ block javascript
 		// createJS says they'll change the name in next release.  Meanwhile:
 		createjs.Sprite = createjs.BitmapAnimation;
 
-		sf.start = function(SockJS, auth) {
+		sf.start = function(SockJS, auth, school) {
+			
+			if (g.gameScale==1) {
+				document.getElementById('appCanvas').className = 'singleCanvas';
+			}
+			else if (g.gameScale==2) {
+				document.getElementById('appCanvas').className = 'doubleCanvas';
+			}
+			
+			
 			var stage = new createjs.Stage("appCanvas");
 			var main = new sf.Main();
 			stage.addChild(main);
-			main.start(SockJS, auth);
+			main.start(SockJS, auth, school);
 		}
 
 
@@ -54,7 +66,7 @@ block content
 			
 	script(type='text/javascript').
 		window.onload = function() {
-			sf.start(SockJS, {token:token, session:session, endpoint:'/sox'});
+			sf.start(SockJS, {token:token, session:session, endpoint:'/sox'}, school);
 		}
 		
 			
@@ -86,29 +98,33 @@ block content
 		#container {
 			position: relative;
 		}
+		
+		.disableSelect {
+			-webkit-user-select: none;  
+			-moz-user-select: none;    
+			-ms-user-select: none;      
+			user-select: none;
+		}
+
 		.homeroomText {
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 12px;
 			
 			resize: none;
+			visibility: hidden;
 		}
 		#homeroomChat {
 			overflow-x:hidden;
 			overflow-y:auto;
-			position:absolute;
-			left: 12;
-			top: 33;
 		}
 		#homeroomTextEntry {
 			overflow:hidden;
-			left: 7;
-			top: 228;
 		}
 		
 		
-	div#container
-		canvas.doubleCanvas#appCanvas(width=528, height=276)
-		div.homeroomText#homeroomChat(width=120, height=150)
+	div#container(width=528,height=276)
+		canvas#appCanvas.singleCanvas(width=528,height=276)
+		div.homeroomText.disableSelect#homeroomChat(width=120, height=150, unselectable="yes")
 		textarea.homeroomText#homeroomTextEntry(width=79, height=43)
 		
 	
