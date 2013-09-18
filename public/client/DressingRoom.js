@@ -149,7 +149,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	}
 	
 	p.avatarDoneBound = function(event) {
-		g.comm.removeEventListener(this.avatarDone);
+		g.comm.removeEventListener(this.avatarDoneBound);
 		console.log("Avatar saved!");
 	}.bind(this)
 
