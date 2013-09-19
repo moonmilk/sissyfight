@@ -107,6 +107,13 @@ app.post('/user/logout', user.logout);
 var server = http.createServer(app);
 sockjs.installHandlers(server, {prefix:'/sox'});
 
+// schools
+var School = require('./gameObjects/school');
+var schools = {'666': new School({id:'666', name:'PS 666'})};
+app.set('schools', schools);
+app.set('schoolDefault', '666');
+
+/*
 // make a lobby room
 var ChatRoom = require('./gameObjects/chatroom');
 var lobby = new ChatRoom({name:'lobby', id:1});
@@ -115,13 +122,6 @@ var lobby = new ChatRoom({name:'lobby', id:1});
 var GameRoom = require('./gameObjects/gameroom');
 var gameroom = new GameRoom({name:'gameroom', id:3, schoolId:666, maxUsers: 6});
 app.set('lobby', gameroom);
-/*
-var Room = require('./models/room');
-Room.findOrCreate({name:'lobby'}, {name:'lobby'}, function(err, lobby){
-	if (err) console.log("Problem creating lobby room: " + err);
-	else console.log("Created lobby room " + lobby.name + ": "+ JSON.stringify(lobby));
-	app.set('lobby', lobby);
-});
 */
 
 server.listen(app.get('port'), function(){

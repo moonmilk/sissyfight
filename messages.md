@@ -28,6 +28,7 @@ of the error (for debugging, probably not for end user).
 	* multi: user is already connected via another socket
 	* dbusererr: couldn't access user database (problem with mysql?)
 	* dbnouser: no such user id (probably can't happen)
+	* noschool: bad or missing school id in user session
 	
 ## dressing room
 
@@ -52,4 +53,52 @@ of the error (for debugging, probably not for end user).
 	errors:
 	* badavatar: (*not yet implemented*) Badly formatted avatar object or item out of range, including don't have permission to use item - might split these off into different errors
 	* dbaverr: couldn't save to database (problem with mysql?)
+
+## chat room (lobby/homeroom)
+
+Homeroom is always id 0
+
+*	**join** (up)
+
+	args: **room** (room id)
+
+	reply:
+	
+*	**joined** (down)
+
+	args: **room** (room id), **roomName**, **occupants**:array of nicknames
+	
+	errors:
+	* duplicate: user is already in this room
+	
+	broadcast:
+
+*	**join** (down)
+
+	args: **nickname** of user who just joined.
+	
+*	**leave** (up)
+
+	args: none
+	
+	reply:
+
+*	**left** (down)
+
+	args: none
+	
+	errors: 
+	* nothere: user wasn't in this room
+		
+	broadcast:
+	
+*	**leave** (down)
+
+	args: **nickname** of user who just left.
+	
+*	**say**	(up)
+
+
+	
+
 	

@@ -49,11 +49,7 @@ module.exports = function(app, sockjs) {
 		/* SISSYFIGHT EVENTS */
 		
 		conn.on("login", loginListener);
-		conn.on("say", sendChatListener);
 		
-		conn.on("getAvatar", getAvatarListener);
-		conn.on("setAvatar", setAvatarListener);
-
 
 	});
 	
@@ -93,6 +89,10 @@ module.exports = function(app, sockjs) {
 					console.log("Socket login: user "+session.user.nickname+" already has a connected socket");
 					conn.writeEvent("login", {error:"multi", message: "Already connected"});
 				}
+				else if (!session.school || !app.get('schools')[session.school]) {
+					console.log("Socket login: user "+session.user.nickname+" has unknown school " + session.school);
+					conn.writeEvent("login", {error:"noschool", message: "Unknown school"});
+				}
 				else {
 					// everything is good: socket corresponds to a logged-in session - connect the user
 					conn.removeListener("login", loginListener);
@@ -111,6 +111,7 @@ module.exports = function(app, sockjs) {
 							console.log("Socket login: retrieved db record for user  " + user.nickname);
 						
 							conn.user = user;
+							conn.school = app.get('schools')[session.school];
 							
 							userConnections[conn.user.id] = {conn:conn};
 							
@@ -120,12 +121,13 @@ module.exports = function(app, sockjs) {
 							
 							conn.writeEvent("login", {error:false, nickname:conn.user.nickname, avatar:conn.user.avatar});
 							
-							// #### go into the lobby chat
-							var room = app.get("lobby").join(conn);
-							if (room) {
-								conn.room = room;
-								//room.on("say", receiveChatListener);
-							}
+							/* SISSYFIGHT EVENTS */
+												
+							conn.on("say", sendChatListener);
+							conn.on("homeroom", joinHomeroomListener);
+							
+							conn.on("getAvatar", getAvatarListener);
+							conn.on("setAvatar", setAvatarListener);
 						}
 					});
 				}
@@ -190,6 +192,44 @@ module.exports = function(app, sockjs) {
 				sendAvatar(conn);
 			}
 		});
+	}
+	
+	
+	function joinHomeroomListener(data) {
+		conn = this;
+		if (!conn.user) {
+			conn.writeEvent("homeroom", {error:"notlogged", message:"Socket's not logged in"});
+			console.log("joinHomeroomListener: socket not logged in");
+			return;
+		}
+		if (!conn.school) {
+			console.log("joinHomeroomListener: user "+conn.user.nickname+" has unknown school");
+			conn.writeEvent("homeroom", {error:"noschool", message: "Unknown school"});
+		}
+		if (conn.room) {
+			console.log("joinHomeroomListener: user "+conn.user.nickname+" is already in school " + conn.school.id + " room " + conn.room.id);
+			conn.writeEvent("homeroom", {error:"inaroom", message: "Already in a room"});
+		}
+		
+		conn.school.getHomeroom(function(err, homeroom) {
+			if (err) {
+				console.log("joinHomeroomListener: user "+conn.user.nickname+" couldn't get school " + conn.school.id + " homeroom: " + err);
+				conn.writeEvent("homeroom", {error:"nohomeroom", message: err.message});
+			}
+			else {
+				homeroom.join(conn, function(err) {
+					if (err) {
+						console.log("joinHomeroomListener: user "+session.user.nickname+" couldn't join school " + conn.school.id + "homeroom " + err);
+						conn.writeEvent("homeroom", {error:"joinhomeroom", message: err.message});
+					}
+					else {
+						console.log("joinHomeroomListener: user "+session.user.nickname+" joined school " + conn.school.id + " homeroom.");
+						conn.writeEvent("homeroom", {error:null});
+					}
+				});
+			}
+		});
+		
 	}
 	
 

@@ -16,41 +16,47 @@ function ChatRoom(params) {
 
 // METHODS
 
-ChatRoom.prototype.join = function(conn) {
+// callback: done(err, this room)
+ChatRoom.prototype.join = function(conn, done) {
 	if (this.occupants.indexOf(conn) != -1) {
 		console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + conn.user.nickname + " tried to join but is already here"); 
-		conn.writeEvent("joined", {room:this.id, error:"duplicate", message: "You're already here!"});
-		return false;
+		var err = {room:this.id, error:"duplicate", message: "You're already here!"};
+		if (conn) conn.writeEvent("joined", err);
+		if (done) done(err);
 	}
 	else {
 		this.occupants.push(conn);
 		console.log("ChatRoom[" + this.id + "," + this.name + "]: added " + conn.user.nickname + " to room, occupants: ", this.occupantNames());
 		//this.emit("join", {user:conn, occupants:this.occupants});
-		conn.writeEvent("joined", {room:this.id, roomName:this.name, error:false, occupants:this.occupantNames()});
+		if (conn) conn.writeEvent("joined", {room:this.id, roomName:this.name, error:false, occupants:this.occupantNames()});
 		this.broadcast("join", {nickname:conn.user.nickname});
-		return this;
+		if (done) done(null, this);
 	}
 }
 
-ChatRoom.prototype.leave = function(conn) {
+// callback: done(err)
+ChatRoom.prototype.leave = function(conn, done) {
 	var index = this.occupants.indexOf(conn);
 	if (index == -1) {
 		console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + conn.user.nickname + " tried to leave but is not here"); 
-		return false;
+		var err = {room:this.id, error:"nothere", message: "Can't leave room you're not in"};
+		if (conn) conn.writeEvent("left", err);
+		if (done) done(err);
 	}
 	else {
-		//this.emit("leave", {user:conn, occupants:this.occupants});
-		// broadcast before getting rid of conn, so conn also gets the leave confirmation
-		this.broadcast("leave", {nickname:conn.user.nickname}); //, occupants:this.occupantNames()});
 		this.occupants.splice(index, 1);
-		return this;
+		conn.writeEvent("left", {room:this.id, error:false});
+		this.broadcast("leave", {nickname:conn.user.nickname});
+		if (done) done(null);
 	}
 }
 
-ChatRoom.prototype.say = function(conn, text) {
+// callback: done() (no error conditions)
+ChatRoom.prototype.say = function(conn, text, done) {
 	console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + conn.user.nickname + " says " + text);
 	//this.emit("say", {user:conn, text:text});
 	this.broadcast("say", {nickname:conn.user.nickname, text:text});
+	if (done) done(null);
 }
 
 
