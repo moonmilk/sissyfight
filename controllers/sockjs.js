@@ -219,11 +219,11 @@ module.exports = function(app, sockjs) {
 			else {
 				homeroom.join(conn, function(err) {
 					if (err) {
-						console.log("joinHomeroomListener: user "+session.user.nickname+" couldn't join school " + conn.school.id + "homeroom " + err);
+						console.log("joinHomeroomListener: user "+conn.user.nickname+" couldn't join school " + conn.school.id + "homeroom " + err);
 						conn.writeEvent("homeroom", {error:"joinhomeroom", message: err.message});
 					}
 					else {
-						console.log("joinHomeroomListener: user "+session.user.nickname+" joined school " + conn.school.id + " homeroom.");
+						console.log("joinHomeroomListener: user "+conn.user.nickname+" joined school " + conn.school.id + " homeroom.");
 						conn.writeEvent("homeroom", {error:null});
 					}
 				});
