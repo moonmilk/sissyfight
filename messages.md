@@ -56,20 +56,25 @@ of the error (for debugging, probably not for end user).
 
 ## chat room (lobby/homeroom)
 
-Homeroom is always id 0
+Special case: message homeroom for joining homeroom
 
-*	**join** (up)
-
-	args: **room** (room id)
+*	**homeroom** (up)
 
 	reply:
 	
-*	**joined** (down)
+*	**homeroom** (down)
 
 	args: **room** (room id), **roomName**, **occupants**:array of nicknames
 	
 	errors:
 	* duplicate: user is already in this room
+	* notlogged: socket not logged in (from here down hopefully can never happen)
+	* noschool: socket has no or unknown school	
+	* inaroom: already in some room (need to leave first)
+	* nohomeroom: couldn't get homeroom from school
+	* joinhomeroom: couldn't join homeroom
+	
+	
 	
 	broadcast:
 
@@ -98,6 +103,33 @@ Homeroom is always id 0
 	
 *	**say**	(up)
 
+	args: **text** to say
+	
+	broadcast:
+	
+*	**say** (down)
+
+	args: **nickname**, **text**
+
+	
+
+## game rooms 
+	
+
+*	**join** (up)
+
+	args: **room** (room id)
+
+	...same as homeroom(up) above
+	
+*	**joined** (down)
+
+	...same as homeroom(down) above
+	
+	errors: as homeroom above, plus:
+	* nosuchroom: no such room
+
+*	**say**(up/down), **leave**(up/down), **left**(down) same as homeroom above 
 
 	
 
