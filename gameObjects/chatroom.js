@@ -18,17 +18,22 @@ function ChatRoom(params) {
 
 // callback: done(err, this room)
 ChatRoom.prototype.join = function(conn, done) {
-	if (this.occupants.indexOf(conn) != -1) {
+	if (!conn) {
+		console.log("ChatRoom[" + this.id + "," + this.name + "]: connection is null");
+		if (done) done({error:"nullconn", message:"connection is null"});
+	}
+	else if (this.occupants.indexOf(conn) != -1) {
 		console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + conn.user.nickname + " tried to join but is already here"); 
 		var err = {room:this.id, error:"duplicate", message: "You're already here!"};
-		if (conn) conn.writeEvent("joined", err);
+		conn.writeEvent("joined", err);
 		if (done) done(err);
 	}
 	else {
 		this.occupants.push(conn);
 		console.log("ChatRoom[" + this.id + "," + this.name + "]: added " + conn.user.nickname + " to room, occupants: ", this.occupantNames());
 		//this.emit("join", {user:conn, occupants:this.occupants});
-		if (conn) conn.writeEvent("joined", {room:this.id, roomName:this.name, error:false, occupants:this.occupantNames()});
+		conn.room = this;
+		conn.writeEvent("joined", {room:this.id, roomName:this.name, error:false, occupants:this.occupantNames()});
 		this.broadcast("join", {nickname:conn.user.nickname});
 		if (done) done(null, this);
 	}
@@ -45,6 +50,7 @@ ChatRoom.prototype.leave = function(conn, done) {
 	}
 	else {
 		this.occupants.splice(index, 1);
+		conn.room = null;
 		conn.writeEvent("left", {room:this.id, error:false});
 		this.broadcast("leave", {nickname:conn.user.nickname});
 		if (done) done(null);

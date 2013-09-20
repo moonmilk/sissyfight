@@ -62,7 +62,7 @@ Special case: message homeroom for joining homeroom
 
 	reply:
 	
-*	**homeroom** (down)
+*	**joined** (down)
 
 	args: **room** (room id), **roomName**, **occupants**:array of nicknames
 	
@@ -124,7 +124,7 @@ Special case: message homeroom for joining homeroom
 	
 *	**joined** (down)
 
-	...same as homeroom(down) above
+	...same as joined(down) above
 	
 	errors: as homeroom above, plus:
 	* nosuchroom: no such room

@@ -144,8 +144,7 @@ module.exports = function(app, sockjs) {
 	
 	function sendChatListener(data) {
 		conn = this;
-		
-		if (this.room && (typeof data.text)==="string") this.room.say(conn, data.text);
+		if (conn.room && (typeof data.text)==="string") conn.room.say(conn, data.text);
 	}	
 	
 	
@@ -220,11 +219,12 @@ module.exports = function(app, sockjs) {
 				homeroom.join(conn, function(err) {
 					if (err) {
 						console.log("joinHomeroomListener: user "+conn.user.nickname+" couldn't join school " + conn.school.id + "homeroom " + err);
-						conn.writeEvent("homeroom", {error:"joinhomeroom", message: err.message});
+						// let chatroom send 'joined' error or success message
+						//conn.writeEvent("homeroom", {error:"joinhomeroom", message: err.message});
 					}
 					else {
 						console.log("joinHomeroomListener: user "+conn.user.nickname+" joined school " + conn.school.id + " homeroom.");
-						conn.writeEvent("homeroom", {error:null});
+						//conn.writeEvent("homeroom", {error:null});
 					}
 				});
 			}
