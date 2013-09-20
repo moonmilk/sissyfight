@@ -71,8 +71,9 @@ app.use(express.cookieParser());  // vvvv---- move to secret config
 app.use(express.session({store: sessionStore // http://stackoverflow.com/questions/14014446/how-to-save-and-retrieve-session-from-redis
 						, key: app.get('cookiekey')
 						, secret: 'I like bananas'
-						, expires: new Date(Date.now() + (12*60*1000))
-						, cookie:{maxAge:12*60*1000}})); // http://www.senchalabs.org/connect/session.html    http://stackoverflow.com/a/11827382
+						, maxAge:12*60*60*1000
+						//, expires: new Date(Date.now() + (12*60*1000))
+						, cookie:{maxAge:12*60*60*1000}})); // http://www.senchalabs.org/connect/session.html    http://stackoverflow.com/a/11827382
 app.use(app.router);
 
 
