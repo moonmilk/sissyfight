@@ -275,6 +275,10 @@ sf.Avatar.getAddonSprites = function (id, look) { // pose, direction, skincolor)
 		// choose head direction or body direction depending on layer zone
 		var direction = look.bodydir;
 		var layerNum = item.layers[layerIndex];
+		
+		// if remove_background, skip anything on layer 0
+		if (layerNum==0 && look.remove_background) continue;
+		
 		if (item.conflicts && item.conflicts[layerNum]) {
 			var zone = item.conflicts[layerNum];
 			// check for Head, Face, or Ear zone
