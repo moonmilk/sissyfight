@@ -73,6 +73,16 @@ config['manifest'] = [
 	 
 	// homeroom 
 	{	id:		'homeroom_bg',		src: 'homeroom/homeroom_bg.png'},
+	{	id:		'homeroom_items',	src: 'homeroom/homeroom_items.png',
+		data:	{
+			pieces: {
+				btn_dressingroom:			[2, 2,	85,31,	0, 0,0],
+				btn_dressingroom_pressed:	[2, 2,	85,31,	0, -1,-1],
+				btn_chat:					[89,2,  47,27,  0, 0,0],
+				btn_chat_pressed:			[89,2,  47,27,  0, -1,-1]
+			}
+		}
+	},
 	
 	// placeholder
 	{

@@ -11,7 +11,7 @@ var Homeroom = function(look, nickname) {
 
 var p = Homeroom.prototype = new createjs.Container();
 
-	p.MESSAGES = ['join','joined','leave','say'];  // list of socket messages I should listen for
+	p.MESSAGES = ['join','joined','leave','left','say'];  // list of socket messages I should listen for
 
 	p.Container_initialize = p.initialize;
 	
@@ -65,7 +65,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		*/
 		this.chatEntry.setFakeScale(g.gameScale);
 		this.chatEntry.setPosition(6, 227);
-		this.chatEntry.setSize(78, 42);
+		this.chatEntry.setSize(76, 42);
 		this.chatEntry.setVisible(true);
 		
 		this.chatRecord.setFakeScale(g.gameScale);
@@ -85,6 +85,9 @@ var p = Homeroom.prototype = new createjs.Container();
 		
 		// ask to join homeroom
 		g.comm.writeEvent("homeroom");
+		
+		// set up buttons
+		this.prepareButtons();
 	
 		// catch enter in chat entry
 		this.handlechatkeypressBound = this.handlechatkeypress.bind(this);
@@ -117,6 +120,12 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatLog(event.data.nickname + " is here");
 	}
 	
+	// i left the room
+	p.handleleft = function(event) {
+		// tell Main it's time to go 
+		this.dispatchEvent("dressing");
+	}
+	
 	// someone left the room
 	p.handleleave = function(event) {
 		this.chatLog(event.data.nickname + " just left");
@@ -139,15 +148,26 @@ var p = Homeroom.prototype = new createjs.Container();
 		event = event || window.event;
 
 		if (event.keyCode == 13) {
-			this.say(this.chatEntry.htmlElement.value);
-			this.chatEntry.htmlElement.value = "";
+			this.sendChatText();
 			return false;
 		}
 		else {
 			return true;
 		}
 	}
+	p.sendChatText = function() {
+		this.say(this.chatEntry.htmlElement.value);
+		this.chatEntry.htmlElement.value = "";
+	}
 
+	// button handlers
+	p.handlebtn_dressingroom = function(event) {
+		
+	}
+	
+	p.handlebtn_chat = function(event) {
+		this.sendChatText();
+	}
 
 
 	// update chat box
@@ -159,9 +179,28 @@ var p = Homeroom.prototype = new createjs.Container();
 
 
 
+	p.prepareButtons = function() {
+		this.buttons = {};
+		var someButtons = {
+			btn_dressingroom:	[9, 189],
+			btn_chat:			[88, 246]
+		};
+		_.forOwn(someButtons, function(what, who) {
+		var b = this.addChild(this.assets[who].clone());
+			this.buttons[who] = b
+			b.x = what[0];
+			b.y = what[1];
+			b.helper = new createjs.ButtonHelper(b, who, who, who+"_pressed");
+			var bound = this['handle'+who].bind(this);
+			this['handle'+who+"Bound"] = bound;
+			b.addEventListener('click', bound);
+		}, this);
+	}
+	
+
 	p.prepareAssets = function() {
 		this.assets = {};
-		_.each(['homeroom_bg'], function(s) {
+		_.each(['homeroom_bg', 'homeroom_items'], function(s) {
 			g.load.unpack(s, this.assets);
 		}, this);
 	}
