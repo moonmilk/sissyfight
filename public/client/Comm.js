@@ -48,11 +48,6 @@ var p = Comm.prototype;
 		}
 		
 		
-		// test that events are being dispatched
-		this.addEventListener('join', function(e) {
-			console.log("Got join event: " + JSON.stringify(e.data));
-		});
-		
 	}
 
 
