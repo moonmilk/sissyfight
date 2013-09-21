@@ -15,9 +15,8 @@ var p = Loader.prototype = new createjs.Container();
 		this.Container_initialize();
 	}
 
-	p.start = function(SockJS, auth) {
-		this.SockJS = SockJS;
-		this.auth = auth;
+	p.start = function(school) {
+		// school arg's not used yet but will probably be used in future to choose alternate assets to load
 		
 		// set up prepreloader to load the loading screen
 		g.load.prepreloader = new createjs.LoadQueue();
@@ -52,7 +51,7 @@ var p = Loader.prototype = new createjs.Container();
 			}
 		}
 	}
-	
+
 	
 	// pre-preload is done
 	p.loadStage2 = function () {	
@@ -96,30 +95,9 @@ var p = Loader.prototype = new createjs.Container();
 	p.loaded = function () {
 		// ####TODO: prepareSpritesheets can be slow, add a callback for the progress bar
 		sf.Avatar.prepareSpritesheets();
-		
-		// maybe socket connection should be tracked in progress bar too?  
-		g.comm = new sf.Comm(this.SockJS, this.auth);
-		comm.addEventListener('login', this.loginEstablished.bind(this));
-		
+		this.dispatchEvent('loaded');		
 	}
-		
-	p.loginEstablished = function (event) {
-		//g.stage.removeChild(g.load.progressbar);	
-		//g.stage.removeChild(g.load.preloadBG);
-		//g.stage.removeChild(g.load.tapping);
-		
-		if (event.data.error) {
-			// TODO: what to do?
-			console.log("Loader: login trouble! " + event.data.error);
-			this.dispatchEvent({type:'error', data:event.data});
-		}
-		else {
-			this.dispatchEvent({type:'complete', data:event.data});
-		}
-	
-		
-	}
-	
+
 	
 	
 	

@@ -55,7 +55,7 @@ module.exports = function(app, sockjs) {
 	
 	
 	function closeListener(data) {
-		conn = this;
+		var conn = this;
 		if (conn.room) conn.room.leave(conn);
 		if (conn.user) delete userConnections[conn.user.id];
 		if (conn.user) console.log("Socket: user " + conn.user.nickname + " disconnected.");
@@ -64,34 +64,34 @@ module.exports = function(app, sockjs) {
 
 	
 	function loginListener(data) {
-		conn = this; 
+		var conn = this; 
 		
 		// try to connect with the session
 		if (data.session && data.token) {
 			app.get('sessionStore').get(data.session, function(err, session) {
 				if (err) {
 					console.log("Socket login: couldn't access session store for session id " + data.session + ": " + err);
-					conn.writeEvent("login", {error:"nostore", message: "Couldn't access session store: " + err.toString()});
+					conn.writeEvent("error", {where:"login", error:"nostore", message: "Couldn't access session store: " + err.toString()});
 				}
 				else if (!session) {
 					console.log("Socket login: no such session " + data.session);
-					conn.writeEvent("login", {error:"nosession", message: "No such session"});
+					conn.writeEvent("error", {where:"login", error:"nosession", message: "No such session"});
 				}
 				else if (!session.user) {
 					console.log("Socket login: session's not logged in " + data.session);	
-					conn.writeEvent("login", {error:"notlogged", message: "Session's not logged in"});
+					conn.writeEvent("error", {where:"login", error:"notlogged", message: "Session's not logged in"});
 				}
 				else if (session.token !== data.token) {
 					console.log("Socket login: bad token " + data.token + " for session " + data.session);
-					conn.writeEvent("login", {error:"token", message: "Bad token"});
+					conn.writeEvent("error", {where:"login", error:"token", message: "Bad token"});
 				}
 				else if (userConnections[session.user.id]) {
 					console.log("Socket login: user "+session.user.nickname+" already has a connected socket");
-					conn.writeEvent("login", {error:"multi", message: "Already connected"});
+					conn.writeEvent("error", {where:"login", error:"multi", message: "Already connected"});
 				}
 				else if (!session.school || !app.get('schools')[session.school]) {
 					console.log("Socket login: user "+session.user.nickname+" has unknown school " + session.school);
-					conn.writeEvent("login", {error:"noschool", message: "Unknown school"});
+					conn.writeEvent("error", {where:"login", error:"noschool", message: "Unknown school"});
 				}
 				else {
 					// everything is good: socket corresponds to a logged-in session - connect the user
@@ -101,11 +101,11 @@ module.exports = function(app, sockjs) {
 					User.find(session.user.id).complete( function(err, user) {
 						if (err) {
 							console.log("Socket login: couldn't find user object due to database problem: " + err);
-							conn.writeEvent("login", {error:"dbusererr", message: "Database trouble"});
+							conn.writeEvent("error", {where:"login", error:"dbusererr", message: "Database trouble"});
 						}
 						else if (!user) {
 							console.log("Socket login: couldn't find user for id "+session.user.id+" in database")
-							conn.writeEvent("login", {error:"dbnouser", message: "Couldn't find user in db"});
+							conn.writeEvent("error", {where:"login", error:"dbnouser", message: "Couldn't find user in db"});
 						}
 						else {
 							console.log("Socket login: retrieved db record for user  " + user.nickname);
@@ -119,15 +119,13 @@ module.exports = function(app, sockjs) {
 							
 							if (!conn.user.avatar) conn.user.avatar={};
 							
-							conn.writeEvent("login", {error:false, nickname:conn.user.nickname, avatar:conn.user.avatar});
+							conn.writeEvent("go", {to:"dressingroom", nickname:conn.user.nickname, avatar:conn.user.avatar});
 							
-							/* SISSYFIGHT EVENTS */
+							/* SISSYFIGHT EVENTS ---------------------- */
 												
 							conn.on("say", sendChatListener);
-							conn.on("homeroom", joinHomeroomListener);
-							
-							conn.on("getAvatar", getAvatarListener);
-							conn.on("setAvatar", setAvatarListener);
+							conn.on("saveAvatar", saveAvatarListener);
+							conn.on("dressingRoom", returnToDressingRoomListener);
 						}
 					});
 				}
@@ -143,15 +141,55 @@ module.exports = function(app, sockjs) {
 	
 	
 	function sendChatListener(data) {
-		conn = this;
+		var conn = this;
 		if (conn.room && (typeof data.text)==="string") conn.room.say(conn, data.text);
 	}	
 	
 	
 	
-	function getAvatarListener(data){
-		conn = this;
-		sendAvatar(conn);
+	// save avatar and go to homeroom
+	function saveAvatarListener(data) {
+		var conn = this;
+		saveAvatar(conn, data, function(err) {
+			if (err) {
+				conn.writeEvent("error", err);
+			}
+			else {
+				joinHomeroom(conn, data, function(err, homeroom) {
+					if (err) {
+						conn.writeEvent("error", err);
+					}
+					else {
+						conn.writeEvent("go", {to:'homeroom', room:homeroom.id, roomName:homeroom.name, occupants:homeroom.getOccupantNicknames()});
+					}
+				});
+			}
+		});
+	}
+	
+	function saveAvatar(conn, data, done) {
+		if (false) {
+			// TODO: should do sanity testing on avatar here or in model ####
+			conn.writeEvent("error", {where:'avatar', error:'badavatar', message:"Badly formatted avatar object or item out of range"});
+			console.log("saveAvatar: Badly formatted avatar object or item out of range");
+			return;
+		}
+		if (!conn.user) {
+			conn.writeEvent("error", {where:'avatar', error:"notlogged", message:"Socket's not logged in"});
+			console.log("saveAvatar: socket not logged in");
+			return;
+		}
+		conn.user.avatar = data.avatar;
+		conn.user.save().complete(function(err){
+			if (err) {
+				console.log("saveAvatar: trouble saving user " + conn.user.nickname + ": " + err);
+				if (done) done({where:'avatar', error:"dbaverr", message:"Trouble saving the avatar"});
+			}
+			else {
+				console.log("saveAvatar: avatar set...");
+				if (done) done(null);
+			}
+		});
 	}
 	
 	function sendAvatar(conn) {
@@ -166,65 +204,46 @@ module.exports = function(app, sockjs) {
 		conn.writeEvent("avatar", {error:false, avatar:conn.user.avatar});
 		console.log("sendAvatar: user " + conn.user.nickname + " retrieved avatar " + JSON.stringify(conn.user.avatar));
 	}
-	
-	function setAvatarListener(data) {
-		conn = this;
-		if (false) {
-			// TODO: should do sanity testing on avatar here or in model ####
-			conn.writeEvent("avatar", {error:'badavatar', message:"Badly formatted avatar object or item out of range"});
-			console.log("setAvatar: Badly formatted avatar object or item out of range");
-			return;
-		}
-		if (!conn.user) {
-			conn.writeEvent("avatar", {error:"notlogged", message:"Socket's not logged in"});
-			console.log("setAvatar:: socket not logged in");
-			return;
-		}
-		conn.user.avatar = data.avatar;
-		conn.user.save().complete(function(err){
-			if (err) {
-				console.log("setAvatarListener: trouble saving user " + conn.user.nickname + ": " + error);
-				conn.writeEvent("avatar", {error:"dbaverr", message:"Trouble saving the avatar"});
-			}
-			else {
-				console.log("setAvatar: avatar set...");
-				sendAvatar(conn);
-			}
-		});
-	}
+
 	
 	
 	function joinHomeroomListener(data) {
-		conn = this;
+		var conn = this;
+		joinHomeRoom(conn, data);
+	}
+	
+	// callback: done(err, homeroom)
+	function joinHomeroom(conn, data, done) {
 		if (!conn.user) {
-			conn.writeEvent("homeroom", {error:"notlogged", message:"Socket's not logged in"});
+			conn.writeEvent("error", {where:"homeroom", error:"notlogged", message:"Socket's not logged in"});
 			console.log("joinHomeroomListener: socket not logged in");
 			return;
 		}
 		if (!conn.school) {
 			console.log("joinHomeroomListener: user "+conn.user.nickname+" has unknown school");
-			conn.writeEvent("homeroom", {error:"noschool", message: "Unknown school"});
+			conn.writeEvent("error", {where:"homeroom", error:"noschool", message: "Unknown school"});
 		}
 		if (conn.room) {
 			console.log("joinHomeroomListener: user "+conn.user.nickname+" is already in school " + conn.school.id + " room " + conn.room.id);
-			conn.writeEvent("homeroom", {error:"inaroom", message: "Already in a room"});
+			conn.writeEvent("error", {where:"homeroom", error:"inaroom", message: "Already in a room"});
 		}
 		
 		conn.school.getHomeroom(function(err, homeroom) {
 			if (err) {
 				console.log("joinHomeroomListener: user "+conn.user.nickname+" couldn't get school " + conn.school.id + " homeroom: " + err);
-				conn.writeEvent("homeroom", {error:"nohomeroom", message: err.message});
+				conn.writeEvent("error", {where:"homeroom", error:"nohomeroom", message: err.message});
 			}
 			else {
 				homeroom.join(conn, function(err) {
 					if (err) {
 						console.log("joinHomeroomListener: user "+conn.user.nickname+" couldn't join school " + conn.school.id + "homeroom " + err);
-						// let chatroom send 'joined' error or success message
-						//conn.writeEvent("homeroom", {error:"joinhomeroom", message: err.message});
+						//conn.writeEvent("error", err);
+						done(err);
 					}
 					else {
 						console.log("joinHomeroomListener: user "+conn.user.nickname+" joined school " + conn.school.id + " homeroom.");
-						//conn.writeEvent("homeroom", {error:null});
+						//conn.writeEvent("go", {to:'homeroom', room:homeroom.id, roomName:homeroom.name, occupants:homeroom.getOccupantNicknames()});
+						done(null, homeroom);
 					}
 				});
 			}
@@ -232,5 +251,22 @@ module.exports = function(app, sockjs) {
 		
 	}
 	
+	
+	function returnToDressingRoomListener(data) {
+		var conn = this;
+		if (!conn.room) {
+			// that way lies madness
+		}
+		else {
+			conn.room.leave(conn, function(err) {
+				if (err) {
+					conn.writeEvent("error", err);
+				}
+				else {
+					conn.writeEvent("go", {to:'dressingroom', avatar:conn.user.avatar, nickname:conn.user.nickname});
+				}
+			})
+		}
+	}
 
 }

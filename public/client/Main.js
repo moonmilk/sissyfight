@@ -22,6 +22,11 @@ var p = Main.prototype = new createjs.Container();
 	}
 	
 	p.start = function(SockJS, auth, school) {
+		this.SockJS = SockJS;
+		this.auth = auth;
+		this.school = school;
+		
+		// start mouseover testing
 		this.getStage().enableMouseOver();
 		
 		// set up tick-based update
@@ -30,24 +35,71 @@ var p = Main.prototype = new createjs.Container();
 			this.getStage().update();
 		}.bind(this));		
 		
+		
+		// start the loader
 		this.loader = new sf.Loader();
 		this.addChild(this.loader);
-		this.loader.start(SockJS, auth, school);
+		this.loader.start(school);
 		
-		this.loader.addEventListener("error", this.loadError.bind(this));
-		this.loader.addEventListener("complete", this.loaded.bind(this));
+		this.loader.addEventListener('loaded', this.loaded.bind(this));
 	}
 	
-	p.loadError = function(event) {
-		// ????
-	}
+	
 	p.loaded = function(event) {
+		// start the socket connection
+		g.comm = new sf.Comm(this.SockJS, this.auth);
+		// have to do something with failed login
+		g.comm.addEventListener('loginError', this.loginError.bind(this));
+		//successful login will send the go(dressingroom) event
+		g.comm.addEventListener('go', this.goHandler.bind(this));
+	}
+	
+	p.cleanupLoader = function() {
 		this.removeChild(this.loader);
 		this.loader.removeAllEventListeners();
 		this.loader = null;
-		
-		this.openDressingRoom(event.data);
 	}
+	
+	p.loginError = function(event) {
+		// TODO: what to do?
+		console.log('main: login problem - ' + event.data);
+	}
+	
+	
+	// go event: server tells client which screen to go to
+	//		data.to = dressingroom, homeroom, gameroom
+	//		with additional data depending on the destination	
+	p.goHandler = function(event) {
+		if (this.loader) this.cleanupLoader();
+		if (this.dressing) this.closeDressingRoom();
+		if (this.homeroom) this.closeHomeroom();
+		
+		if (event.data && event.data.to) {
+			switch(event.data.to) {
+				case 'dressingroom': 
+					this.openDressingRoom(event.data);
+					break;
+					
+				case 'homeroom':
+					this.openHomeroom(event.data);
+					break;
+					
+				case 'gameroom':
+					this.openGameRoom(event.data);
+					break;
+					
+				default:
+					console.log('main: got a go event with unknown destination ' + event.data.to);
+					break;
+			}
+		}
+		else {
+			// ?????
+			console.log('main: got a go event with no destination');
+		}
+	}
+	
+	
 	
 	
 	p.openDressingRoom = function(data)	{
@@ -74,20 +126,13 @@ var p = Main.prototype = new createjs.Container();
 	
 	p.openHomeroom = function(data) {
 		console.log("Opening homeroom");
-		this.homeroom = new sf.Homeroom();
+		this.homeroom = new sf.Homeroom(data.avatar, data.nickname, data.occupants);
 		this.addChild(this.homeroom);
 		this.homeroom.start();
-		
-		this.homeroom.addEventListener("dressing", function(event) {
-			this.closeHomeroom();
-			this.openDressingRoom(event.data);
-		});
-		/* not yet
-		this.homeroom.addEventListener("game", function(event) {
-			this.closeHomeroom();
-			this.openGameRoom(event.data);
-		});
-		*/
+	}
+	
+	p.closeHomeroom = function() {
+		this.homeroom = null;
 	}
 	
 

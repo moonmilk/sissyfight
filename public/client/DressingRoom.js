@@ -133,36 +133,16 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 	
 	
-	// save look back to server, with optional callback
-	p.persistLook = function(look, callback) {
+	// save look back to server on OK button
+	p.saveAndDone = function(look) {
 		if (!look) look = this.look;
-		if (!look) {
-			console.log('DressingRoom.persistLook: my this is messed up');
-			return;
-		}
 		
 		var sendLook = _.pick(look, ['face', 'skincolor', 'hairstyle', 'haircolor', 'uniform', 'uniformcolor', 'addons'] );
 		
-		g.comm.writeEvent('setAvatar', {avatar:sendLook});
+		g.comm.writeEvent('saveAvatar', {avatar:sendLook});
+	}
+	
 		
-		if (callback) g.comm.addEventListener('avatar', callback);
-	}
-	
-	// callback when persistLook is called by OK button:
-	p.dressingRoomDone = function(event) {
-		g.comm.removeEventListener(this.dressingRoomDoneBound);
-		if (event.data.error) {
-			// TODO: HANDLE ERROR
-			// maybe on clicking ok button, disable all controls with a no-click overlay until this callback returns
-			// ...and if it's error, show "couldn't save avatar" message and re-enable controls
-		}
-		else {
-			console.log("DressingRoom (", this, ") is done: dispatching done event");
-			this.dispatchEvent({type:"done", data:event.data});
-		}
-	}
-	
-	
 	// can call with no args to refresh the avatar
 	p.setFeature = function(feature, value) {
 		if (feature) this.look[feature] = value;
@@ -352,8 +332,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 			this.buttons.btn_ok.unlocked = true;
 			this.buttons.btn_ok.helper = new createjs.ButtonHelper(this.buttons.btn_ok, 'btn_ok', 'btn_ok', 'btn_ok_pressed');
 			this.buttons.btn_ok.addEventListener("click", function(event){
-				this.dressingRoomDoneBound = this.dressingRoomDone.bind(this);
-				this.persistLook(null, this.dressingRoomDoneBound);
+				this.saveAndDone();
 			}.bind(this));
 		}
 	}

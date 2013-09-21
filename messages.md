@@ -7,18 +7,18 @@ Error will be false or undefined if there's no error, but if there was an error,
 unique to that error (in case we need some sort of lookup table on the client), and message will be a description
 of the error (for debugging, probably not for end user).
 
+Server messages **go** and **error** have lots of variations, see below.
+
 ## login
 
 *	**login** (up)
 
 	args: **token**: string, **session**: string - authentication info supplied by the hosting web page
 	
-	reply:
+	error reply:
 	
-*	**login** (down)
+*	**error{where=login}** (down)
 
-	args: **nickname**:string, **avatar**:object - avatar is {} if it's never been set
-	
 	errors:
 	* tsnotsupp: didn't supply token and/or session
 	* nostore: couldn't access session store (problem with redis?)
@@ -30,42 +30,34 @@ of the error (for debugging, probably not for end user).
 	* dbnouser: no such user id (probably can't happen)
 	* noschool: bad or missing school id in user session
 	
+	A successful login will reply with go{to=dressingroom}
+	
 ## dressing room
 
-*	**getAvatar** (up)
-
-	reply:
+*	**go{to=dressingroom}** (down)
+	args: nickname, avatar - avatar is {} if it's never been set
 	
-*	**avatar** (down)
-
-	args: **avatar** (object) - avatar is {} if it's never been set
-	
-	errors:
-	* notlogged: not logged in (maybe user logged out of web site without closing the game?)
-	
-*	**setAvatar** (up)
+*	**saveAvatar** (up) -
 
 	args: **avatar** (object)
 	
-	reply:
+	error reply:
 
-*	**avatar** (down) - same as above with more possible errors:
+*	**error{where=avatar}** (down) -
 	errors:
 	* badavatar: (*not yet implemented*) Badly formatted avatar object or item out of range, including don't have permission to use item - might split these off into different errors
 	* dbaverr: couldn't save to database (problem with mysql?)
-
-## chat room (lobby/homeroom)
-
-Special case: message homeroom for joining homeroom
-
-*	**homeroom** (up)
-
-	reply:
+	* plus some of the loginError errors.
 	
-*	**joined** (down)
+	A successful saveAvatar will reply with go{to=homeroom}
+
+## chat room (homeroom)
+	
+*	**go{to=homeroom}** (down)
 
 	args: **room** (room id), **roomName**, **occupants**:array of nicknames
 	
+	**error{where=homeroom}** ...errors that could happen if saveAvatar succeeded but couldn't enter homeroom. With luck, none of these will ever happen.
 	errors:
 	* duplicate: user is already in this room
 	* notlogged: socket not logged in (from here down hopefully can never happen)
@@ -74,63 +66,25 @@ Special case: message homeroom for joining homeroom
 	* nohomeroom: couldn't get homeroom from school
 	* joinhomeroom: couldn't join homeroom
 	
-	
-	
-	broadcast:
 
-*	**join** (down)
+*	**join** (down: broadcast)
 
-	args: **nickname** of user who just joined.
+	args: **nickname** of user who just joined, **room** id.
 	
-*	**leave** (up)
+*	**leave** (down: broadcast)
 
-	args: none
-	
-	reply:
-
-*	**left** (down)
-
-	args: none
-	
-	errors: 
-	* nothere: user wasn't in this room
-		
-	broadcast:
-	
-*	**leave** (down)
-
-	args: **nickname** of user who just left.
+	args: **nickname** of user who just left, **room** id.
 	
 *	**say**	(up)
 
 	args: **text** to say
 	
-	broadcast:
-	
-*	**say** (down)
+*	**say** (down: broadcast)
 
-	args: **nickname**, **text**
+	args: **nickname**, **text**, **room** id.
 
-	
+*	**dressingRoom** (up) - request to return to dressing room
 
-## game rooms 
-	
+	args: none
 
-*	**join** (up)
 
-	args: **room** (room id)
-
-	...same as homeroom(up) above
-	
-*	**joined** (down)
-
-	...same as joined(down) above
-	
-	errors: as homeroom above, plus:
-	* nosuchroom: no such room
-
-*	**say**(up/down), **leave**(up/down), **left**(down) same as homeroom above 
-
-	
-
-	

@@ -5,17 +5,17 @@ this.sf = this.sf||{};
 
 (function() {
 
-var Homeroom = function(look, nickname) {
+var Homeroom = function(look, nickname, occupants) {
   this.initialize(look, nickname);
 }
 
 var p = Homeroom.prototype = new createjs.Container();
 
-	p.MESSAGES = ['join','joined','leave','left','say'];  // list of socket messages I should listen for
+	p.MESSAGES = ['join','leave','say'];  // list of socket messages I should listen for
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(avatar, nickname) {
+	p.initialize = function(look, nickname, occupants) {
 		this.Container_initialize();	
 		
 		this.prepareAssets();
@@ -25,7 +25,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		// display avatar without background layer, if any (like phone booth or bodyguard)
 		this.avatar = this.addChild(new sf.Avatar());
 		var nobg = {remove_background:true};
-		_.defaults(nobg, avatar);
+		_.defaults(nobg, look);
 		this.avatar.setLook(nobg);
 		this.avatar.x = 323;
 		this.avatar.y = 162;
@@ -83,9 +83,6 @@ var p = Homeroom.prototype = new createjs.Container();
 			g.comm.addEventListener(type, bound);
 		}, this);
 		
-		// ask to join homeroom
-		g.comm.writeEvent("homeroom");
-		
 		// set up buttons
 		this.prepareButtons();
 	
@@ -110,20 +107,9 @@ var p = Homeroom.prototype = new createjs.Container();
 
 	// message handlers -----
 	
-	// I joined successfully
-	p.handlejoined = function(event) {
-		this.chatLog("Joined! Occupants:" + event.data.occupants.join(", "));
-	}
-	
 	// someone joined the room
 	p.handlejoin = function(event) {
 		this.chatLog(event.data.nickname + " is here");
-	}
-	
-	// i left the room
-	p.handleleft = function(event) {
-		// tell Main it's time to go 
-		this.dispatchEvent("dressing");
 	}
 	
 	// someone left the room
@@ -162,7 +148,8 @@ var p = Homeroom.prototype = new createjs.Container();
 
 	// button handlers
 	p.handlebtn_dressingroom = function(event) {
-		
+		// request server to send client back to dressing room
+		g.comm.writeEvent('dressingRoom');	
 	}
 	
 	p.handlebtn_chat = function(event) {
