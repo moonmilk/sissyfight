@@ -70,6 +70,7 @@ var p = Main.prototype = new createjs.Container();
 	//		data.to = dressingroom, homeroom, gameroom
 	//		with additional data depending on the destination	
 	p.goHandler = function(event) {
+		//console.log("goHandler got " + event.data.to + " and loader dressing and homeroom are ", this.loader, this.dressing, this.homeroom);
 		if (this.loader) this.cleanupLoader();
 		if (this.dressing) this.closeDressingRoom();
 		if (this.homeroom) this.closeHomeroom();
@@ -132,6 +133,8 @@ var p = Main.prototype = new createjs.Container();
 	}
 	
 	p.closeHomeroom = function() {
+		console.log("Closing homeroom");
+		this.homeroom.destroy();
 		this.homeroom = null;
 	}
 	
