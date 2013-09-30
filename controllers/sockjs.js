@@ -155,12 +155,12 @@ module.exports = function(app, sockjs) {
 				conn.writeEvent("error", err);
 			}
 			else {
-				joinHomeroom(conn, data, function(err, homeroom) {
+				joinHomeroom(conn, data, function(err, homeroom, games) {
 					if (err) {
 						conn.writeEvent("error", err);
 					}
 					else {
-						conn.writeEvent("go", {to:'homeroom', room:homeroom.id, roomName:homeroom.name, occupants:homeroom.getOccupantNicknames()});
+						conn.writeEvent("go", {to:'homeroom', room:homeroom.id, roomName:homeroom.name, occupants:homeroom.getOccupantNicknames(), games:games});
 					}
 				});
 			}
@@ -212,7 +212,7 @@ module.exports = function(app, sockjs) {
 		joinHomeRoom(conn, data);
 	}
 	
-	// callback: done(err, homeroom)
+	// callback: done(err, homeroom, list of games)
 	function joinHomeroom(conn, data, done) {
 		if (!conn.user) {
 			conn.writeEvent("error", {where:"homeroom", error:"notlogged", message:"Socket's not logged in"});
@@ -243,7 +243,11 @@ module.exports = function(app, sockjs) {
 					else {
 						console.log("joinHomeroomListener: user "+conn.user.nickname+" joined school " + conn.school.id + " homeroom.");
 						//conn.writeEvent("go", {to:'homeroom', room:homeroom.id, roomName:homeroom.name, occupants:homeroom.getOccupantNicknames()});
-						done(null, homeroom);
+						conn.school.getGameRooms(function(err, games) {
+							// no errors expected
+							done(err, homeroom, games);
+						});
+						
 					}
 				});
 			}

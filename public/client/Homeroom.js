@@ -5,8 +5,8 @@ this.sf = this.sf||{};
 
 (function() {
 
-var Homeroom = function(look, nickname, occupants) {
-  this.initialize(look, nickname);
+var Homeroom = function(look, nickname, occupants, games) {
+  this.initialize(look, nickname, occupants, games);
 }
 
 var p = Homeroom.prototype = new createjs.Container();
@@ -15,7 +15,7 @@ var p = Homeroom.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(look, nickname, occupants) {
+	p.initialize = function(look, nickname, occupants, games) {
 		this.Container_initialize();	
 		
 		this.prepareAssets();
@@ -33,6 +33,15 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatRecord = new createjs.DOMElement(document.getElementById('homeroomChat'));
 		this.chatEntry = new createjs.DOMElement(document.getElementById('homeroomTextEntry'));
 		this.chatBuffer = [];
+		
+		this.gameList = new createjs.Container();
+		this.gameList.x = 148;
+		this.gameList.y = 39;
+		this.addChild(this.gameList);
+		
+		_.forOwn(games, function(game) {
+			this.addGameListing(game);
+		}, this);
 	}
 	
 	
@@ -171,6 +180,17 @@ var p = Homeroom.prototype = new createjs.Container();
 		_.each(['homeroom_bg', 'homeroom_items'], function(s) {
 			g.load.unpack(s, this.assets);
 		}, this);
+	}
+	
+	
+	
+	
+	// update game listings
+	p.addGameListing = function(game) {
+		var listing = new sf.HomeroomGameListing(game);
+		listing.y = this.gameList.children.length*25;
+		console.log("y:",listing.y);
+		this.gameList.addChild(listing);
 	}
 	
 	
