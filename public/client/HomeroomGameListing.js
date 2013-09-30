@@ -28,16 +28,25 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		this.items = {};
 		
 		this.items.join = this.addChild(this.assets.btn_join.clone());
-		this.items.join.x = 20;
+		this.items.join.helper = new createjs.ButtonHelper(this.items.join, 'btn_join', 'btn_join', 'btn_join_pressed');
+		
+		this.items.status = this.addChild(this.assets.label_full.clone());
+		
 		switch(gameInfo.status) {
 			case 'open':
 				this.items.join.gotoAndStop('btn_join');
+				this.items.join.visible = true;
+				this.items.status.visible = false;
 				break;
 			case 'full':
-				this.items.join.gotoAndStop('label_full');
+				this.items.status.gotoAndStop('label_full');
+				this.items.status.visible = true;
+				this.items.join.visible = false;
 				break;
 			case 'fighting':
-				this.items.join.gotoAndStop('label_fighting');
+				this.items.status.gotoAndStop('label_fighting');
+				this.items.status.visible = true;
+				this.items.join.visible = false;
 				break;
 		}
 		

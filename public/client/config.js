@@ -86,11 +86,11 @@ config['manifest'] = [
 	{	id:		'homeroom_listing_items', src: 'homeroom/homeroom_listing_items.png',
 		data:	{
 			pieces:	{
-				label_full:			[1, 2,  30, 7,  0,  0,0],
-				label_fighting:		[40,2,  62, 7,  0,  0,0],
-				btn_join:			[1,13,  51, 21, 0,  0,0],
-				btn_join_pressed:	[53,13, 51, 21, 0,  0,0],
-				btn_join_locked:	[40,35, 64, 21, 0,  13,0]
+				label_full:			[1, 2,  30, 7,  0,  -18,-10],
+				label_fighting:		[40,2,  62, 7,  0,   -4,-10],
+				btn_join:			[1,13,  51, 21, 0,  -13,-1],
+				btn_join_pressed:	[53,13, 51, 21, 0,  -13,-1],
+				btn_join_locked:	[40,35, 64, 21, 0,   0,-1]
 			}
 		}
 	},
