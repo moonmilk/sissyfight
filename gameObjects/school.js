@@ -1,35 +1,33 @@
 // School
 // mostly just a collection of rooms - one homeroom and multipe gamerooms per school.
 
-var ChatRoom = require('./chatroom');
+
+var Homeroom = require('./homeroom');
+var GameRoom = require('./gameroom');
+
 
 function School(params) {
 	this.id = params.id;
 	this.name = params.name;
 	
-	this.homeroom = new ChatRoom({id:0, name:'homeroom'});
+	this.homeroom = new Homeroom({id:0, name:'homeroom'});
 	this.games = {};
+	this.nextGameID = 1;
 	
 	// for testing game listings
-	this.games[1] = {
-		name: 'hell room!',
-		id: 1,
-		status: 'open',
-		occupants: ['John', 'Paul', 'George', 'Ringo']
-	};
-	this.games[2] = {
-		name: 'jam packed',
-		id: 2,
-		status: 'full',
-		occupants: ['strawberry', 'marmalade', 'plum', 'grape', 'black cherry', 'blackberry']
-	};	
-	this.games[3] = {
-		name: 'thunderdome',
-		id: 3,
-		status: 'fighting',
-		occupants: ['The Rock', 'Killer Beethoven', 'Soup Nazi', 'Bub']
-	};
-	
+	var testGames = [];
+	testGames.push({
+		name: 'hell room!', school:this.id
+	});
+	testGames.push({
+		name: 'jam packed', school:this.id
+	});	
+	testGames.push({
+		name: 'thunderdome', school:this.id
+	});
+	for (var i=0; i<testGames.length; i++) {
+		this.createGame(testGames[i]);
+	}
 	
 }
 
@@ -43,17 +41,47 @@ School.prototype.getHomeroom = function(done) {
 School.prototype.getGameRoom = function(gameID, done) {
 	var gameroom = this.games[gameID];
 	if (!gameroom) {
-		done({error:'nosuchgame', id:gameID});
+		if (done) done({error:'nosuchgame', id:gameID});
 	}
 	else {
-		done(null, gameroom);
+		if (done) done(null, gameroom);
 	}
 } 
 
 // callback: done(err, gamerooms)
 School.prototype.getGameRooms = function(done) {
-	done(null, this.games);
+	if (done) done(null, this.games);
 }
+
+
+
+// callback: done(err, room info)
+School.prototype.createGame = function(params, done) {
+	params.id = this.nextGameID++;
+	var game = new GameRoom(params);
+	this.games[params.id] = game;
+	
+	game.on('update', this.gameUpdateListener.bind(this));
+	game.start();
+	
+	if (done) done(null, game.getInfo());
+}
+
+// callback: done(err)
+School.prototype.destroyGame = function(done) {
+	game.destroy();
+	game.removeAllEventListeners();
+	
+	if (done) done(null);
+}
+
+
+// receive updates from games
+School.prototype.gameUpdateListener = function(event) {
+	//console.log("got a gameroom update: ", event);
+	this.homeroom.handleGameUpdate(event);
+}
+
 
 
 // periodic maintenance: throw away old empty game rooms, but make sure there's always at least one empty room.
