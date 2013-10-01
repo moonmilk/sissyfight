@@ -55,7 +55,7 @@ Server messages **go** and **error** have lots of variations, see below.
 	
 *	**go{to=homeroom}** (down)
 
-	args: **room** (room id), **roomName**, **occupants**:array of nicknames, **games**:array of game rooms, see game below
+	args: **room**: {**room** (room id), **roomName**, **occupants**:array of {id, nickname}}, **games**:array of game rooms, see game below
 	
 	**error{where=homeroom}** ...errors that could happen if saveAvatar succeeded but couldn't enter homeroom. With luck, none of these will ever happen.
 	errors:
@@ -102,7 +102,7 @@ Server messages **go** and **error** have lots of variations, see below.
 	
 *	**joingame** (up) - request to join a game room
 
-	args: **id** (might add in future: password)
+	args: **room** (might add in future: password)
 	
 *	error reply:	
 
@@ -114,13 +114,17 @@ Server messages **go** and **error** have lots of variations, see below.
 	* playing
 	* (blocked, badpassword ... might add in future)
 	
+*	**go{to=homeroom}** (down)
+
+	args: **me** (player userID so client can tell which occupant is me without any memory), **room**:{same as args of **game** below}
+	
 *	**game** (down: broadcast) indicates new game room or updates existing game room
 
-	args: **id**, **name**, **status**, **occupants** -- status is open, full, or fighting (might add in future: locked (boolean), rules (??))
+	args: **room** (id), **name**, **status**, **occupants** (list of {id, name, avatar}) -- status is open, full, or fighting (might add in future: locked (boolean), rules (??))
 	
 *	**closegame** (down: broadcast) indicates deletion of game room
 	
-	args: **id**
+	args: **room** (id)
 	
 
 

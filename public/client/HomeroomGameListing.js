@@ -29,9 +29,12 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		
 		this.items.join = this.addChild(this.assets.btn_join.clone());
 		this.items.join.helper = new createjs.ButtonHelper(this.items.join, 'btn_join', 'btn_join', 'btn_join_pressed');
+		this.items.join.addEventListener('click', function() {
+			this.dispatchEvent({type:'joingame', room:gameInfo.room})
+		}.bind(this));
 		
 		this.items.status = this.addChild(this.assets.label_full.clone());
-		
+
 		switch(gameInfo.status) {
 			case 'open':
 				this.items.join.gotoAndStop('btn_join');
@@ -48,9 +51,14 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 				this.items.status.visible = true;
 				this.items.join.visible = false;
 				break;
+			default:
+				this.items.status.visible = false;
+				this.items.join.visible = false;
+				console.log('HomeroomGameListing got game with unknown status: ', gameInfo);
+				break;
 		}
 		
-		this.items.name = this.addChild(new createjs.Text(gameInfo.name));
+		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName));
 		this.items.name.x = 78;
 		this.items.name.y = 6;
 		

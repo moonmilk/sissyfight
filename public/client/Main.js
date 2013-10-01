@@ -135,8 +135,26 @@ var p = Main.prototype = new createjs.Container();
 	p.closeHomeroom = function() {
 		console.log("Closing homeroom");
 		this.homeroom.destroy();
+		this.removeChild(this.homeroom);
 		this.homeroom = null;
 	}
+	
+	
+	
+	p.openGameRoom = function(data) {
+		console.log("Opening gameroom");
+		this.gameroom = new sf.GameRoom(data.me, data.room);
+		this.addChild(this.gameroom);
+		this.gameroom.start();
+	}
+	
+	p.closeGameRoom = function(data) {
+		console.log("Closing gameroom");
+		this.gameroom.destroy();
+		this.removeChild(this.gameroom);
+		this.gameroom = null;
+	}
+	
 	
 
 	sf.Main = Main;

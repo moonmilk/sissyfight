@@ -189,9 +189,25 @@ var p = Homeroom.prototype = new createjs.Container();
 	p.addGameListing = function(game) {
 		var listing = new sf.HomeroomGameListing(game);
 		listing.y = this.gameList.children.length*25;
-		console.log("y:",listing.y);
 		this.gameList.addChild(listing);
+		listing.addEventListener('joingame', this.joingameHandler.bind(this));
 	}
+	
+	p.removeGameListing = function(id) {
+		// TODO
+	}
+	
+	
+	
+	// when someone clicks a join game button
+	p.joingameHandler = function(event) {
+		g.comm.writeEvent('joingame', {room:event.room});
+	}
+	
+	
+	
+	
+	
 	
 	
 		

@@ -21,6 +21,14 @@ Homeroom.prototype.getInfo = function() {
 	return info;
 }
 
+
+
+Homeroom.prototype.handleGameUpdate = function(event) {
+	
+}
+
+
+
 // join override:
 //   when connection joins homeroom, subscribe to school gameroom updates for them
 //	 callback: done(err, info about this room)

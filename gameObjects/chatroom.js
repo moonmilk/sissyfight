@@ -31,8 +31,7 @@ ChatRoom.prototype.destroy = function() {
 // METHODS
 
 ChatRoom.prototype.getInfo = function() {
-	console.log("chatroom.getinfo...");
-	return {room:this.id, roomName:this.name, occupants:this.getOccupantNicknames(), type:"ChatRoom"};
+	return {room:this.id, roomName:this.name, occupants:this.getOccupantProperties(['id','nickname']), type:"ChatRoom"};
 }
 
 
@@ -95,8 +94,9 @@ ChatRoom.prototype.getOccupantProperties = function(props) {
 	for (var i=0; i<this.occupants.length; i++) {
 		var occ = {};
 		for (var j=0; j<props.length; j++) {
-			occ[props[j]] = this.occupants[i].user[j];
+			occ[props[j]] = this.occupants[i].user[props[j]];
 		}
+		occupants.push(occ);
 	}
 	return occupants;
 }

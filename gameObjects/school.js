@@ -5,6 +5,8 @@
 var Homeroom = require('./homeroom');
 var GameRoom = require('./gameroom');
 
+var _ = require('lodash');
+
 
 function School(params) {
 	this.id = params.id;
@@ -20,7 +22,7 @@ function School(params) {
 		name: 'hell room!', school:this.id
 	});
 	testGames.push({
-		name: 'jam packed', school:this.id
+		name: 'jam packed', school:this.id, maxUsers:0
 	});	
 	testGames.push({
 		name: 'thunderdome', school:this.id
@@ -51,6 +53,12 @@ School.prototype.getGameRoom = function(gameID, done) {
 // callback: done(err, gamerooms)
 School.prototype.getGameRooms = function(done) {
 	if (done) done(null, this.games);
+}
+
+// callback: done(err, info for game rooms)
+School.prototype.getGameRoomsInfo = function(done) {
+	var gamesInfo = _.map(this.games, function(game) {return game.getInfo()});
+	if (done) done(null, gamesInfo);
 }
 
 

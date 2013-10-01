@@ -22,6 +22,7 @@ block javascript
 	script(src="../client/DressingRoom.js")
 	script(src="../client/Homeroom.js")
 	script(src="../client/HomeroomGameListing.js")
+	script(src="../client/GameRoom.js")
 	script(src="../client/AddonsList.js")
 	script(src="../client/Comm.js")
 	script(src="../client/Main.js")
@@ -108,25 +109,36 @@ block content
 			user-select: none;
 		}
 
-		.homeroomText {
+		.homeroomText  {
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 12px;
 			
 			resize: none;
 			visibility: hidden;
+			
+			overflow: hidden;
 		}
-		#homeroomChat {
-			overflow-x:hidden;
-			overflow-y:hidden;
+		
+		.gameroomText {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 12px;
+			
+			resize: none;
+			visibility: hidden;
+			
+			overflow: hidden;
 		}
-		#homeroomTextEntry {
-			overflow:hidden;
-		}
+
 		
 		
 	div#container(width=528,height=276)
 		canvas#appCanvas.singleCanvas(width=528,height=276)
+		
 		div.homeroomText.disableSelect#homeroomChat(width=120, height=150, unselectable="yes")
 		textarea.homeroomText#homeroomTextEntry(width=79, height=43)
+		
+		textarea.gameroomText#gameroomTextEntry(width=79, height=43)
+		each i in [0,1,2,3,4,5]
+			div.gameroomText(id='gameroomChatBubble'+i)
 		
 	

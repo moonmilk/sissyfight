@@ -7,6 +7,8 @@
 
 var User = require("../models/user");
 
+var _ = require('lodash');
+
 
 
 module.exports = function(app, sockjs) {
@@ -46,17 +48,27 @@ module.exports = function(app, sockjs) {
 		
 		conn.on("close", closeListener);
 		
-		/* SISSYFIGHT EVENTS */
-		
 		conn.on("login", loginListener);
 		
 
 	});
 	
 	
+	function registerSissyfightEvents(conn) {
+		/* SISSYFIGHT EVENTS ---------------------- */
+												
+		conn.on("say", sendChatListener);
+		conn.on("saveAvatar", saveAvatarListener);
+		conn.on("dressingRoom", returnToDressingRoomListener);
+		
+		conn.on("joingame", joinGameListener);
+	}
+	
+	
+	
 	function closeListener(data) {
 		var conn = this;
-		if (conn.room) conn.room.leave(conn);
+		if (conn.room) conn.room.leave(conn, null);
 		if (conn.user) delete userConnections[conn.user.id];
 		if (conn.user) console.log("Socket: user " + conn.user.nickname + " disconnected.");
 	}
@@ -121,11 +133,7 @@ module.exports = function(app, sockjs) {
 							
 							conn.writeEvent("go", {to:"dressingroom", nickname:conn.user.nickname, avatar:conn.user.avatar});
 							
-							/* SISSYFIGHT EVENTS ---------------------- */
-												
-							conn.on("say", sendChatListener);
-							conn.on("saveAvatar", saveAvatarListener);
-							conn.on("dressingRoom", returnToDressingRoomListener);
+							registerSissyfightEvents(conn);
 						}
 					});
 				}
@@ -158,9 +166,11 @@ module.exports = function(app, sockjs) {
 				joinHomeroom(conn, data, function(err, homeroom, games) {
 					if (err) {
 						conn.writeEvent("error", err);
+						console.log("saveAvatarListener - error", err);
 					}
 					else {
-						conn.writeEvent("go", {to:'homeroom', room:homeroom.id, roomName:homeroom.name, occupants:homeroom.getOccupantNicknames(), games:games});
+						conn.writeEvent("go", {to:'homeroom', games:games, room:homeroom.getInfo()});
+						//console.log("saveAvatarListener - go!");
 					}
 				});
 			}
@@ -206,11 +216,13 @@ module.exports = function(app, sockjs) {
 	}
 
 	
-	
+	/*
 	function joinHomeroomListener(data) {
 		var conn = this;
 		joinHomeRoom(conn, data);
 	}
+	*/
+	
 	
 	// callback: done(err, homeroom, list of games)
 	function joinHomeroom(conn, data, done) {
@@ -243,7 +255,7 @@ module.exports = function(app, sockjs) {
 					else {
 						console.log("joinHomeroomListener: user "+conn.user.nickname+" joined school " + conn.school.id + " homeroom.");
 						//conn.writeEvent("go", {to:'homeroom', room:homeroom.id, roomName:homeroom.name, occupants:homeroom.getOccupantNicknames()});
-						conn.school.getGameRooms(function(err, games) {
+						conn.school.getGameRoomsInfo(function(err, games) {
 							// no errors expected
 							done(err, homeroom, games);
 						});
@@ -270,6 +282,42 @@ module.exports = function(app, sockjs) {
 					conn.writeEvent("go", {to:'dressingroom', avatar:conn.user.avatar, nickname:conn.user.nickname});
 				}
 			})
+		}
+	}
+	
+	
+	
+	function joinGameListener(data) {
+		var conn = this;
+		if (conn.room) {
+			conn.room.leave(conn, function(err) {
+				if (err) {
+					conn.writeEvent("error", err);
+				}
+				else {
+					conn.school.getGameRoom(data.room, function(err, gameRoom) {
+						if (err) {
+							conn.writeEvent("error", err);
+						}
+						else {
+							gameRoom.join(conn, function(err, gameRoomInfo) {
+								if (err) {
+									conn.writeEvent("error", err);
+								}
+								else {
+									// sort game occupants so that current player always appears first
+									gameRoomInfo.occupants = _.sortBy(gameRoomInfo.occupants, function(occupant) {
+										return (occupant.id != conn.user.id);
+									});
+									conn.writeEvent("go", {to:'gameroom', room:gameRoomInfo, me:conn.user.id});
+								}
+							});
+						}
+					});
+					
+				}
+			});
+			
 		}
 	}
 
