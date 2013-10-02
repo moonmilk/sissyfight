@@ -56,12 +56,12 @@ GameRoom.prototype.join = function(conn, done) {
 		GameRoom.super_.prototype.join.call(this, conn, function(err, roomInfo) {
 			if (!err) {
 				console.log("homeroom joined by " + conn.user.nickname);
-				if (roomInfo) roomInfo.type = "GameRoom";
 							
 				if (this.occupants.length == this.maxUsers) {
-					// for the join message, include avatars of occupants with getInfo(true)
-					this.emit('update', {update:'status', roomInfo:this.getInfo(true)});
+					this.emit('update', {update:'status', roomInfo:roomInfo});
 				}
+				// for the join message, include avatars of occupants with getInfo(true)
+				roomInfo = this.getInfo(true);
 				if (done) done(null, roomInfo);
 			}
 			

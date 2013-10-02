@@ -3,6 +3,10 @@ config = {};
 config['avatar'] = {};
 var xoffset = 40;
 
+// which school-specific art to load?
+var SCHOOL_ASSETS_TAG = 'angel'; // TODO: change this based on school
+
+
 config['assetPath'] = '../client/assets/';
 
 config['preloadManifest'] = [
@@ -95,12 +99,52 @@ config['manifest'] = [
 		}
 	},
 	
-	// placeholder
-	{
-		id:		'bg-angel',
-		src:	'background/angel.png'
+	// game room
+	{	id:		'gameroom_bgitems',	src: 'game/' + SCHOOL_ASSETS_TAG + '/game_bgitems.png', 
+		data:	{
+			pieces: {
+				gameroom_bg:		[0, 0, 528, 276,   0,  0, 0],
+				bubble:				[4,23,  85, 78,    0,  0, 0],
+				shadow:				[23,203, 47,12,    0,  0, 0]
+			}
+		}
 	},
+	{	id:		'gameroom_items', src: 'game/game_items.png',
+		data:	{
+			pieces: {
+				btn_exitgame:		[0, 0, 79,17, 	0, 0, 0],
+				btn_exitgame_pressed:[0, 0, 79,17, 	0, -1,-1],
+				btn_help:			[0, 19, 42, 39, 0, 0, 0],
+				btn_help_pressed:	[0, 19, 42, 39, 0, -1,-1],
+				btn_chat:			[82, 1, 47, 27, 0, 0, 0],
+				btn_chat_pressed:	[82, 1, 47, 27, 0, -1,-1]
+				
+			}
+		}
+	},
+	{	id:		'player_items',	src: 'game/player_items.png',
+		data:	{
+			pieces: {
+				heart_10:			[0, 0,  21, 54,   0,   0, 0],
+				heart_9:			[22, 0,  21, 54,   0,   0, 0],
+				heart_8:			[44, 0,  21, 54,   0,   0, 0],
+				heart_7:			[66, 0,  21, 54,   0,   0, 0],
+				heart_6:			[88, 0,  21, 54,   0,   0, 0],
+				heart_5:			[110, 0,  21, 54,   0,   0, 0],
+				heart_4:			[132, 0,  21, 54,   0,   0, 0],
+				heart_3:			[154, 0,  21, 54,   0,   0, 0],
+				heart_2:			[176, 0,  21, 54,   0,   0, 0],
+				heart_1:			[198, 0,  21, 54,   0,   0, 0],
+				heart_0:			[220, 0,  21, 54,   0,   0, 0],
+				
+				status_undecided:	[0,  56,  12, 18,  0,  0, 0],
+				status_decided:		[12, 56,  12, 18,  0,  0, 0],
+				
+			}
+		}
+	}
 	
+
 		
 ];
 
