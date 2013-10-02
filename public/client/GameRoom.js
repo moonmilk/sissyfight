@@ -40,7 +40,8 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.textElements.push(document.getElementById('gameroomChatBubble'+i));
 		}
 		
-
+		// grab div for chat entry
+		this.chatEntry = new createjs.DOMElement(document.getElementById('gameroomTextEntry'));
 	}
 	
 	
@@ -58,6 +59,15 @@ var p = GameRoom.prototype = new createjs.Container();
 			g.comm.addEventListener(type, bound);
 		}, this);
 		
+		// set up chat entry field
+		this.chatEntry.setFakeScale(g.gameScale);
+		this.chatEntry.setPosition(6, 227);
+		this.chatEntry.setSize(76, 42);
+		this.chatEntry.setVisible(true);
+			
+		// catch enter in chat entry
+		this.handlechatkeypressBound = this.handlechatkeypress.bind(this);
+		this.chatEntry.htmlElement.onkeypress = this.handlechatkeypressBound;
 	}
 	
 	
@@ -74,6 +84,7 @@ var p = GameRoom.prototype = new createjs.Container();
 			// just in case, check for trouble that should never happen
 			console.log("GameRoom: shutting down, should have " + GameRoom.MAX_PLAYERS + " free text elements but have " + this.textElements.length + " instead.");
 		}
+		this.chatEntry.htmlElement.onkeypress = null;
 	}
 	
 	
@@ -89,11 +100,38 @@ var p = GameRoom.prototype = new createjs.Container();
 	}
 	
 	p.handlesay = function(event) {
-		console.log("gameroom.say",event);
+		var player = this.playersByID[event.data.id];
+		if (player) player.handlesay(event.data.text);
 	}
 	
 	
+		
+	// I said something
+	p.say = function(text) {
+		g.comm.writeEvent("say", {text: text});
+	}
 	
+	
+	// key handler
+	p.handlechatkeypress = function(event) {
+		event = event || window.event;
+
+		if (event.keyCode == 13) {
+			this.sendChatText();
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	p.sendChatText = function() {
+		this.say(this.chatEntry.htmlElement.value);
+		this.chatEntry.htmlElement.value = "";
+	}
+
+
+
+
 	
 	
 	p.addPlayer = function(playerInfo) {

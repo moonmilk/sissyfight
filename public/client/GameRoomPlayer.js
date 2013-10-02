@@ -74,7 +74,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.chatText.setPosition(5, 7);
 		this.items.chatText.setSize(73, 59);
 		
-		
+		this.chatBuffer = [];
 	}
 	
 	
@@ -95,6 +95,17 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		}, this);
 
 	}
+	
+	
+	
+	// incoming chat
+	p.handlesay = function(text) {
+		this.chatBuffer.push(text);
+		while(this.chatBuffer.length > 8) this.chatBuffer.shift();
+		this.items.chatText.htmlElement.innerHTML = this.chatBuffer.join('<br/>');
+		this.items.chatText.htmlElement.scrollTop = this.items.chatText.htmlElement.scrollHeight;
+	}
+	
 	
 	
 	sf.GameRoomPlayer = GameRoomPlayer;

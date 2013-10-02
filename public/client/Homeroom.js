@@ -90,7 +90,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		}, this);
 		this.chatEntry.setVisible(false);
 		this.chatRecord.setVisible(false);
-		this.chatEntry.onkeypress = null;
+		this.chatEntry.htmlElement.onkeypress = null;
 	}
 	
 	
@@ -150,6 +150,7 @@ var p = Homeroom.prototype = new createjs.Container();
 	// update chat box
 	p.chatLog = function(text) {
 		this.chatBuffer.push(text);
+		while(this.chatBuffer.length > 24) this.chatBuffer.shift();
 		this.chatRecord.htmlElement.innerHTML = this.chatBuffer.join('<br/>');
 		this.chatRecord.htmlElement.scrollTop = this.chatRecord.htmlElement.scrollHeight;
 	}

@@ -74,7 +74,7 @@ ChatRoom.prototype.leave = function(conn, done) {
 // callback: done() (no error conditions)
 ChatRoom.prototype.say = function(conn, text, done) {
 	console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + conn.user.nickname + " says " + text);
-	this.broadcast("say", {nickname:conn.user.nickname, text:text});
+	this.broadcast("say", {id:conn.user.id, nickname:conn.user.nickname, text:text});
 	if (done) done(null);
 }
 
