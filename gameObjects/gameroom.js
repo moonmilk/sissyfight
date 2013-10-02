@@ -95,6 +95,13 @@ GameRoom.prototype.leave = function(conn, done) {
 }
 
 
+// broadcastJoin override: include avatar in the join message 
+GameRoom.prototype.broadcastJoin = function(conn) {
+	this.broadcast("join", {room:this.id, id:conn.user.id, nickname:conn.user.nickname, avatar:conn.user.avatar});
+}
+
+
+
 
 
 

@@ -49,7 +49,7 @@ ChatRoom.prototype.join = function(conn, done) {
 		this.occupants.push(conn);
 		console.log("ChatRoom[" + this.id + "," + this.name + "]: added " + conn.user.nickname + " to room, occupants: ", this.getOccupantNicknames());
 		conn.room = this;
-		this.broadcast("join", {room:this.id, nickname:conn.user.nickname});
+		this.broadcastJoin(conn);
 		this.emit('update', {update:'occupants', roomInfo:this.getInfo()});
 		if (done) done(null, this.getInfo());
 	}
@@ -60,12 +60,12 @@ ChatRoom.prototype.leave = function(conn, done) {
 	var index = this.occupants.indexOf(conn);
 	if (index == -1) {
 		console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + conn.user.nickname + " tried to leave but is not here"); 
-		if (done) done({where:'chatroom', room:this.id, room:this.id, roomName:this.name, error:"nothere", message: "Can't leave room you're not in"});
+		if (done) done({where:'chatroom', room:this.id, roomName:this.name, error:"nothere", message: "Can't leave room you're not in"});
 	}
 	else {
 		this.occupants.splice(index, 1);
 		conn.room = null;
-		this.broadcast("leave", {nickname:conn.user.nickname});
+		this.broadcast("leave", {room:this.id, id:conn.user.id, nickname:conn.user.nickname});
 		this.emit('update', {update:'occupants', roomInfo:this.getInfo()});
 		if (done) done(null);
 	}
@@ -78,6 +78,12 @@ ChatRoom.prototype.say = function(conn, text, done) {
 	if (done) done(null);
 }
 
+
+// broadcast that conn has joined the room 
+// -- separated out so GameRoom can override it
+ChatRoom.prototype.broadcastJoin = function(conn) {
+	this.broadcast("join", {room:this.id, id:conn.user.id, nickname:conn.user.nickname});
+}
 
 
 ChatRoom.prototype.broadcast = function(event, data) {

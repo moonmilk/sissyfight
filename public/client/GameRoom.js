@@ -16,6 +16,8 @@ GameRoom.MAX_PLAYERS = 6;
 
 var p = GameRoom.prototype = new createjs.Container();
 
+	p.MESSAGES = ['join','leave','say'];  // list of socket messages I should listen for
+
 	p.Container_initialize = p.initialize;
 	
 	p.initialize = function(me, gameInfo) {
@@ -48,11 +50,22 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.addPlayer(playerInfo);
 		}, this);
 		
-		// register message handlers
+		// set up message handlers
+		_.forOwn(this.MESSAGES, function(type) {
+			var handler = "handle" + type;
+			var bound = this[handler].bind(this);
+			this[handler+"Bound"] = bound;
+			g.comm.addEventListener(type, bound);
+		}, this);
+		
 	}
 	
 	
 	p.destroy = function() {
+		// remove message handlers
+		_.forOwn(this.MESSAGES, function(type) {
+			g.comm.removeEventListener(type, this["handle"+type+"Bound"]);
+		}, this);
 		// make sure players clean up their text elements when leaving gameroom
 		_.each(this.players, function(player) {
 			this.removePlayer(player.id);
@@ -62,6 +75,24 @@ var p = GameRoom.prototype = new createjs.Container();
 			console.log("GameRoom: shutting down, should have " + GameRoom.MAX_PLAYERS + " free text elements but have " + this.textElements.length + " instead.");
 		}
 	}
+	
+	
+	// message handlers --------------
+	
+	
+	p.handlejoin = function(event) {
+		this.addPlayer(event.data);
+	}
+	
+	p.handleleave = function(event) {
+		this.removePlayer(event.data.id);
+	}
+	
+	p.handlesay = function(event) {
+		console.log("gameroom.say",event);
+	}
+	
+	
 	
 	
 	
@@ -82,7 +113,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		// create player
 		var player = this.addChild(new sf.GameRoomPlayer(i, playerInfo, textElement));
 		this.players[i] = player;
-		this.playersByID[player.id] = player;
+		this.playersByID[playerInfo.id] = player;
 		
 		// set its location
 		player.x = 4 + 86*i + (i > 0) * 5;	// 5 pixels extra space after the first opsition
@@ -93,12 +124,13 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	
 	p.removePlayer = function(playerID) {
-		var player = playersByID[playerID];
-		delete playersByID[playerID];
-		players[player.position] = undefined;
+		var player = this.playersByID[playerID];
+		this.removeChild(player);
+		delete this.playersByID[playerID];
+		this.players[player.position] = undefined;
 		
 		// get the text element back from the player
-		textElements.push(player.textElement);
+		this.textElements.push(player.textElement);
 		player.destroy();
 	}
 	
