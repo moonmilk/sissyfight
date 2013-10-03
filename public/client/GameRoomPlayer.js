@@ -25,6 +25,8 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		
 		this.position = position;
 		this.playerInfo = playerInfo;
+		this.textElement = textElement;
+		
 		this.playerInfo.avatar.uniformcolor = position;
 		// players on the left side of the screen face right; the other half face left
 		if (position < sf.GameRoom.MAX_PLAYERS/2) this.playerInfo.avatar.headdir = 1;
@@ -69,7 +71,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.bubble.x = 0;
 		this.items.bubble.y = 0;
 		
-		this.items.chatText = this.addChild(new createjs.DOMElement(textElement));
+		this.items.chatText = this.addChild(new createjs.DOMElement(this.textElement));
 		this.items.chatText.setFakeScale(g.gameScale);
 		this.items.chatText.setPosition(5, 7);
 		this.items.chatText.setSize(73, 59);

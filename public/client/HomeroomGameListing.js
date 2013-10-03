@@ -62,7 +62,7 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		this.items.name.x = 78;
 		this.items.name.y = 6;
 		
-		var nicknames = gameInfo.occupants.join(", ");
+		var nicknames = _.pluck(gameInfo.occupants, 'nickname').join(", ");
 		this.items.occupants = this.addChild(new createjs.Text(nicknames));
 		this.items.occupants.lineWidth = 192;
 		this.items.occupants.lineHeight = 12;
