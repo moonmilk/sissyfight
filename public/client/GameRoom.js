@@ -177,7 +177,6 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	
 	p.removePlayer = function(playerID) {
-		console.log('removePlayer', playerID);
 		var player = this.playersByID[playerID];
 		this.removeChild(player);
 		delete this.playersByID[playerID];
