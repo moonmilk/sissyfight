@@ -22,9 +22,12 @@ Homeroom.prototype.getInfo = function() {
 }
 
 
-
+// receive events when game rooms are created or destroyed, change open/full/fighting status, or join/leave members; forward to client
+// event = {update:string, roomInfo:{object}}
+//   where update is start, destroy, occupants, or status
 Homeroom.prototype.handleGameUpdate = function(event) {
-	
+	//console.log("gameUpdate:", event);
+	this.broadcast('gameUpdate', event);
 }
 
 

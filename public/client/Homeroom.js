@@ -11,7 +11,7 @@ var Homeroom = function(look, nickname, occupants, games) {
 
 var p = Homeroom.prototype = new createjs.Container();
 
-	p.MESSAGES = ['join','leave','say'];  // list of socket messages I should listen for
+	p.MESSAGES = ['join','leave','say', 'gameUpdate'];  // list of socket messages I should listen for
 
 	p.Container_initialize = p.initialize;
 	
@@ -113,6 +113,31 @@ var p = Homeroom.prototype = new createjs.Container();
 	}
 	
 	
+	// update the chalkboard of games
+	p.handlegameUpdate = function(event) {
+		switch(event.data.update) {
+			case 'start': // new game room
+				this.addGameListing(event.data.roomInfo);
+				break;
+			case 'destroy': // delete game room
+				this.removeGameListing(event.data.roomInfo.room);
+				break;
+			case 'occupants':
+			case 'status': // update game room
+				this.updateGameListing(event.data.roomInfo);
+				break;
+			
+			default:
+				console.log("Homeroom: unknown gameUpdate type " + event.data.update);
+				break;
+		}
+	}
+	
+	
+	
+	// local interactions
+	
+	
 	// I said something
 	p.say = function(text) {
 		g.comm.writeEvent("say", {text: text});
@@ -191,11 +216,32 @@ var p = Homeroom.prototype = new createjs.Container();
 		var listing = new sf.HomeroomGameListing(game);
 		listing.y = this.gameList.children.length*25;
 		this.gameList.addChild(listing);
+		listing.start();
 		listing.addEventListener('joingame', this.joingameHandler.bind(this));
 	}
 	
 	p.removeGameListing = function(id) {
-		// TODO
+		var victim;
+		for (var i=0; i<this.gameList.children.length; i++) {
+			var gameListing = this.gameList.children[i];
+			// slide rooms below the deleted room up to fill space
+			if (victim) {
+				gameListing.y -= 25;
+			}
+			if (gameListing.id==id) {
+				victim = gameListing;
+				this.gameList.removeChild(victim);
+				victim.destroy();
+			}
+		}
+	}
+	
+	p.updateGameListing = function(game) {
+		var updated = _.find(this.gameList.children, {id:game.room});
+		if (updated) {
+			updated.update(game);
+			console.log("bloop!");
+		}
 	}
 	
 	

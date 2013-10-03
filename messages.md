@@ -118,13 +118,9 @@ Server messages **go** and **error** have lots of variations, see below.
 
 	args: **me** (player userID so client can tell which occupant is me without any memory), **room**:{same as args of **game** below}
 	
-*	**game** (down: broadcast) indicates new game room or updates existing game room
+*	**gameUpdate** (down: broadcast) indicates new or deleted game room or updates existing game room
 
-	args: **room** (id), **name**, **status**, **occupants** (list of {id, name, avatar}) -- status is open, full, or fighting (might add in future: locked (boolean), rules (??))
-	
-*	**closegame** (down: broadcast) indicates deletion of game room
-	
-	args: **room** (id)
-	
+	args: **update** = start, destroy, occupants, or status,
+	**roomInfo** = {room (id), roomName, occupants:[], status} where status=open, full, or fighting
 
 

@@ -24,6 +24,8 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		
 		this.prepareAssets();
 		
+		this.id = gameInfo.room;
+		
 
 		this.items = {};
 		
@@ -35,28 +37,7 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		
 		this.items.status = this.addChild(this.assets.label_full.clone());
 
-		switch(gameInfo.status) {
-			case 'open':
-				this.items.join.gotoAndStop('btn_join');
-				this.items.join.visible = true;
-				this.items.status.visible = false;
-				break;
-			case 'full':
-				this.items.status.gotoAndStop('label_full');
-				this.items.status.visible = true;
-				this.items.join.visible = false;
-				break;
-			case 'fighting':
-				this.items.status.gotoAndStop('label_fighting');
-				this.items.status.visible = true;
-				this.items.join.visible = false;
-				break;
-			default:
-				this.items.status.visible = false;
-				this.items.join.visible = false;
-				console.log('HomeroomGameListing got game with unknown status: ', gameInfo);
-				break;
-		}
+		this.updateStatus(gameInfo);
 		
 		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName));
 		this.items.name.x = 78;
@@ -81,7 +62,34 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 	}
 	
 	p.update = function(gameInfo) {
-		
+		this.updateStatus(gameInfo);
+		this.items.occupants.text = _.pluck(gameInfo.occupants, 'nickname').join(", ");
+	}
+	
+	
+	p.updateStatus = function(gameInfo) {
+		switch(gameInfo.status) {
+			case 'open':
+				this.items.join.gotoAndStop('btn_join');
+				this.items.join.visible = true;
+				this.items.status.visible = false;
+				break;
+			case 'full':
+				this.items.status.gotoAndStop('label_full');
+				this.items.status.visible = true;
+				this.items.join.visible = false;
+				break;
+			case 'fighting':
+				this.items.status.gotoAndStop('label_fighting');
+				this.items.status.visible = true;
+				this.items.join.visible = false;
+				break;
+			default:
+				this.items.status.visible = false;
+				this.items.join.visible = false;
+				console.log('HomeroomGameListing got game with unknown status: ', gameInfo);
+				break;
+		}
 	}
 	
 	
