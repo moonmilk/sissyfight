@@ -82,13 +82,14 @@ ChatRoom.prototype.say = function(conn, text, done) {
 // broadcast that conn has joined the room 
 // -- separated out so GameRoom can override it
 ChatRoom.prototype.broadcastJoin = function(conn) {
-	this.broadcast("join", {room:this.id, id:conn.user.id, nickname:conn.user.nickname});
+	this.broadcast("join", {room:this.id, id:conn.user.id, nickname:conn.user.nickname}, conn);
 }
 
 
-ChatRoom.prototype.broadcast = function(event, data) {
+// if exclude is a connection, don't broadcast to that connection (e.g. so that clients don't receive their own join events)
+ChatRoom.prototype.broadcast = function(event, data, exclude) {
 	for (var i=0; i<this.occupants.length; i++) {
-		this.occupants[i].writeEvent(event, data);
+		if (!exclude || this.occupants[i] !== exclude) this.occupants[i].writeEvent(event, data);
 	}
 }
 

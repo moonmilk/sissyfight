@@ -228,7 +228,7 @@ var p = Homeroom.prototype = new createjs.Container();
 			if (victim) {
 				gameListing.y -= 25;
 			}
-			if (gameListing.id==id) {
+			if (gameListing.gameID==id) {
 				victim = gameListing;
 				this.gameList.removeChild(victim);
 				victim.destroy();
@@ -240,7 +240,6 @@ var p = Homeroom.prototype = new createjs.Container();
 		var updated = _.find(this.gameList.children, {id:game.room});
 		if (updated) {
 			updated.update(game);
-			console.log("bloop!");
 		}
 	}
 	

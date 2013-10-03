@@ -42,6 +42,15 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// grab div for chat entry
 		this.chatEntry = new createjs.DOMElement(document.getElementById('gameroomTextEntry'));
+		
+		
+		// permanent buttons
+		this.items = [];
+		this.items.btn_exitgame = this.addChild(this.assets.btn_exitgame.clone());
+		this.items.btn_exitgame.x = 445;
+		this.items.btn_exitgame.y = 3;
+		this.items.btn_exitgame.helper = new createjs.ButtonHelper(this.items.btn_exitgame, "btn_exitgame", "btn_exitgame", "btn_exitgame_pressed");
+		this.items.btn_exitgame.addEventListener("click", this.handleExitButton);
 	}
 	
 	
@@ -78,13 +87,14 @@ var p = GameRoom.prototype = new createjs.Container();
 		}, this);
 		// make sure players clean up their text elements when leaving gameroom
 		_.each(this.players, function(player) {
-			this.removePlayer(player.id);
-		}), this;
+			this.removePlayer(player.playerInfo.id);
+		}, this);
 		if (this.textElements.length != GameRoom.MAX_PLAYERS) {
 			// just in case, check for trouble that should never happen
 			console.log("GameRoom: shutting down, should have " + GameRoom.MAX_PLAYERS + " free text elements but have " + this.textElements.length + " instead.");
 		}
 		this.chatEntry.htmlElement.onkeypress = null;
+		this.chatEntry.setVisible(false);
 	}
 	
 	
@@ -130,6 +140,11 @@ var p = GameRoom.prototype = new createjs.Container();
 	}
 
 
+	// exit button clicked
+	p.handleExitButton = function() {
+		// request to return to homeroom
+		g.comm.writeEvent("homeroom");
+	}
 
 
 	
@@ -162,6 +177,7 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	
 	p.removePlayer = function(playerID) {
+		console.log('removePlayer', playerID);
 		var player = this.playersByID[playerID];
 		this.removeChild(player);
 		delete this.playersByID[playerID];

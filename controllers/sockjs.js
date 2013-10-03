@@ -60,7 +60,7 @@ module.exports = function(app, sockjs) {
 		conn.on("say", sendChatListener);
 		conn.on("saveAvatar", saveAvatarListener);
 		conn.on("dressingRoom", returnToDressingRoomListener);
-		
+		conn.on("homeroom", returnToHomeroomListener);
 		conn.on("joingame", joinGameListener);
 	}
 	
@@ -318,6 +318,31 @@ module.exports = function(app, sockjs) {
 				}
 			});
 			
+		}
+	}
+	
+	
+	function returnToHomeroomListener(data) {
+		var conn = this;
+		if (!conn.room) {
+			// should not happen!
+		}
+		else {
+			conn.room.leave(conn, function(err) {
+				if (err) {
+					conn.writeEvent("error", err);
+				}
+				else {
+					joinHomeroom(conn, data, function(err, homeroom, games) {
+						if (err) {
+							conn.writeEvent("error", err);
+						}
+						else {
+							conn.writeEvent("go", {to:'homeroom', games:games, room:homeroom.getInfo()});
+						}
+					});				
+				}
+			})
 		}
 	}
 

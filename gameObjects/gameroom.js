@@ -55,7 +55,7 @@ GameRoom.prototype.join = function(conn, done) {
 	else {
 		GameRoom.super_.prototype.join.call(this, conn, function(err, roomInfo) {
 			if (!err) {
-				console.log("homeroom joined by " + conn.user.nickname);
+				console.log("gameroom joined by " + conn.user.nickname);
 							
 				if (this.occupants.length == this.maxUsers) {
 					this.emit('update', {update:'status', roomInfo:roomInfo});
@@ -97,7 +97,7 @@ GameRoom.prototype.leave = function(conn, done) {
 
 // broadcastJoin override: include avatar in the join message 
 GameRoom.prototype.broadcastJoin = function(conn) {
-	this.broadcast("join", {room:this.id, id:conn.user.id, nickname:conn.user.nickname, avatar:conn.user.avatar});
+	this.broadcast("join", {room:this.id, id:conn.user.id, nickname:conn.user.nickname, avatar:conn.user.avatar}, conn);
 }
 
 

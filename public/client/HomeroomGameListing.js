@@ -24,7 +24,7 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		
 		this.prepareAssets();
 		
-		this.id = gameInfo.room;
+		this.gameID = gameInfo.room;
 		
 
 		this.items = {};

@@ -74,6 +74,7 @@ var p = Main.prototype = new createjs.Container();
 		if (this.loader) this.cleanupLoader();
 		if (this.dressing) this.closeDressingRoom();
 		if (this.homeroom) this.closeHomeroom();
+		if (this.gameroom) this.closeGameRoom();
 		
 		if (event.data && event.data.to) {
 			switch(event.data.to) {

@@ -85,6 +85,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	}
 	p.destroy = function() {
 		this.items.chatText.setVisible(false);
+		this.items.chatText.htmlElement.innerHTML = '';
 	}
 	
 	

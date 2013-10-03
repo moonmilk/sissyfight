@@ -114,7 +114,7 @@ Server messages **go** and **error** have lots of variations, see below.
 	* playing
 	* (blocked, badpassword ... might add in future)
 	
-*	**go{to=homeroom}** (down)
+*	**go{to=gameroom}** (down)
 
 	args: **me** (player userID so client can tell which occupant is me without any memory), **room**:{same as args of **game** below}
 	
@@ -122,5 +122,9 @@ Server messages **go** and **error** have lots of variations, see below.
 
 	args: **update** = start, destroy, occupants, or status,
 	**roomInfo** = {room (id), roomName, occupants:[], status} where status=open, full, or fighting
+
+## game room
+
+*	**homeroom** (up) - request to exit game back to homeroom
 
 
