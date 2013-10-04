@@ -112,12 +112,12 @@ config['manifest'] = [
 	{	id:		'gameroom_items', src: 'game/game_items.png',
 		data:	{
 			pieces: {
-				btn_exitgame:		[0, 0, 79,17, 	0, 0, 0],
-				btn_exitgame_pressed:[0, 0, 79,17, 	0, -1,-1],
-				btn_help:			[0, 19, 42, 39, 0, 0, 0],
-				btn_help_pressed:	[0, 19, 42, 39, 0, -1,-1],
-				btn_chat:			[82, 1, 47, 27, 0, 0, 0],
-				btn_chat_pressed:	[82, 1, 47, 27, 0, -1,-1]
+				btn_exitgame:		[0, 37, 79,17, 	0, 0, 0],
+				btn_exitgame_pressed:[0, 19, 79,17, 	0, 0, 0],
+				btn_help:			[82, 19, 42, 39, 0, 0, 0],
+				btn_help_pressed:	[82, 19, 42, 39, 0, -1,-1],
+				btn_chat:			[535, 47, 47, 27, 0, 0, 0],
+				btn_chat_pressed:	[535, 47, 47, 27, 0, -1,-1]
 				
 			}
 		}
