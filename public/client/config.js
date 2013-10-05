@@ -116,8 +116,54 @@ config['manifest'] = [
 				btn_exitgame_pressed:[0, 19, 79,17, 	0, 0, 0],
 				btn_help:			[82, 19, 42, 39, 0, 0, 0],
 				btn_help_pressed:	[82, 19, 42, 39, 0, -1,-1],
+				
+				console_pregame:	[0, 122,  528, 54,   0, 0, 0],
+				console_game:		[0,  66,  528, 54,   0, 0, 0],
+				
 				btn_chat:			[535, 47, 47, 27, 0, 0, 0],
-				btn_chat_pressed:	[535, 47, 47, 27, 0, -1,-1]
+				btn_chat_pressed:	[535, 47, 47, 27, 0, -1,-1],
+				
+				btn_start:			[591, 78,   56, 32,  0, 0, 0],
+				btn_start_pressed:	[531, 77,   56, 32,  0, 0, 0],
+				
+				boot_menu_bg:		[88, 392,   82, 76,  0, 0, -31],	// offset relative to larger act_menu
+				boot_menu_boot:		[98, 469,   62, 15,  0, -10, -38],
+				boot_menu_dont:		[99, 490,   62, 23,  0, -11, -59],
+				boot_count_1:		[82, 531,   19, 39,  0, 0, 0],
+				boot_count_2:		[102, 531,   19, 39,  0, 0, 0],
+				boot_count_3:		[122, 531,   19, 39,  0, 0, 0],
+				boot_count_4:		[142, 531,   19, 39,  0, 0, 0],
+				boot_count_5:		[162, 531,   19, 39,  0, 0, 0],
+				boot_count_6:		[73, 617,   117, 57,  0, -30, -6],  // big BOOTED
+				boot_status_booted:	[102,573,    53, 11,  0, 26, 0],
+				
+				self_menu_bg:		[88, 314,    82, 76,  0, 0, -31],	// offset relative to larger act_menu
+				act_menu_bg:		[3, 314, 	 82,107,  0, 0, 0],
+				act_menu_grab:		[26, 531,    35, 7,   0, 23, 7],
+				act_menu_scratch:	[15, 540,    59, 7,   0, 12, 16],
+				act_menu_tease:		[23, 549, 	 41, 7,   0, 20, 25],
+				act_menu_cower:		[22, 562,    44, 7,   0, 19, 38],
+				act_menu_lick:	    [10, 571,    68, 15,  0, 7, 47],
+				act_menu_tattle:	[10, 592,	 68, 15,  0, 7, 68],
+				act_status_grab:	[25, 439,    37, 11,  0, 18, 0],
+				act_status_scratch: [14, 452,    61, 11,  0, 30, 0],
+				act_status_tease:	[22, 467,    43, 11,  0, 21, 0],
+				act_status_cower:	[21, 480,    46, 11,  0, 23, 0], 
+				act_status_lick:	[7, 494,     73, 11,  0, 36, 0],
+				act_status_tattle:	[7, 516,    142, 11,  0, 0, 0],   // TATTLE ON EVERYONE needs computed alignment
+				
+				
+				digit_0:			[129, 18,   22, 27,  0, 0, 0],
+				digit_1:			[159, 18,   22, 27,  0, 0, 0],
+				digit_2:			[189, 18,   22, 27,  0, 0, 0],
+				digit_3:			[219, 18,   22, 27,  0, 0, 0],
+				digit_4:			[249, 18,   22, 27,  0, 0, 0],
+				digit_5:			[279, 18,   22, 27,  0, 0, 0],
+				digit_6:			[309, 18,   22, 27,  0, 0, 0],
+				digit_7:			[339, 18,   22, 27,  0, 0, 0],
+				digit_8:			[369, 18,   22, 27,  0, 0, 0],
+				digit_9:			[399, 18,   22, 27,  0, 0, 0],
+				
 				
 			}
 		}
