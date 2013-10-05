@@ -148,7 +148,7 @@ GameRoom.prototype.startGame = function() {
 	console.log("GameRoom: starting game with occupants " + this.getOccupantNicknames().join(", "));
 	this.game = new SFGame(this);
 
-	this.emit('update', {update:'status', roomInfo:roomInfo});
+	this.emit('update', {update:'status', roomInfo:this.getInfo()});
 }
 
 
