@@ -170,24 +170,23 @@ module.exports = function(app, sockjs) {
 						console.log("saveAvatarListener - error", err);
 					}
 					else {
-						conn.writeEvent("go", {to:'homeroom', games:games, room:homeroom.getInfo()});
-						//console.log("saveAvatarListener - go!");
+						sendGoHomeroom(conn, homeroom, games);
 					}
 				});
 			}
 		});
 	}
 	
+	// callback: done(err, avatar)  - useful to send avatar back in case it gets altered by validation code (TODO)
 	function saveAvatar(conn, data, done) {
 		if (false) {
 			// TODO: should do sanity testing on avatar here or in model ####
-			conn.writeEvent("error", {where:'avatar', error:'badavatar', message:"Badly formatted avatar object or item out of range"});
 			console.log("saveAvatar: Badly formatted avatar object or item out of range");
-			return;
+			done({where:'avatar', error:'badavatar', message:"Badly formatted avatar object or item out of range"});
 		}
 		if (!conn.user) {
-			conn.writeEvent("error", {where:'avatar', error:"notlogged", message:"Socket's not logged in"});
 			console.log("saveAvatar: socket not logged in");
+			done({where:'avatar', error:"notlogged", message:"Socket's not logged in"});
 			return;
 		}
 		conn.user.avatar = data.avatar;
@@ -198,31 +197,12 @@ module.exports = function(app, sockjs) {
 			}
 			else {
 				console.log("saveAvatar: avatar set...");
-				if (done) done(null);
+				if (done) done(null,data.avatar);
 			}
 		});
 	}
 	
-	function sendAvatar(conn) {
-		if (!conn.user) {
-			conn.writeEvent("avatar", {error:"notlogged", message:"Socket's not logged in"});
-			console.log("sendAvatar: socket not logged in");
-			return;
-		}
-		else if (!conn.user.avatar) {
-			conn.user.avatar = {};
-		}
-		conn.writeEvent("avatar", {error:false, avatar:conn.user.avatar});
-		console.log("sendAvatar: user " + conn.user.nickname + " retrieved avatar " + JSON.stringify(conn.user.avatar));
-	}
 
-	
-	/*
-	function joinHomeroomListener(data) {
-		var conn = this;
-		joinHomeRoom(conn, data);
-	}
-	*/
 	
 	
 	// callback: done(err, homeroom, list of games)
@@ -339,12 +319,16 @@ module.exports = function(app, sockjs) {
 							conn.writeEvent("error", err);
 						}
 						else {
-							conn.writeEvent("go", {to:'homeroom', games:games, room:homeroom.getInfo()});
+							sendGoHomeroom(conn, homeroom, games);
 						}
 					});				
 				}
 			})
 		}
+	}
+	
+	function sendGoHomeroom(conn, homeroom, games) {
+		conn.writeEvent("go", {to:'homeroom', games:games, avatar:conn.user.avatar, nickname:conn.user.nickname, occupants:homeroom.getOccupantProperties()});
 	}
 	
 	
