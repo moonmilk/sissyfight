@@ -119,9 +119,9 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	}
 	
 	// set the action status display to decided (and blink it)
-	p.setActed = function() {
+	p.setActed = function(blink) {
 		this.items.status.gotoAndStop('status_decided');
-		createjs.Tween.get(this.items.status).wait(150).to({visible:false},0).wait(150).to({visible:true},0).wait(150).to({visible:false},0).wait(150).to({visible:true},0);
+		if (blink) createjs.Tween.get(this.items.status).wait(150).to({visible:false},0).wait(150).to({visible:true},0).wait(150).to({visible:false},0).wait(150).to({visible:true},0);
 	}
 	
 	

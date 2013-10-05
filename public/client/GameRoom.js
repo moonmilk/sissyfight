@@ -131,14 +131,21 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	p.handlegameEvent = function(event) {
 		switch(event.data.event) {
-			case 'acted':
+			case 'acted': // user chose an action or hit start button
 				var actor = this.playersByID[event.data.id];
-				if (actor) actor.setActed();
+				if (actor) actor.setActed(true);
 				else console.log("GameRoom: weirdly, i got an acted event for player not in this room, id " + event.data.event.id);
 				break;
 				
-				
+			case 'start':	// game is starting!
+				this.items.console.setMode('game');
+				break;
 			
+			
+			
+			default:
+				console.log('GameRoom: got unknown gameEvent ', event.data);
+				break;
 		}
 	}
 	

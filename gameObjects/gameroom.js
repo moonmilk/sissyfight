@@ -121,7 +121,9 @@ GameRoom.prototype.broadcastJoin = function(conn) {
 // handle game actions from client (events of type 'act')
 GameRoom.prototype.act = function(conn, data) {
 	console.log("GameRoom: got action", data, "from", conn.user.nickname);
-	this.broadcast("gameEvent", {event:'acted', id:conn.user.id});
+	
+	// let everyone know the user chose an action, except timeout which doesn't count!
+	if (data.action != 'timeout') this.broadcast("gameEvent", {event:'acted', id:conn.user.id});
 
 	// if there's a game running, let it handle the action
 	if (this.game) game.act(conn, data);
@@ -144,7 +146,7 @@ GameRoom.prototype.act = function(conn, data) {
 // start a new game
 GameRoom.prototype.startGame = function() {
 	console.log("GameRoom: starting game with occupants " + this.getOccupantNicknames().join(", "));
-	this.game = new SFGame();
+	this.game = new SFGame(this);
 
 	this.emit('update', {update:'status', roomInfo:roomInfo});
 }

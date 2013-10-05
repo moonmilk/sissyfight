@@ -118,6 +118,11 @@ ChatRoom.prototype.getOccupantNicknames = function() {
 	return names;
 }
 
+// return occupant matching user id
+ChatRoom.prototype.getoccupantByID = function(id) {
+	return _.find(this.occupants, function(occupant){return occupant.user.id==id});
+}
+
 
 
 module.exports = ChatRoom;
