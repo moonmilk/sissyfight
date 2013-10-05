@@ -93,7 +93,7 @@ GameRoom.prototype.leave = function(conn, done) {
 			delete this.startVotes[conn];
 			
 			// let the game know, if any
-			if (this.game) game.leave(conn);
+			if (this.game) this.game.leave(conn);
 			
 			// update status
 			if (!this.game && this.occupants.length < this.maxUsers) {
@@ -126,7 +126,7 @@ GameRoom.prototype.act = function(conn, data) {
 	if (data.action != 'timeout') this.broadcast("gameEvent", {event:'acted', id:conn.user.id});
 
 	// if there's a game running, let it handle the action
-	if (this.game) game.act(conn, data);
+	if (this.game) this.game.act(conn, data);
 	
 	else {
 		if (data.action=='start') {
@@ -148,7 +148,7 @@ GameRoom.prototype.startGame = function() {
 	console.log("GameRoom: starting game with occupants " + this.getOccupantNicknames().join(", "));
 	this.game = new SFGame(this);
 
-	this.emit('update', {update:'status', roomInfo:roomInfo});
+	this.emit('update', {update:'status', roomInfo:this.getInfo()});
 }
 
 
