@@ -127,4 +127,12 @@ Server messages **go** and **error** have lots of variations, see below.
 
 *	**homeroom** (up) - request to exit game back to homeroom
 
+*	**act** (up) - game action
 
+	args: **action** -- boot, start, cower, lolly, tattle, timeout, scratch, grab, tease
+	**target** -- id of target player for boot, scratch, grab, tease actions
+	
+*	**gameEvent** (down: broadcast)
+	
+	args: **event** = booted(target=user id), startgame, status([player health]}, startturn(time=seconds), countdown(time=seconds), acted(id=user id), endturn(results=[...])
+	

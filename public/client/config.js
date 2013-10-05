@@ -183,8 +183,8 @@ config['manifest'] = [
 				heart_1:			[198, 0,  21, 54,   0,   0, 0],
 				heart_0:			[220, 0,  21, 54,   0,   0, 0],
 				
-				status_undecided:	[0,  56,  12, 18,  0,  0, 0],
-				status_decided:		[12, 56,  12, 18,  0,  0, 0],
+				status_undecided:	[12,  56,  12, 18,  0,  0, 0],
+				status_decided:		[0, 56,  12, 18,  0,  0, 0],
 				
 			}
 		}
@@ -273,4 +273,8 @@ config.dressing.addons = {
 	hole_color: '#222'
 }
 
+
+config.game = {};
+config.game.MIN_PLAYERS = 3;  // minimum number of players to start a game
+config.game.MAX_PLAYERS = 6;
 

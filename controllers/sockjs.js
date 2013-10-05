@@ -62,6 +62,7 @@ module.exports = function(app, sockjs) {
 		conn.on("dressingRoom", returnToDressingRoomListener);
 		conn.on("homeroom", returnToHomeroomListener);
 		conn.on("joingame", joinGameListener);
+		conn.on("act", gameActionListener);
 	}
 	
 	
@@ -344,6 +345,13 @@ module.exports = function(app, sockjs) {
 				}
 			})
 		}
+	}
+	
+	
+	// forward game actions to game room
+	function gameActionListener(data) {
+		var conn = this;
+		if (conn.room && conn.room.act) conn.room.act(conn,data);
 	}
 
 }

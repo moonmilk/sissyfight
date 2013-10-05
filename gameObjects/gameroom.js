@@ -3,22 +3,32 @@
 var _ = require("lodash");
 var util = require("util");
 var ChatRoom = require("./chatroom");
+var SFGame = require("./sfgame");
 
 
 function GameRoom(params) {
 	ChatRoom.call(this, params);
 	
-	this.maxUsers = (params && typeof params.maxUsers === 'number') ? params.maxUsers : 6;
+	this.maxUsers = (params && typeof params.maxUsers === 'number') ? params.maxUsers : GameRoom.MAX_PLAYERS;
 	
-	this.password = undefined;
-	this.blockedUsers = [];
+	// room access
+	this.password = undefined; 	// not used yet
+	this.blockedUsers = []; 	// also not yet
 	
-	this.fighting = false;
+	// voting to start a game (everyone in room must have clicked Start; need at least 3 players to start)
+	this.startVotes = {};
+	
+	
+	this.game = undefined;  // when game is in progress, this is a SFGame object
 	
 }
 
 util.inherits(GameRoom, ChatRoom);
 
+
+// CONSTANTS
+GameRoom.MAX_PLAYERS = 6;
+GameRoom.MIN_PLAYERS = 3;
 
 // METHODS
 
@@ -27,7 +37,7 @@ GameRoom.prototype.getInfo = function(avatars) {
 	var info = GameRoom.super_.prototype.getInfo.call(this);
 	
 	// add game status to info
-	if (this.fighting) info.status = 'fighting';
+	if (this.game) info.status = 'fighting';
 	else if (this.occupants.length >= this.maxUsers) info.status = 'full';
 	else info.status = 'open';
 	
@@ -44,7 +54,7 @@ GameRoom.prototype.getInfo = function(avatars) {
 //   check for full or fighting; update full status
 //	 callback: done(err, info about this room)
 GameRoom.prototype.join = function(conn, done) {
-	if (this.fighting) {
+	if (this.game) {
 		if (done) done({where:'gameroom', room:this.id, roomName:this.name, error:"fighting", message: "They're already fighting in there"});
 	}
 	else if (this.occupants.length >= this.maxUsers) {
@@ -79,8 +89,14 @@ GameRoom.prototype.join = function(conn, done) {
 GameRoom.prototype.leave = function(conn, done) {
 	GameRoom.super_.prototype.leave.call(this, conn, function(err, roomInfo) {
 		if (!err) {
-			if (this.status!='fighting' && this.occupants.length < this.maxUsers) {
-				this.status = 'open';
+			// clear start vote
+			delete this.startVotes[conn];
+			
+			// let the game know, if any
+			if (this.game) game.leave(conn);
+			
+			// update status
+			if (!this.game && this.occupants.length < this.maxUsers) {
 				this.emit('update', {update:'status', roomInfo:this.getInfo()});
 			}
 			if (done) done(null, roomInfo);
@@ -101,6 +117,37 @@ GameRoom.prototype.broadcastJoin = function(conn) {
 }
 
 
+
+// handle game actions from client (events of type 'act')
+GameRoom.prototype.act = function(conn, data) {
+	console.log("GameRoom: got action", data, "from", conn.user.nickname);
+	this.broadcast("gameEvent", {event:'acted', id:conn.user.id});
+
+	// if there's a game running, let it handle the action
+	if (this.game) game.act(conn, data);
+	
+	else {
+		if (data.action=='start') {
+			this.startVotes[conn] = 1;
+			var votes = _.size(this.startVotes);
+			if (votes >= GameRoom.MIN_PLAYERS && votes==this.occupants.length) {
+				// start the game!
+				this.startGame();
+			}
+		}
+	}
+}
+
+
+
+
+// start a new game
+GameRoom.prototype.startGame = function() {
+	console.log("GameRoom: starting game with occupants " + this.getOccupantNicknames().join(", "));
+	this.game = new SFGame();
+
+	this.emit('update', {update:'status', roomInfo:roomInfo});
+}
 
 
 

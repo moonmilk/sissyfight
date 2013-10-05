@@ -74,7 +74,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.chatText = this.addChild(new createjs.DOMElement(this.textElement));
 		this.items.chatText.setFakeScale(g.gameScale);
 		this.items.chatText.setPosition(5, 7);
-		this.items.chatText.setSize(73, 59);
+		this.items.chatText.setSize(76, 59);
 		
 		this.chatBuffer = [];
 	}
@@ -108,6 +108,22 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.chatText.htmlElement.innerHTML = this.chatBuffer.join('<br/>');
 		this.items.chatText.htmlElement.scrollTop = this.items.chatText.htmlElement.scrollHeight;
 	}
+	
+	
+	
+	// requests from gameroom
+	
+	// reset the action status display to undecided
+	p.resetActed = function() {
+		this.items.status.gotoAndStop('status_undecided');
+	}
+	
+	// set the action status display to decided (and blink it)
+	p.setActed = function() {
+		this.items.status.gotoAndStop('status_decided');
+		createjs.Tween.get(this.items.status).wait(150).to({visible:false},0).wait(150).to({visible:true},0).wait(150).to({visible:false},0).wait(150).to({visible:true},0);
+	}
+	
 	
 	
 	

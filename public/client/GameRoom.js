@@ -16,7 +16,7 @@ GameRoom.MAX_PLAYERS = 6;
 
 var p = GameRoom.prototype = new createjs.Container();
 
-	p.MESSAGES = ['join','leave','say'];  // list of socket messages I should listen for
+	p.MESSAGES = ['join','leave','say', 'gameEvent'];  // list of socket messages I should listen for
 
 	p.Container_initialize = p.initialize;
 	
@@ -34,6 +34,13 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.players = [];
 		this.playersByID = {};  // map id->player
 		
+		this.items = [];
+		
+		// console
+		this.items.console = this.addChild(new sf.GameRoomConsole(this.assets, 0)); // TODO: colorize console to match uniform
+		this.items.console.y = 222;
+		
+		
 		// grab the 6 chat bubble divs from document for players to use as chat text
 		this.textElements = [];
 		for (var i=0; i<GameRoom.MAX_PLAYERS; i++) {
@@ -45,7 +52,6 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		
 		// permanent buttons
-		this.items = [];
 		this.items.btn_exitgame = this.addChild(this.assets.btn_exitgame.clone());
 		this.items.btn_exitgame.x = 445;
 		this.items.btn_exitgame.y = 3;
@@ -70,13 +76,19 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// set up chat entry field
 		this.chatEntry.setFakeScale(g.gameScale);
-		this.chatEntry.setPosition(6, 227);
-		this.chatEntry.setSize(76, 42);
+		this.chatEntry.setPosition(6, 226);
+		this.chatEntry.setSize(76, 41);
 		this.chatEntry.setVisible(true);
 			
 		// catch enter in chat entry
 		this.handlechatkeypressBound = this.handlechatkeypress.bind(this);
 		this.chatEntry.htmlElement.onkeypress = this.handlechatkeypressBound;
+		
+		// start up console
+		this.items.console.start();
+		
+		// watch for start button
+		this.items.console.addEventListener('start', this.handleStartButton.bind(this));
 	}
 	
 	
@@ -95,6 +107,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		}
 		this.chatEntry.htmlElement.onkeypress = null;
 		this.chatEntry.setVisible(false);
+		
+		this.items.console.destroy();
 	}
 	
 	
@@ -112,6 +126,20 @@ var p = GameRoom.prototype = new createjs.Container();
 	p.handlesay = function(event) {
 		var player = this.playersByID[event.data.id];
 		if (player) player.handlesay(event.data.text);
+	}
+	
+	
+	p.handlegameEvent = function(event) {
+		switch(event.data.event) {
+			case 'acted':
+				var actor = this.playersByID[event.data.id];
+				if (actor) actor.setActed();
+				else console.log("GameRoom: weirdly, i got an acted event for player not in this room, id " + event.data.event.id);
+				break;
+				
+				
+			
+		}
 	}
 	
 	
@@ -146,6 +174,12 @@ var p = GameRoom.prototype = new createjs.Container();
 		g.comm.writeEvent("homeroom");
 	}
 
+
+
+	// start game button clicked
+	p.handleStartButton = function() {
+		g.comm.writeEvent("act", {action:"start"});
+	}
 
 	
 	
