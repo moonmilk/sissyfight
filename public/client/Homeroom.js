@@ -237,7 +237,7 @@ var p = Homeroom.prototype = new createjs.Container();
 	}
 	
 	p.updateGameListing = function(game) {
-		var updated = _.find(this.gameList.children, {id:game.room});
+		var updated = _.find(this.gameList.children, {gameID:game.room});
 		if (updated) {
 			updated.update(game);
 		}
