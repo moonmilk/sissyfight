@@ -42,7 +42,15 @@ GameRoom.prototype.getInfo = function(avatars) {
 	else info.status = 'open';
 	
 	if (avatars) {
-		info.occupants = this.getOccupantProperties(['id','nickname','avatar'], true);
+		// add startVotes to info so latecomers to game can see who has already pressed start
+		info.occupants = _.map(this.occupants, function(conn){
+			return {
+				started:	this.startVotes[conn],
+				id:			conn.user.id,
+				nickname:	conn.user.nickname,
+				avatar:		conn.user.avatar
+			}
+		}, this);
 	} // else use the default [id,nickname] from parent ChatRoom
 	
 	info.type = "GameRoom";
@@ -130,7 +138,7 @@ GameRoom.prototype.act = function(conn, data) {
 	
 	else {
 		if (data.action=='start') {
-			this.startVotes[conn] = 1;
+			this.startVotes[conn] = true;
 			var votes = _.size(this.startVotes);
 			if (votes >= GameRoom.MIN_PLAYERS && votes==this.occupants.length) {
 				// start the game!

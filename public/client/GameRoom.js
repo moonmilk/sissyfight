@@ -31,8 +31,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.addChild(this.assets.gameroom_bg.clone());
 		
 		
-		this.players = [];
-		this.playersByID = {};  // map id->player
+		this.players = [];		// map position 0-5 -> player - don't iterate over this because it might have gaps
+		this.playersByID = {};  // map id->player - iterate over this one for doing things to all players
 		
 		this.items = [];
 		
@@ -98,7 +98,7 @@ var p = GameRoom.prototype = new createjs.Container();
 			g.comm.removeEventListener(type, this["handle"+type+"Bound"]);
 		}, this);
 		// make sure players clean up their text elements when leaving gameroom
-		_.each(this.players, function(player) {
+		_.each(this.playersByID, function(player) {
 			this.removePlayer(player.playerInfo.id);
 		}, this);
 		if (this.textElements.length != GameRoom.MAX_PLAYERS) {
@@ -139,6 +139,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'start':	// game is starting!
 				this.items.console.setMode('game');
+				_.each(this.playersByID, function(player){player.resetActed()});
 				break;
 			
 			
@@ -214,6 +215,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		player.y = 23;
 		
 		player.start();
+		
+		if (playerInfo.started) player.setActed(); // show to new entrant to room whether existing players have voted to start
 	}
 	
 	
