@@ -54,6 +54,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.health = this.addChild(this.assets.heart_10.clone());
 		this.items.health.x = 0;
 		this.items.health.y = 77;
+		this.items.health.visible = false;
 		
 		this.items.status = this.addChild(this.assets.status_undecided.clone());
 		this.items.status.x = 70;
@@ -122,6 +123,19 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	p.setActed = function(blink) {
 		this.items.status.gotoAndStop('status_decided');
 		if (blink) createjs.Tween.get(this.items.status).wait(150).to({visible:false},0).wait(150).to({visible:true},0).wait(150).to({visible:false},0).wait(150).to({visible:true},0);
+	}
+	
+	
+	p.hideHealth = function(h) {
+		this.items.health.visible = false;
+	}
+	p.setHealth = function(h) {
+		this.items.health.gotoAndStop('heart_'+h);
+		this.items.health.visible = true;
+	}
+	p.setStatus = function(s) {
+		// for now, health is the only member of status
+		this.setHealth(s.health);
 	}
 	
 	

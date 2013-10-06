@@ -139,10 +139,15 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'start':	// game is starting!
 				this.items.console.setMode('game');
-				_.each(this.playersByID, function(player){player.resetActed()});
+				_.each(this.playersByID, function(player){player.resetActed()}, this);
 				break;
 			
-			
+			case 'status':	// health of each player (maybe other things in future? but probably just health)
+				_.each(event.data.status, function(playerStatus, playerID) {
+					if (this.playersByID[playerID]) this.playersByID[playerID].setStatus(playerStatus);
+					else console.log("GameRoom.handlegameEvent: got status for player who isn't here, userid=",playerID);
+				}, this);
+				break;
 			
 			default:
 				console.log('GameRoom: got unknown gameEvent ', event.data);
