@@ -57,6 +57,11 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.btn_exitgame.y = 3;
 		this.items.btn_exitgame.helper = new createjs.ButtonHelper(this.items.btn_exitgame, "btn_exitgame", "btn_exitgame", "btn_exitgame_pressed");
 		this.items.btn_exitgame.addEventListener("click", this.handleExitButton);
+		
+		
+		// prepare timer
+		this.timerTime = 0;  // seconds on timer;
+		this.timerNextTick = undefined;   // time in msec for next countdown, or falsey if timer's not running
 	}
 	
 	
@@ -89,6 +94,10 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// watch for start button
 		this.items.console.addEventListener('start', this.handleStartButton.bind(this));
+		
+		// get ticks for updating timer
+		this.handleTickBound = this.handleTick.bind(this);
+		createjs.Ticker.addEventListener('tick', this.handleTickBound);
 	}
 	
 	
@@ -107,6 +116,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		}
 		this.chatEntry.htmlElement.onkeypress = null;
 		this.chatEntry.setVisible(false);
+		
+		createjs.Ticker.removeEventListener('tick', this.handleTickBound);
 		
 		this.items.console.destroy();
 	}
@@ -137,9 +148,13 @@ var p = GameRoom.prototype = new createjs.Container();
 				else console.log("GameRoom: weirdly, i got an acted event for player not in this room, id " + event.data.event.id);
 				break;
 				
-			case 'start':	// game is starting!
+			case 'startGame':	// game is starting!
 				this.items.console.setMode('game');
 				_.each(this.playersByID, function(player){player.resetActed()}, this);
+				break;
+				
+			case 'startTurn':
+				this.setTimer(event.data.time);
 				break;
 			
 			case 'status':	// health of each player (maybe other things in future? but probably just health)
@@ -153,6 +168,12 @@ var p = GameRoom.prototype = new createjs.Container();
 				console.log('GameRoom: got unknown gameEvent ', event.data);
 				break;
 		}
+	}
+	
+	
+	// time is passing!
+	p.handleTick = function() {
+		this.updateTimer();
 	}
 	
 	
@@ -238,7 +259,46 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	
 	
+	// setTimer to time - if running is false, don't count down
+	p.setTimer = function(time, running) {
+		if (running != false) this.startTimer();
+		else this.stopTimer();
+		this.timerTime = time;
 		
+		this.items.console.setTimer(this.timerTime);
+	}
+	
+	p.startTimer = function() {
+		if (!this.timerNextTick) this.timerNextTick = createjs.Ticker.getTime() + 1000;
+	}
+	
+	p.stopTimer = function() {
+		this.timerNextTick = undefined;
+	}
+	
+	// updateTimer returns true if timer hits 0
+	p.updateTimer = function() {
+		if (!this.timerNextTick) return;
+		
+		var now = createjs.Ticker.getTime() + 1000;
+		if (now >= this.timerNextTick && this.timerTime > 0) {
+			this.timerTime -= 1;
+			this.items.console.setTimer(this.timerTime);
+			
+			if (this.timerTime == 0) {
+				this.timerNextTick = undefined;
+				return true;
+			}
+			else {
+				this.timerNextTick += 1000;
+			}
+		} 
+		
+		return false;
+	}
+	
+	
+	
 
 	p.prepareAssets = function() {
 		this.assets = {};

@@ -37,11 +37,19 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 		this.items.btn_start.x = 307;
 		this.items.btn_start.y = 17;
 		this.items.btn_start.helper = new createjs.ButtonHelper(this.items.btn_start, 'btn_start', 'btn_start', 'btn_start_pressed');
+		
+		this.items.game.timer1 = this.items.game.addChild(this.assets.digit_0.clone());
+		this.items.game.timer1.x = 297;
+		this.items.game.timer1.y = 19;
+		this.items.game.timer0 = this.items.game.addChild(this.assets.digit_0.clone()); 
+		this.items.game.timer0.x = 323;
+		this.items.game.timer0.y = 19;
+		
+		this.setMode('pregame');
 	}
 	
 	
 	p.start = function() {
-		this.setMode('pregame');
 		this.items.btn_start.addEventListener('click', function(){this.dispatchEvent('start')}.bind(this));
 	}
 	p.destroy = function() {
@@ -60,6 +68,15 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 			this.items.pregame.visible = true;
 			this.items.game.visible = false;
 		}
+	}
+	
+	// set timer to number (0-99)
+	p.setTimer = function(time) {
+		var digit0 = time % 10;
+		var digit1 = ((time - digit0)/10) % 10;
+		this.items.game.timer0.gotoAndStop('digit_' + digit0);
+		this.items.game.timer1.gotoAndStop('digit_' + digit1);
+		console.log('setTimer', time, digit1, digit0);
 	}
 	
 		

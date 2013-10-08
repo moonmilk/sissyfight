@@ -11,10 +11,14 @@ function SFGame(gameroom) {
 	
 	this.players = {};	// map from player user ids to game status info
 	
-	// let clients know game has started
-	this.gameEvent('start');
+	this.state = "await actions";	// possible states: await actions, await eot, end of game
+	
+	this.turn_time = undefined;  // time at which current turn started
+	
 	this.prepareGame();
+	this.startGame();
 	this.broadcastStatus();
+	this.startTurn();
 }
 
 
@@ -25,6 +29,9 @@ SFGame.INITIAL_STATUS = {
 	tattles:	2,
 	cowardice:	0	// number of times cowered without being attacked
 }
+
+SFGame.TURN_TIME = 90;
+
 
 // user leaves game in progress
 SFGame.prototype.leave = function(conn) {
@@ -61,7 +68,14 @@ SFGame.prototype.prepareGame = function() {
 }
 
 
+SFGame.prototype.startGame = function() {
+	this.gameEvent('startGame');
+}
 
+
+SFGame.prototype.startTurn = function() {
+	this.gameEvent('startTurn', {time:SFGame.TURN_TIME});
+}
 
 
 
