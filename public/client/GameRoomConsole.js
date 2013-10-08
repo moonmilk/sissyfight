@@ -76,7 +76,6 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 		var digit1 = ((time - digit0)/10) % 10;
 		this.items.game.timer0.gotoAndStop('digit_' + digit0);
 		this.items.game.timer1.gotoAndStop('digit_' + digit1);
-		console.log('setTimer', time, digit1, digit0);
 	}
 	
 		
