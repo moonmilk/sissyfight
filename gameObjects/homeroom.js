@@ -2,7 +2,7 @@
 
 var _ = require("lodash");
 var util = require("util");
-var ChatRoom = require("./ChatRoom");
+var ChatRoom = require("./chatroom");
 
 
 function Homeroom(params) {
