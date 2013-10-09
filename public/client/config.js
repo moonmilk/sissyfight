@@ -139,17 +139,18 @@ config['manifest'] = [
 				
 				self_menu_bg:		[88, 314,    82, 76,  0, 0, -31],	// offset relative to larger act_menu
 				act_menu_bg:		[3, 314, 	 82,107,  0, 0, 0],
-				act_menu_grab:		[26, 531,    35, 7,   0, 23, 7],
-				act_menu_scratch:	[15, 540,    59, 7,   0, 12, 16],
-				act_menu_tease:		[23, 549, 	 41, 7,   0, 20, 25],
-				act_menu_cower:		[22, 562,    44, 7,   0, 19, 38],
-				act_menu_lick:	    [10, 571,    68, 15,  0, 7, 47],
-				act_menu_tattle:	[10, 592,	 68, 15,  0, 7, 68],
-				act_status_grab:	[25, 439,    37, 11,  0, 18, 0],
-				act_status_scratch: [14, 452,    61, 11,  0, 30, 0],
-				act_status_tease:	[22, 467,    43, 11,  0, 21, 0],
-				act_status_cower:	[21, 480,    46, 11,  0, 23, 0], 
-				act_status_lick:	[7, 494,     73, 11,  0, 36, 0],
+				act_menu_grab:		[26, 531,    35, 7,   0, -23, -7],
+				act_menu_scratch:	[15, 540,    59, 7,   0, -12, -16],
+				act_menu_tease:		[23, 549, 	 41, 7,   0, -20, -25],
+				act_menu_cower:		[22, 562,    44, 7,   0, -19, -38],
+				act_menu_lick:	    [10, 571,    68, 15,  0, -7, -47],
+				act_menu_tattle:	[10, 592,	 68, 15,  0, -7, -68],
+				act_menu_invisible:	[25, 405,     1,  1,  0, -0, 0],
+				act_status_grab:	[25, 439,    37, 11,  0, -18, 0],
+				act_status_scratch: [14, 452,    61, 11,  0, -30, 0],
+				act_status_tease:	[22, 467,    43, 11,  0, -21, 0],
+				act_status_cower:	[21, 480,    46, 11,  0, -23, 0], 
+				act_status_lick:	[7, 494,     73, 11,  0, -36, 0],
 				act_status_tattle:	[7, 516,    142, 11,  0, 0, 0],   // TATTLE ON EVERYONE needs computed alignment
 				
 				
