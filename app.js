@@ -11,7 +11,9 @@ var express = require('express')
   , sockjs  = require('sockjs')
 ;
   
-  
+// i like to use lodash
+var _ = require('lodash');
+
   
 // database setup  
 var db = require('./database');
@@ -29,6 +31,26 @@ var sockjs = sockjs.createServer(sockjs_opts);
 
 // app setup
 var app = express();
+
+
+// optional basic authentication for setting up closed testing sessions:
+//  set environment variable BASIC_AUTH=username,password[|username,password]
+var basic_auth = undefined;
+var basic_auth_str = process.env.BASIC_AUTH;
+if (basic_auth_str) {
+	var basic_auth_users = _.map(basic_auth_str.split('|'), function(userAndPassword) {
+		return userAndPassword.split(',');
+	});
+	// basic_auth_users now contains [[username, password], [username, password]....]
+	
+	// now set up the basic auth middleware as in http://stackoverflow.com/a/12148212
+	basic_auth = express.basicAuth(function(user, pass) {     
+		for (var i=0; i<basic_auth_users.length; i++) {
+			if (user==basic_auth_users[i][0] && pass==basic_auth_users[i][1]) return true;
+		}
+		return false;
+	},'SiSSYFiGHT testing');
+}
 
 
 // session store
@@ -61,6 +83,9 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// add authentication if set up
+if (basic_auth) app.use(basic_auth);
 
 app.use(express.favicon());
 app.use(express.logger('dev'));
