@@ -134,5 +134,5 @@ Server messages **go** and **error** have lots of variations, see below.
 	
 *	**gameEvent** (down: broadcast)
 	
-	args: **event** = booted(target=user id), startGame, status([player health]}, startTurn(time=seconds), countdown(time=seconds), acted(id=user id), endTurn(results=[...])
+	args: **event** = booted(target=user id), startGame, status([player health]}, startTurn(time=seconds, lollies=#, tattles=#), countdown(time=seconds), acted(id=user id), endTurn(results=[...])
 	

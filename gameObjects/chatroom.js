@@ -87,12 +87,21 @@ ChatRoom.prototype.broadcastJoin = function(conn) {
 
 
 // if exclude is a connection, don't broadcast to that connection (e.g. so that clients don't receive their own join events)
+// if data has any values that are functions, they will be applied to conn so that broadcast can be customized per connection
 ChatRoom.prototype.broadcast = function(event, data, exclude) {
 	for (var i=0; i<this.occupants.length; i++) {
+		this.nestedApply(data, this.occupants[i]);
 		if (!exclude || this.occupants[i] !== exclude) this.occupants[i].writeEvent(event, data);
 	}
 }
 
+// recursively replace any function values with the result of applying the function to conn
+ChatRoom.prototype.nestedApply = function(data,conn) {
+	_.each(data, function(val, key) {
+		if (typeof val==='function') data[key] = val.call(this, conn);
+		else if (typeof val==='object') this.nestedApply(val, conn);
+	}, this);
+}
 
 // return list of occupant user properties (default id and nickname)
 ChatRoom.prototype.getOccupantProperties = function(props) {

@@ -74,7 +74,12 @@ SFGame.prototype.startGame = function() {
 
 
 SFGame.prototype.startTurn = function() {
-	this.gameEvent('startTurn', {time:SFGame.TURN_TIME});
+	var game=this;
+	this.gameEvent('startTurn', {
+		time:SFGame.TURN_TIME, 
+		lollies:function(conn){return game.players[conn.user.id].lollies}, 
+		tattles:function(conn){return game.players[conn.user.id].tattles}
+	});
 }
 
 
