@@ -64,6 +64,7 @@ SFGame.prototype.broadcastStatus = function() {
 SFGame.prototype.prepareGame = function() {
 	_.each(this.gameroom.occupants, function(conn) {
 		this.players[conn.user.id] = _.clone(SFGame.INITIAL_STATUS);
+		//this.players[conn.user.id].lollies = conn.user.id % 4;
 	}, this);
 }
 

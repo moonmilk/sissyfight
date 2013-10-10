@@ -156,6 +156,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'startTurn':
 				this.setTimer(event.data.time);
+				this.items.console.setLolliesAndTattles(event.data.lollies, event.data.tattles);
 				break;
 			
 			case 'status':	// health of each player (maybe other things in future? but probably just health)

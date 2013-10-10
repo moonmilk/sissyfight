@@ -165,6 +165,11 @@ config['manifest'] = [
 				digit_8:			[369, 18,   22, 27,  0, 0, 0],
 				digit_9:			[399, 18,   22, 27,  0, 0, 0],
 				
+				// counters for lollies and tattles
+				counter_3:			[1, 56,      14, 5,  0, 0, 0],
+				counter_2:			[1, 56,       9, 5,  0, 0, 0],
+				counter_1:			[1, 56,       4, 5,  0, 0, 0],
+				counter_0:			[0, 56,		  1, 1,  0, 0, 0]
 				
 			}
 		}
