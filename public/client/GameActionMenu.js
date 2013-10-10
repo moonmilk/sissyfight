@@ -23,7 +23,7 @@ var p = GameActionMenu.prototype = new createjs.Container();
 		
 		this.assets = assets;
 		
-		this.cursor = 'pointer';
+		//this.cursor = 'pointer'; // doesn't work :(
 		
 		this.items = [];
 		var prefix='act_menu_', btns=[];
