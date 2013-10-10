@@ -61,18 +61,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// prepare timer
 		this.timerTime = 0;  // seconds on timer;
-		this.timerNextTick = undefined;   // time in msec for next countdown, or falsey if timer's not running
-		
-		
-		this.items.tempTestMenu = this.addChild(new sf.GameActionMenu(this.assets, 'self', true, false));
-		this.items.tempTestMenu.x = 300;
-		this.items.tempTestMenu.y = 100;
-		this.items.tempTestMenu = this.addChild(new sf.GameActionMenu(this.assets, 'other', false, true));
-		this.items.tempTestMenu.x = 400;
-		this.items.tempTestMenu.y = 100;
-		this.items.tempTestMenu = this.addChild(new sf.GameActionMenu(this.assets, 'boot'));
-		this.items.tempTestMenu.x = 200;
-		this.items.tempTestMenu.y = 100;		
+		this.timerNextTick = undefined;   // time in msec for next countdown, or falsey if timer's not running	
 	}
 	
 	
@@ -160,6 +149,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				break;
 				
 			case 'startGame':	// game is starting!
+				this.state = 'game';
 				this.items.console.setMode('game');
 				_.each(this.playersByID, function(player){player.resetActed()}, this);
 				break;
