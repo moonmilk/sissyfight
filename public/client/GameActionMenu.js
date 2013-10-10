@@ -23,6 +23,8 @@ var p = GameActionMenu.prototype = new createjs.Container();
 		
 		this.assets = assets;
 		
+		this.cursor = 'pointer';
+		
 		this.items = [];
 		var prefix='act_menu_', btns=[];
 		
@@ -47,18 +49,9 @@ var p = GameActionMenu.prototype = new createjs.Container();
 			}
 			else {
 				var assetName = prefix+b;
-				console.log('GameActionMenu added menu button ' + assetName);
 				var button = this.buttons[b] = this.addChild(this.assets[assetName].clone());
-				// make a hitarea that's as wide as the menu (74) and as high as the button (variable)
-				var buttonFrame = button.spriteSheet._frames[button.currentFrame];
-				var hitArea = this.addChild(new createjs.Shape());
-				hitArea.visible = false;
-				hitArea.graphics.f('#fff').r(4,-buttonFrame.regY, 74,buttonFrame.rect.height);
-				button.helper = new createjs.ButtonHelper(button, 'act_menu_invisible', assetName, assetName, false, hitArea);
-				button.addEventListener('click', function() {
-					this.dispatchEvent(b);
-					console.log("GameActionMenu.click", b, button);
-				}.bind(this));
+				button.visible = false;  // visible only on rollover
+				button.actionLabel = b;
 			}
 		}, this);
 	}
@@ -73,7 +66,27 @@ var p = GameActionMenu.prototype = new createjs.Container();
 			b.removeAllEventListeners();
 		}, this);
 	}
+	
+	
+	// gameroom forwards drag event to me - use it to figure out which menu entry to highlight
+	p.mouseDrag = function(event) {
+		var mouse = this.globalToLocal(event.stageX, event.stageY);
+		this.selectedAction = undefined;
+		_.forOwn(this.buttons, function(button) {
+			var bounds = button.getBounds();
+			if (mouse.x > 1 && mouse.x < 79 && mouse.y >= (bounds.y-1) && mouse.y <= (bounds.y+bounds.height+1)) {
+				button.visible = true;
+				this.selectedAction = button.actionLabel;
+			}
+			else {
+				button.visible = false;
+			}
+		}, this);
+	}
 
+	p.getSelectedAction = function() {
+		return this.selectedAction;
+	}
 
 
 	sf.GameActionMenu = GameActionMenu;

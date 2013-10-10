@@ -28,6 +28,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.me = me; // id of this player, so I don't need any memory to know which one is me
 		this.gameInfo = gameInfo; // game(id), gameName, occupants:[{id,nickname,avatar}]
 		
+		this.state = 'pregame'; // can be pregame or game
+		
 		this.addChild(this.assets.gameroom_bg.clone());
 		
 		
@@ -35,6 +37,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.playersByID = {};  // map id->player - iterate over this one for doing things to all players
 		
 		this.items = [];
+		this.layers = [];
 		
 		// console
 		this.items.console = this.addChild(new sf.GameRoomConsole(this.assets, 0)); // TODO: colorize console to match uniform
@@ -50,6 +53,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		// grab div for chat entry
 		this.chatEntry = new createjs.DOMElement(document.getElementById('gameroomTextEntry'));
 		
+		// layer for players
+		this.layers.playerLayer = this.addChild(new createjs.Container());
+		
 		
 		// permanent buttons
 		this.items.btn_exitgame = this.addChild(this.assets.btn_exitgame.clone());
@@ -57,6 +63,13 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.btn_exitgame.y = 3;
 		this.items.btn_exitgame.helper = new createjs.ButtonHelper(this.items.btn_exitgame, "btn_exitgame", "btn_exitgame", "btn_exitgame_pressed");
 		this.items.btn_exitgame.addEventListener("click", this.handleExitButton);
+		
+		
+		// layer for action menus
+		this.layers.actionMenuLayer = this.addChild(new createjs.Container());
+		
+		// layer for dust cloud
+		this.layers.dustCloudLayer = this.addChild(new createjs.Container());
 		
 		
 		// prepare timer
@@ -156,6 +169,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'startTurn':
 				this.setTimer(event.data.time);
+				this.lollyCounter = event.data.lollies;
+				this.tattleCounter = event.data.tattles;
 				this.items.console.setLolliesAndTattles(event.data.lollies, event.data.tattles);
 				break;
 			
@@ -234,7 +249,7 @@ var p = GameRoom.prototype = new createjs.Container();
 			console.log("GameRoom: ran out of textElements!"); // this should also never happen
 		}
 		// create player
-		var player = this.addChild(new sf.GameRoomPlayer(i, playerInfo, textElement));
+		var player = this.layers.playerLayer.addChild(new sf.GameRoomPlayer(i, playerInfo, textElement));
 		this.players[i] = player;
 		this.playersByID[playerInfo.id] = player;
 		
@@ -245,18 +260,24 @@ var p = GameRoom.prototype = new createjs.Container();
 		player.start();
 		
 		if (playerInfo.started) player.setActed(); // show to new entrant to room whether existing players have voted to start
+		
+		player.addEventListener('mousedown', this.playerMouseEvent.bind(this));
+		player.addEventListener('pressmove', this.playerMouseEvent.bind(this));
+		player.addEventListener('pressup', this.playerMouseEvent.bind(this));
 	}
 	
 	
 	p.removePlayer = function(playerID) {
 		var player = this.playersByID[playerID];
-		this.removeChild(player);
+		this.layers.playerLayer.removeChild(player);
 		delete this.playersByID[playerID];
 		this.players[player.position] = undefined;
 		
 		// get the text element back from the player
 		this.textElements.push(player.textElement);
 		player.destroy();
+		
+		player.removeAllEventListeners();
 	}
 	
 	
@@ -298,6 +319,64 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		return false;
 	}
+	
+	
+	// player menu handling
+	p.playerMouseEvent = function(event) {
+		var player = event.currentTarget;
+		
+		if (event.type=='mousedown') {
+			this.removeActionMenu();
+			
+			var whichMenu;  // nothing, boot, self, or action?
+			var clickedMe = (player.playerInfo.id == this.me)  // clicked on self avatar or other's avatar?
+			if (this.state=='pregame') {
+				if (!clickedMe) whichMenu = 'boot';
+				else return;
+			}
+			else if (this.state=='game') {
+				if (clickedMe) whichMenu = 'self';
+				else whichMenu = 'other';
+			}
+			else return;
+		
+			this.items.actionMenu = this.layers.actionMenuLayer.addChild(new sf.GameActionMenu(this.assets, whichMenu, this.lollyCounter, this.tattleCounter));
+			this.items.actionMenu.x = player.x;
+			this.items.actionMenu.y = player.y+108;
+			
+			this.items.actionMenu.mouseDrag(event);
+		}
+		
+		else if (event.type=='pressmove') {
+			if (this.items.actionMenu) this.items.actionMenu.mouseDrag(event);
+		}
+		
+		else if (event.type=='pressup') {
+			if (this.items.actionMenu) {
+				var selectedAction = this.items.actionMenu.getSelectedAction();
+				if (selectedAction) console.log('action', selectedAction, 'on player', player.playerInfo.nickname);
+				this.removeActionMenu();
+			}
+		}
+	}
+	
+	p.removeActionMenu = function() {
+		if (this.items.actionMenu) {
+			this.layers.actionMenuLayer.removeChild(this.items.actionMenu);
+			this.items.actionMenu.destroy();
+			this.items.actionMenu.removeAllEventListeners();
+			this.items.actionMenu = undefined;
+		}
+	}
+	
+	p.playerActionItem = function(player, action) {
+		console.log('playerActionItem', player, action);
+	}
+	
+	
+	
+	
+	
 	
 	
 	
