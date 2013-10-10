@@ -103,6 +103,9 @@ GameRoom.prototype.leave = function(conn, done) {
 			// let the game know, if any
 			if (this.game) this.game.leave(conn);
 			
+			// if nobody's left, delete the game
+			if (this.occupants.length==0) this.game = undefined;
+			
 			// update status
 			if (!this.game && this.occupants.length < this.maxUsers) {
 				this.emit('update', {update:'status', roomInfo:this.getInfo()});
