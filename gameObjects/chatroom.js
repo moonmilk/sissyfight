@@ -88,8 +88,9 @@ ChatRoom.prototype.broadcastJoin = function(conn) {
 
 // if exclude is a connection, don't broadcast to that connection (e.g. so that clients don't receive their own join events)
 // if data has any values that are functions, they will be applied to conn so that broadcast can be customized per connection
-ChatRoom.prototype.broadcast = function(event, data, exclude) {
+ChatRoom.prototype.broadcast = function(event, dataIn, exclude) {
 	for (var i=0; i<this.occupants.length; i++) {
+		var data = _.cloneDeep(dataIn);
 		this.nestedApply(data, this.occupants[i]);
 		if (!exclude || this.occupants[i] !== exclude) this.occupants[i].writeEvent(event, data);
 	}
