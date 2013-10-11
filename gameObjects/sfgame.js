@@ -13,7 +13,7 @@ function SFGame(gameroom) {
 	
 	this.state = "await actions";	// possible states: await actions, await eot, end of game
 	
-	this.turn_time = undefined;  // time at which current turn started
+	this.overrideTimer = undefined; // id of setTimeout timer that forces turn to end even if not all clients check in
 	
 	this.prepareGame();
 	this.startGame();
@@ -34,6 +34,7 @@ SFGame.INITIAL_STATUS = {
 
 SFGame.TURN_TIME = 90;		// max time per turn, in seconds
 SFGame.COUNTDOWN_TIME = 10;	// when all players have chosen an action, timer jumps to final countdown
+SFGame.OVERRIDE_TIME = 100;	// end turn even if not all clients have checked in (may be hung or hacked client)
 
 
 // user leaves game in progress
@@ -53,7 +54,7 @@ SFGame.prototype.gameEvent = function(type, args) {
 SFGame.prototype.act = function(conn, data) {
 	var actorInfo = this.players[conn.user.id];
 	if (!actorInfo) {
-		console.log('SFGame.act - connection user seems not to be in the game', conn.user);
+		console.log('SFGame.act - connection user seems not to be in game', this.gameroom.name, this.gameroom.id, conn.user);
 		return;
 	}
 	
@@ -67,7 +68,7 @@ SFGame.prototype.act = function(conn, data) {
 		if (data.target) {
 			var targetInfo = this.players[data.target];
 			if (!targetInfo) {
-				console.log('SFGame.act - action target user seems not to be in the game', data);
+				console.log('SFGame.act - action target user seems not to be in game', this.gameroom.name, this.gameroom.id, data);
 				return;
 			}
 			actorInfo.action.target = data.target;
@@ -82,6 +83,19 @@ SFGame.prototype.act = function(conn, data) {
 		this.gameEvent('countdown', {time:SFGame.COUNTDOWN_TIME});
 	}
 
+}
+
+// called by SetTimeout if 
+SFGame.prototype.overrideTimeout = function() {
+	if (this.overrideTimer) {
+		clearTimeout(this.overrideTimer);
+		this.overrideTimer = undefined;
+	}
+	console.log('SFGame.overrideTimeout: had to force a timeout in ', this.gameroom.name, this.gameroom.id);
+	// whoever didn't check in, give them a timeout action
+	_.each(this.players, function(playerInfo){if (!playerInfo.action) playerInfo.action={action:'timeout'}});
+	// and resolve the turn
+	this.resolveTurn();
 }
 
 
@@ -115,6 +129,10 @@ SFGame.prototype.startTurn = function() {
 		info.timeout = false
 	}, this);
 	
+	// set the override timer
+	if (this.overrideTimer) clearTimeout(this.overrideTimer);
+	this.overrideTimer = setTimeout(this.overrideTimeout.bind(this), 1000 * SFGame.OVERRIDE_TIME);
+	
 	this.gameEvent('startTurn', {
 		time:SFGame.TURN_TIME, 
 		lollies:function(conn){return game.players[conn.user.id].lollies}, 
@@ -126,6 +144,11 @@ SFGame.prototype.startTurn = function() {
 SFGame.prototype.resolveTurn = function() {
 	// TODO: actually resolve turn!
 	// for testing: just start a new turn
+	if (this.overrideTimer) {
+		clearTimeout(this.overrideTimer);
+		this.overrideTimer = undefined;
+	}
+	
 	this.startTurn();
 }
 
