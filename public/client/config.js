@@ -146,12 +146,13 @@ config['manifest'] = [
 				act_menu_lick:	    [10, 571,    68, 15,  0, -7, -47],
 				act_menu_tattle:	[10, 592,	 68, 15,  0, -7, -68],
 				act_menu_invisible:	[25, 405,     1,  1,  0, -0, 0],
-				act_status_grab:	[25, 439,    37, 11,  0, -18, 0],
-				act_status_scratch: [14, 452,    61, 11,  0, -30, 0],
-				act_status_tease:	[22, 467,    43, 11,  0, -21, 0],
-				act_status_cower:	[21, 480,    46, 11,  0, -23, 0], 
-				act_status_lick:	[7, 494,     73, 11,  0, -36, 0],
-				act_status_tattle:	[7, 516,    142, 11,  0, 0, 0],   // TATTLE ON EVERYONE needs computed alignment
+				
+				act_status_grab:	[7, 439,     77, 11,  0, -7, 0],
+				act_status_scratch: [7, 452,     77, 11,  0, -6, 0],
+				act_status_tease:	[7, 467,     77, 11,  0, -6, 0],
+				act_status_cower:	[7, 480,     77, 11,  0, -6, 0], 
+				act_status_lick:	[7, 494,     77, 11,  0, -6, 0],
+				act_status_tattle:	[7, 516,    142, 11,  0, -17, 0],   // TATTLE ON EVERYONE needs computed alignment
 				
 				
 				digit_0:			[129, 18,   22, 27,  0, 0, 0],

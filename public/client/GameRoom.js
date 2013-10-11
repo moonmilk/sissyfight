@@ -65,6 +65,11 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.btn_exitgame.addEventListener("click", this.handleExitButton);
 		
 		
+		// action status tag displays which game action you've chosen
+		this.items.actionStatusTag = this.addChild(this.assets.act_status_grab.clone());
+		this.items.actionStatusTag.y = 210;
+		this.items.actionStatusTag.visible = false;
+		
 		// layer for action menus
 		this.layers.actionMenuLayer = this.addChild(new createjs.Container());
 		
@@ -172,6 +177,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				this.lollyCounter = event.data.lollies;
 				this.tattleCounter = event.data.tattles;
 				this.items.console.setLolliesAndTattles(event.data.lollies, event.data.tattles);
+				this.setPlayerActionTag(); // clear all action tags
 				break;
 			
 			case 'status':	// health of each player (maybe other things in future? but probably just health)
@@ -354,7 +360,11 @@ var p = GameRoom.prototype = new createjs.Container();
 		else if (event.type=='pressup') {
 			if (this.items.actionMenu) {
 				var selectedAction = this.items.actionMenu.getSelectedAction();
-				if (selectedAction) console.log('action', selectedAction, 'on player', player.playerInfo.nickname);
+				// tell the server
+				if (selectedAction) g.comm.writeEvent('act', {action:selectedAction});
+				// show the choice on target player
+				this.setPlayerActionTag(player, selectedAction);
+				// get rid of menu
 				this.removeActionMenu();
 			}
 		}
@@ -369,10 +379,36 @@ var p = GameRoom.prototype = new createjs.Container();
 		}
 	}
 	
-	p.playerActionItem = function(player, action) {
-		console.log('playerActionItem', player, action);
-	}
 	
+	// Display tag under player showing action you've chosen against them.  There can be only one at a time.
+	// With no arguments, clears all action tags.
+	p.setPlayerActionTag = function(targetPlayer, action) {
+		if (!targetPlayer) {
+			this.items.actionStatusTag.visible = false;
+		}
+		else {
+			// lick, tattle, and cower are always marked on self, regardless of who the user clicked on to choose them.	
+			if (action=='lick' || action=='cower' || action=='tattle') targetPlayer = this.playersByID[this.me];
+			
+			this.items.actionStatusTag.gotoAndStop('act_status_' + action);
+			this.items.actionStatusTag.visible = true;
+			
+			if (action != 'tattle') {
+				this.items.actionStatusTag.x = targetPlayer.x;				
+			}
+			else {
+				// tattle tag should be centered across all opponents, so find leftmost and rightmost and split the difference
+				// TODO: don't count opponents who have already lost the game
+				var leftmost = 9999, rightmost = 0;
+				_.each(this.playersByID, function(player) {
+					if (player.x < leftmost) leftmost = player.x;
+					if (player.x > rightmost) rightmost = player.x;
+				}, this);
+				this.items.actionStatusTag.x = Math.floor((leftmost + rightmost) / 2);
+			}
+
+		}
+	}
 	
 	
 	

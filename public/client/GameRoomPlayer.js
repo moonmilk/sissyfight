@@ -76,6 +76,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.chatText.setFakeScale(g.gameScale);
 		this.items.chatText.setPosition(5, 7);
 		this.items.chatText.setSize(76, 59);
+
 		
 		this.chatBuffer = [];
 	}
@@ -137,7 +138,6 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		// for now, health is the only member of status
 		this.setHealth(s.health);
 	}
-	
 	
 	
 	
