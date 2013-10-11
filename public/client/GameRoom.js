@@ -169,11 +169,11 @@ var p = GameRoom.prototype = new createjs.Container();
 			case 'startGame':	// game is starting!
 				this.state = 'game';
 				this.items.console.setMode('game');
-				_.each(this.playersByID, function(player){player.resetActed()}, this);
 				break;
 				
 			case 'startTurn':
 				this.setTimer(event.data.time);
+				_.each(this.playersByID, function(player){player.resetActed()}, this);
 				this.lollyCounter = event.data.lollies;
 				this.tattleCounter = event.data.tattles;
 				this.items.console.setLolliesAndTattles(event.data.lollies, event.data.tattles);
@@ -186,6 +186,11 @@ var p = GameRoom.prototype = new createjs.Container();
 					else console.log("GameRoom.handlegameEvent: got status for player who isn't here, userid=",playerID);
 				}, this);
 				break;
+				
+			case 'countdown': // every player has moved; final countdown gives everyone [10] seconds to change their minds
+				if (this.getTimer() > event.data.time) this.setTimer(event.data.time);
+				break;	
+			
 			
 			default:
 				console.log('GameRoom: got unknown gameEvent ', event.data);
@@ -305,17 +310,24 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.timerNextTick = undefined;
 	}
 	
+	p.getTimer = function() {
+		return this.timerTime;
+	}
+	
 	// updateTimer returns true if timer hits 0
 	p.updateTimer = function() {
 		if (!this.timerNextTick) return;
 		
-		var now = createjs.Ticker.getTime() + 1000;
+		var now = createjs.Ticker.getTime();
 		if (now >= this.timerNextTick && this.timerTime > 0) {
 			this.timerTime -= 1;
 			this.items.console.setTimer(this.timerTime);
 			
+			// time's up?
 			if (this.timerTime == 0) {
 				this.timerNextTick = undefined;
+				// let the server know i failed to move before timer ran out
+				comm.writeEvent('act', {action:'timeout'});
 				return true;
 			}
 			else {
@@ -360,8 +372,16 @@ var p = GameRoom.prototype = new createjs.Container();
 		else if (event.type=='pressup') {
 			if (this.items.actionMenu) {
 				var selectedAction = this.items.actionMenu.getSelectedAction();
-				// tell the server
-				if (selectedAction) g.comm.writeEvent('act', {action:selectedAction});
+				
+				// tell the server (cower/lick/tattle don't have a target)
+				if (selectedAction) {
+					var action = {action:selectedAction};
+					if (selectedAction=='grab' || selectedAction=='scratch' || selectedAction=='tease') {
+						action.target = player.playerInfo.id;
+					}
+					g.comm.writeEvent('act', action);
+				}
+				
 				// show the choice on target player
 				this.setPlayerActionTag(player, selectedAction);
 				// get rid of menu
