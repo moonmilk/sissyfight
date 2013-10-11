@@ -68,8 +68,12 @@ block javascript
 block content
 	h1 SiSSYFiGHT 2000&frac12;
 	
-	p: form(method='post',action='/user/logout')
-		input(type='submit', value='log out')
+	table
+		tr
+			td: form(method='post',action='/user/logout')
+					input(type='submit', value='log out')
+			td: form(method='get',action='/game')
+					input(type='submit', value='reload')
 			
 	script(type='text/javascript').
 		window.onload = function() {
