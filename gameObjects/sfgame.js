@@ -668,7 +668,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				&& p1.target.action=='tease' && p1.target.teasers.length==1 && !p1.target.resolved
 				&& p1.target.target == p1) {
 			p1.resolved = true;
-			p2.resolved = true;
+			p1.target.resolved = true;
 			
 			narrative.push({
 				scene: 14,
