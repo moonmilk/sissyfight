@@ -1,6 +1,6 @@
 {
   "name": "sissyfight",
-  "version": "0.0.1-5",
+  "version": "0.0.1-19",
   "private": true,
   "scripts": {
     "start": "node app.js",
@@ -19,7 +19,7 @@
     "sequelize": "*",
     "jugglingdb": "*",
     "jugglingdb-redis": "*",
-    "lodash": "*",
+    "lodash": "2.2.1",
     "bcrypt": "*"
   },
   "devDependencies": {
