@@ -64,6 +64,7 @@ SFGame.DAMAGE_COWER_SCARED = 1;		// for cowering unproductively twice in a row
 SFGame.DAMAGE_SCRATCH = 1;			// for being scratched (per scratcher)
 SFGame.DAMAGE_LOLLY_SCRATCH	= 2,	// for being scratched while trying to lick a lolly (per scratcher)
 SFGame.DAMAGE_GRAB = 1;				// for being grabbed (per grabber)
+SFGame.DAMAGE_GRAB_SCRATCH = 2;		// scratched while grabbed (per scratcher)
 SFGame.DAMAGE_TEASE_ADD = 0;		// 
 SFGame.DAMAGE_TEASE_MULT = 2,		// tease damage is 0 if 1 attacker, else ADD+MULT*(# of attackers)
 SFGame.DAMAGE_TIMEOUT = 1,			// for not choosing an action (or sending an invalid action)
