@@ -234,12 +234,20 @@ SFGame.prototype.resolveTurn = function() {
 		this.resolveTurnStage1(narrative, actions);
 		this.resolveTurnStage2(narrative, actions);
 		
-		this.gameEvent('endTurn', {narrative:narrative});
 	}
 	catch (err) {
 		console.log('game resolution error '+err, err.stack);
+		narrative.push({
+			scene: 0,
+			text: "Server broke down like a crybaby: " + err.stack.split('\n').slice(0,3).join(', ').replace(/\s+/g, ' '),
+			code: null,
+			damage: {}
+		});
 	}
 	
+	this.gameEvent('endTurn', {results:narrative});
+	this.broadcastStatus();
+
 	this.startTurn()
 }
 
@@ -848,7 +856,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	}, this);
 	
 	
-}
+} // end resolveTurnStage2
 
 
 
