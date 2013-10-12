@@ -695,7 +695,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				teaser.resolved = true;
 			});
 		
-			var text =_.pluck(victim.teasers, 'nickname').join(" and ") + " teased " + victim.name + ".";
+			var text =_.pluck(victim.teasers, 'nickname').join(" and ") + " teased " + victim.nickname + ".";
 			var scene;
 			var damage;
 			
