@@ -84,7 +84,8 @@ SFGame.prototype.leave = function(conn) {
 	var leaver = this.players[conn.user.id];
 	if (leaver) {
 		leaver.zombie = true;
-		leaver.action = 'leave';
+		//leaver.action = 'leave';
+		this.act(conn, {action:'leave'});
 	}
 }
 
@@ -107,6 +108,11 @@ SFGame.prototype.act = function(conn, data) {
 	}
 	
 	// record the action - new actions replace old ones - except timeout, which is also recorded separately.
+	if (data.action=='leave') {
+		// leave should also set timeout so turn doesn't hang up waiting for departed player's timeout
+		actorInfo.action = 'leave';
+		actorInfo.timeout = true;
+	}
 	if (data.action=='timeout') {
 		actorInfo.timeout = true;
 		if (!actorInfo.action) actorInfo.action = 'timeout';
