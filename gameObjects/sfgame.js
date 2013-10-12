@@ -370,7 +370,13 @@ SFGame.prototype.testActionStage1 = function(narrative, act) {
 				act.target.resolved = true;
 				act.resolved = true;
 			}
+			// target not cowering
+			else {
+				act.target.scratched = true;
+				act.target.scratchers.push(act);
+			}
 		}
+		
 	}
 	// end SCRATCH
 	
