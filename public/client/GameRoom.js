@@ -37,6 +37,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		this.players = [];		// map position 0-5 -> player - don't iterate over this because it might have gaps
 		this.playersByID = {};  // map id->player - iterate over this one for doing things to all players
+		this.looksByID = {};	// map id->avatar look, so can get looks even of players who have left the room
 		
 		this.items = [];
 		this.layers = [];
@@ -313,6 +314,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		var player = this.layers.playerLayer.addChild(new sf.GameRoomPlayer(i, facing, playerInfo, textElement));
 		this.players[i] = player;
 		this.playersByID[playerInfo.id] = player;
+		this.looksByID[playerInfo.id] = _.cloneDeep(playerInfo.avatar);
 		
 		// set its location
 		player.x = 4 + 86*i + (i > 0) * 5;	// 5 pixels extra space after the first opsition
@@ -495,7 +497,7 @@ var p = GameRoom.prototype = new createjs.Container();
 	p.displayResults = function(results) {
 		this.displayResultsDone(); // get rid of previous round's results, if any
 		this.items.console.disableShowResults();
-		this.items.resultsDisplay = this.layers.resultsLayer.addChild(new sf.GameRoomResultsDisplay(this.assets, this.playersByID, results));
+		this.items.resultsDisplay = this.layers.resultsLayer.addChild(new sf.GameRoomResultsDisplay(this.assets, this.looksByID, results));
 		this.items.resultsDisplay.x = 88;  // moved right from original design enough to not cover the chat box
 		this.items.resultsDisplay.y = 119;
 		this.items.resultsDisplay.start();

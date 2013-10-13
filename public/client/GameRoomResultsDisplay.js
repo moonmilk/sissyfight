@@ -19,13 +19,13 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(assets, playersByID, results) {
+	p.initialize = function(assets, looksByID, results) {
 		this.Container_initialize();
 		
 		this.assets = assets;
-		this.playersByID = playersByID;
+		this.looksByID = looksByID;
 		this.results = results;
-		//console.log('GRRD', this.assets, this.playersByID, this.results);
+		//console.log('GRRD', this.assets, this.looksByID, this.results);
 		
 		this.items = [];
 		
@@ -151,7 +151,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		}
 		
 		_.each(results.damage, function(points, id) {
-			var look = _.cloneDeep(this.playersByID[id].items.avatar.look);
+			var look = _.cloneDeep(this.looksByID[id]);
 			look.remove_background = true;
 			
 			var avatar = new sf.Avatar();
