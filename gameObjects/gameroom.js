@@ -156,9 +156,21 @@ GameRoom.prototype.act = function(conn, data) {
 
 // start a new game
 GameRoom.prototype.startGame = function() {
-	console.log("GameRoom: starting game with occupants " + this.getOccupantNicknames().join(", "));
+	console.log("GameRoom", this.id, this.name, "starting game with occupants " + this.getOccupantNicknames().join(", "));
 	this.game = new SFGame(this);
+	this.game.on('gameOver', this.gameOver.bind(this));
 
+	this.emit('update', {update:'status', roomInfo:this.getInfo()});
+}
+
+
+// game tells me it's over!
+GameRoom.prototype.gameOver = function() {
+	if (this.game) {
+		this.game.removeAllListeners();
+		this.game = undefined;
+	}
+	console.log("GameRoom", this.id, this.name, "just ended game");
 	this.emit('update', {update:'status', roomInfo:this.getInfo()});
 }
 

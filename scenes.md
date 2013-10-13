@@ -21,8 +21,10 @@
 * 18: failed tattle (more than one tattler)
 * 19: lick lolly (one or more players)
 * 20: humiliation
-
+* 21: *list of survivors (not used)*
 * 22: timeout (didn't choose action before end of turn)
-
+* 23: **game over, no winners**
+* 24: **game over, one winner**
+* 25: **game over, two winners**
 * 26: mutual scratch
 * 27: leave the room

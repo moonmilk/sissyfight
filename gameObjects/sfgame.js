@@ -2,6 +2,7 @@
 
 var _ = require("lodash");
 var util = require("util");
+var events = require("events");
 
 
 
@@ -22,6 +23,8 @@ function SFGame(gameroom) {
 	this.startTurn();
 }
 
+// SFGame is EventEmitter so it can emit GameOver for the GameRoom
+util.inherits(SFGame, events.EventEmitter);
 
 // each user starts out with ...
 SFGame.INITIAL_STATUS = {
@@ -71,9 +74,11 @@ SFGame.DAMAGE_TIMEOUT = 1,			// for not choosing an action (or sending an invali
 
 SFGame.MAX_HEALTH = 10;				// most possible health points
 
+SFGame.MIN_PLAYERS = 3;				// game ends when drop below 3 players
+
 
 SFGame.HUMILIATION_TEXTS = [
-	" was totally embarassed and lost all her self-esteem. She has to sit out for the rest of the game!",
+	" was totally embarrassed and lost all her self-esteem. She has to sit out for the rest of the game!",
 	" couldn't take it any more and collapsed into sobs! With no self-esteem left, she's out of the game!",
 	" broke down into a bawling crybaby from being humiliated so much! And the game went on..."
 ];
@@ -104,6 +109,10 @@ SFGame.prototype.act = function(conn, data) {
 	var actorInfo = this.players[conn.user.id];
 	if (!actorInfo) {
 		console.log('SFGame.act - connection user seems not to be in game', this.gameroom.name, this.gameroom.id, conn.user);
+		return;
+	}
+	if (actorInfo.loser) {
+		// this player lost already and should not be submitting actinos
 		return;
 	}
 	
@@ -141,12 +150,12 @@ SFGame.prototype.act = function(conn, data) {
 			}
 		}
 	}
-	// if everyone has reached timeout (can't find any player with timeout=false), turn is over!
-	if (!_.find(this.players, {timeout:false})) {
+	// if everyone has reached timeout (can't find any surviving player with timeout=false), turn is over!
+	if (!_.find(this.players, function(p){ if(p.loser || p.zombie) return false; else return !p.timeout })) {
 		this.resolveTurn();
 	}
-	// otherwise, if everyone has acted (can't find any player with no action), go to final countdown 
-	else if (!_.find(this.players, {action:false})) {
+	// otherwise, if everyone has acted (can't find any surviving player with no action), go to final countdown 
+	else if (!_.find(this.players, function(p){ if (p.loser || p.zombie) return false; else return !p.action })) {
 		this.gameEvent('countdown', {time:SFGame.COUNTDOWN_TIME});
 	}
 
@@ -236,10 +245,11 @@ SFGame.prototype.resolveTurn = function() {
 	
 	// make ordered list of playerInfos
 	var actions = [];
-
+	var gameOver = false;
+	
 	try {
 		this.resolveTurnStage1(narrative, actions);
-		this.resolveTurnStage2(narrative, actions);
+		gameOver = this.resolveTurnStage2(narrative, actions);
 		
 	}
 	catch (err) {
@@ -254,8 +264,14 @@ SFGame.prototype.resolveTurn = function() {
 	
 	this.gameEvent('endTurn', {results:narrative});
 	this.broadcastStatus();
-
-	this.startTurn()
+	
+	if (gameOver) {
+		this.gameEvent('endGame');
+		this.emit('gameOver');
+	}
+	else {
+		this.startTurn()
+	}
 }
 
 
@@ -450,6 +466,7 @@ SFGame.prototype.testActionStage1 = function(narrative, act) {
 // SECOND PASS
 // resolve unresolved actions into narrative scenes
 // (only scenes 4 and 5 have already been found during stage 1)
+// ...returns true if game has ended
 SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	
 	// look for SCENE 1: unproductive cowering alone 
@@ -855,10 +872,13 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				}
 				
 				if (player.health==0) {
+					// set the loser flag so can be skipped in future rounds
+					player.loser = true;
+					
 					// if newly humiliated, make a scene
 					narrative.push({
 						scene: 20,
-						text: _.sample(SFGame.HUMILIATION_TEXTS),
+						text: player.nickname + _.sample(SFGame.HUMILIATION_TEXTS),
 						code: null, // TODO
 						damage: {}
 					});
@@ -867,6 +887,49 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			}, this);
 		}
 	}, this);
+	
+	
+	
+	// SCENES 23-25 END OF GAME?
+	var gameOver = false;
+	var survivors = _.where(actions, function(player) {return (player.health > 0 && !player.zombie)});
+	if (survivors.length >= SFGame.MIN_PLAYERS) {
+		// game's not over yet!
+		
+	}
+	else if (survivors.length > 1) {
+		// SCENE 25: dual win!
+		narrative.push({
+			scene: 25,
+			text: _.pluck(survivors, 'nickname').join(' and ') + ' became best friends and won the game!',
+			code: null, //TODO
+			damage: {}
+		});
+		gameOver = true; 
+	}
+	else if (survivors.length == 1) {
+		// SCENE 24: solo win!
+		narrative.push({
+			scene: 24,
+			text: survivors[0].nickname + " won the game all by herself!",
+			code: null, //TODO
+			damage: {}
+		});
+		gameOver = true;
+	}
+	else {
+		// SCENE 23: no winner!
+		narrative.push({
+			scene: 23,
+			text: "Everybody was humiliated and nobody won!",
+			code: null, //TODO
+			damage: {}
+		});
+		gameOver = true;
+	}
+	
+	
+	return gameOver;
 	
 	
 } // end resolveTurnStage2
