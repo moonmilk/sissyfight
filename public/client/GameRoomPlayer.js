@@ -10,6 +10,7 @@ this.sf = this.sf||{};
 
 //args:
 // position: 0-5 (0 is always current player), kept for GameRoom's use and to choose uniform and text
+// facing: 0 left or 1 right
 // playerInfo: {nickname, avatar}
 // textElement: html div to use for chat text
 var GameRoomPlayer = function() {
@@ -20,19 +21,24 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(position, playerInfo, textElement) {
+	p.initialize = function(position, facing, playerInfo, textElement) {
 		this.Container_initialize();
 		
-		this.position = position;
-		this.playerInfo = playerInfo;
+		this.position = position;  		// 0-5 position in gameroom
+		this.facing = facing; 			// 0 left or 1 right
+		this.playerInfo = playerInfo;	// {id, nicknamename, avatar} 
 		this.textElement = textElement;
 		
 		this.playerInfo.avatar.uniformcolor = position;
+		/* gonna try a different facing system
 		// players on the left side of the screen face right; the other half face left
 		if (position < sf.GameRoom.MAX_PLAYERS/2) this.playerInfo.avatar.headdir = 1;
 		else this.playerInfo.avatar.headdir = 0;
 		// all players have left-facing posture
 		this.playerInfo.avatar.bodydir = 0;
+		*/
+		this.playerInfo.avatar.headdir = this.playerInfo.avatar.bodydir = this.facing;
+		
 		// allow avatar background elements
 		this.playerInfo.avatar.remove_background = false
 		
@@ -146,19 +152,24 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		return (this.status.health==0);
 	}
 	
+	p.setFacing = function(facing) {
+		this.facing = facing;
+		this.items.avatar.setLook({headdir:facing, bodydir:facing});
+	}
+	
 	
 	p.setPose = function(pose) {
 		switch (pose) {
 			case 'normal':
-				this.items.avatar.setLook({pose:0});
+				this.items.avatar.setLook({pose:0, expression:0});
 				break
 			
 			case 'crying':
-				this.items.avatar.setLook({pose:1});
+				this.items.avatar.setLook({pose:1, expression:3});
 				break			
 				
 			case 'victory':
-				this.items.avatar.setLook({pose:2});
+				this.items.avatar.setLook({pose:2, expression:2});
 				break
 				
 		}

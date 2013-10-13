@@ -206,7 +206,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'endTurn':
 				this.setPlayerActionTag();
-				// display turn results
+				// display turn results and give winners victory pose
 				// TODO
 				break;
 				
@@ -290,7 +290,8 @@ var p = GameRoom.prototype = new createjs.Container();
 			console.log("GameRoom: ran out of textElements!"); // this should also never happen
 		}
 		// create player
-		var player = this.layers.playerLayer.addChild(new sf.GameRoomPlayer(i, playerInfo, textElement));
+		var facing = (i >= GameRoom.MAX_PLAYERS/2) ? 0 : 1;
+		var player = this.layers.playerLayer.addChild(new sf.GameRoomPlayer(i, facing, playerInfo, textElement));
 		this.players[i] = player;
 		this.playersByID[playerInfo.id] = player;
 		
