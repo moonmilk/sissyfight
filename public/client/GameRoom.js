@@ -23,6 +23,8 @@ var p = GameRoom.prototype = new createjs.Container();
 	p.initialize = function(me, gameInfo) {
 		this.Container_initialize();
 		
+		g.testGameRoom = this;
+		
 		this.prepareAssets();
 		
 		this.me = me; // id of this player, so I don't need any memory to know which one is me
@@ -187,9 +189,12 @@ var p = GameRoom.prototype = new createjs.Container();
 			
 			case 'status':	// health of each player (maybe other things in future? but probably just health)
 				_.each(event.data.status, function(playerStatus, playerID) {
-					if (this.playersByID[playerID]) {
-						this.playersByID[playerID].setStatus(playerStatus);
-						if (playerStatus.health===0) this.playersByID[playerID].setPose('crying');
+					var player = this.playersByID[playerID]; 
+					if (player) {
+						player.setStatus(playerStatus);
+						if (playerStatus.health===0) {
+							player.setPose('crying');
+						}
 					}
 					else console.log("GameRoom.handlegameEvent: got status for player who isn't here, userid=",playerID);
 				}, this);

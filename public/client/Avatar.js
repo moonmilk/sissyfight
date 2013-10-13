@@ -45,15 +45,15 @@ var Avatar = function(masterlayers, offset) {
 }
 var p = Avatar.prototype = new createjs.Container();
 
-	p.info = null;
+	//p.info = null;
 	
 	p.NUM_LAYERS = config.avatar.numAvatarLayers;
-	p.layers = [];
+	//p.layers = [];
 		
 	p.NUM_POSES = config.avatar.numPoses;
 	
-	p.look = {};
-	p.offset = {x:0, y:0};
+	//p.look = {};
+	//p.offset = {x:0, y:0};
 
 	p.Container_initialize = p.initialize;
 	
@@ -65,28 +65,39 @@ var p = Avatar.prototype = new createjs.Container();
 	p.initialize = function(masterLayers, offset) {
 		this.Container_initialize();
 		
+		this.info = null;
+		this.look = {};
+		this.offset = {x:0, y:0};
+		
+		this.testID = Math.random();
+		
 		if (offset) this.offset = offset;	
 		
-		
+		this.layers = [];
 		for (var l=0; l<this.NUM_LAYERS; l++) {	
-			p.layers[l] = new createjs.Container();
-			p.layers[l].info = "Avatar layer " + l + " container."
+			this.layers[l] = new createjs.Container();
+			this.layers[l].info = "Avatar " + this.testID + " layer " + l + " container."
 			if (masterLayers && masterLayers.length==this.NUM_LAYERS) {
-				masterLayers[l].addChild(p.layers[l]);
+				masterLayers[l].addChild(this.layers[l]);
 			}
 			else {				
-				this.addChild(p.layers[l]);
+				this.addChild(this.layers[l]);
 			}
-			p.layers[l].x = this.offset.x;
-			p.layers[l].y = this.offset.y;
+			this.layers[l].x = this.offset.x;
+			this.layers[l].y = this.offset.y;
 		}
 		
 		//this.clear();
 	}
 	
 	p.clear = function() {
+		this.look = _.cloneDeep(this.look);
 		_.defaults(this.look, {remove_background:false, name:"{NO NAME}", face:0,skincolor:0,expression:0,hairstyle:0,haircolor:0,pose:0,bodydir:0,headdir:0,uniform:0,uniformcolor:0, addons:[]});
+		if (this.sprites) _.each(this.sprites, function(sprite){ if (sprite.parent) sprite.parent.removeChild(sprite)});
+		if (this.addonSprites) _.each(this.addonSprites, function(sprite){ if (sprite.parent) sprite.parent.removeChild(sprite)});
+		
 		this.sprites = {face:null, hair:null, body:null, uniform:null};
+		this.addonSprites = [];
 		
 		//console.log(this.layers)
 		//_(this.layers).each(function(layer){layer.removeAllChildren();});
@@ -157,7 +168,10 @@ var p = Avatar.prototype = new createjs.Container();
 				// (addon sprites have the addon property)
 				//this.layers[spriteInfo.layer].removeAllChildren();
 				_(this.layers[spriteInfo.layer].children).where({addon:undefined}).map(function(sprite){sprite.parent.removeChild(sprite)});
-				if (spriteInfo.sprite) this.layers[spriteInfo.layer].addChild(spriteInfo.sprite); // there can also be override layers where sprite is null but you should still clear this layer 
+				if (spriteInfo.sprite) {
+					this.layers[spriteInfo.layer].addChild(spriteInfo.sprite); // there can also be override layers where sprite is null but you should still clear this layer 
+					this.addonSprites.push(spriteInfo.sprite);
+				}
 			}, this);
 		}, this);
 	}
