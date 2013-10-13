@@ -167,11 +167,16 @@ var p = GameRoom.prototype = new createjs.Container();
 				break;
 				
 			case 'startGame':	// game is starting!
+				this.removeActionMenu();
 				this.state = 'game';
 				this.items.console.setMode('game');
+				_.each(this.playersByID, function(player) {
+					player.setPose('normal');
+				})
 				break;
 				
 			case 'startTurn':
+				this.removeActionMenu();
 				this.setTimer(event.data.time);
 				_.each(this.playersByID, function(player){player.resetActed()}, this);
 				this.lollyCounter = event.data.lollies;
@@ -182,7 +187,10 @@ var p = GameRoom.prototype = new createjs.Container();
 			
 			case 'status':	// health of each player (maybe other things in future? but probably just health)
 				_.each(event.data.status, function(playerStatus, playerID) {
-					if (this.playersByID[playerID]) this.playersByID[playerID].setStatus(playerStatus);
+					if (this.playersByID[playerID]) {
+						this.playersByID[playerID].setStatus(playerStatus);
+						if (playerStatus.health===0) this.playersByID[playerID].setPose('crying');
+					}
 					else console.log("GameRoom.handlegameEvent: got status for player who isn't here, userid=",playerID);
 				}, this);
 				break;
@@ -190,6 +198,23 @@ var p = GameRoom.prototype = new createjs.Container();
 			case 'countdown': // every player has moved; final countdown gives everyone [10] seconds to change their minds
 				if (this.getTimer() > event.data.time) this.setTimer(event.data.time);
 				break;	
+				
+			case 'endTurn':
+				this.setPlayerActionTag();
+				// display turn results
+				// TODO
+				break;
+				
+			case 'endGame':
+				this.removeActionMenu();
+				this.state = 'pregame';
+				this.items.console.setMode('pregame');
+				_.each(this.playersByID, function(player) {
+					player.resetActed();
+				});
+				// display endgame scoreboard
+				// TODO
+				break;
 			
 			
 			default:
@@ -349,12 +374,22 @@ var p = GameRoom.prototype = new createjs.Container();
 			var whichMenu;  // nothing, boot, self, or action?
 			var clickedMe = (player.playerInfo.id == this.me)  // clicked on self avatar or other's avatar?
 			if (this.state=='pregame') {
+				return; // for now, hide the boot menu since the function's not implemented
+				
 				if (!clickedMe) whichMenu = 'boot';
 				else return;
 			}
 			else if (this.state=='game') {
+				// disable all menus if current player has lost
+				if (this.playersByID[this.me].hasLost()) return;
+			
 				if (clickedMe) whichMenu = 'self';
-				else whichMenu = 'other';
+				else {
+					// disable menu on opponents who have lost already
+					if (player.hasLost()) return;
+					
+					whichMenu = 'other';
+				}
 			}
 			else return;
 		

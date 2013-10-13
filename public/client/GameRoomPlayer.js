@@ -136,7 +136,32 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	}
 	p.setStatus = function(s) {
 		// for now, health is the only member of status
+		this.status = s;
 		this.setHealth(s.health);
+	}
+	p.getStatus = function() {
+		return this.status;
+	}
+	p.hasLost = function() {
+		return (this.status.health==0);
+	}
+	
+	
+	p.setPose = function(pose) {
+		switch (pose) {
+			case 'normal':
+				this.items.avatar.setLook({pose:0});
+				break
+			
+			case 'crying':
+				this.items.avatar.setLook({pose:1});
+				break			
+				
+			case 'victory':
+				this.items.avatar.setLook({pose:2});
+				break
+				
+		}
 	}
 	
 	

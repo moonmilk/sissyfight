@@ -144,6 +144,8 @@ GameRoom.prototype.act = function(conn, data) {
 			this.startVotes[conn] = true;
 			var votes = _.size(this.startVotes);
 			if (votes >= GameRoom.MIN_PLAYERS && votes==this.occupants.length) {
+				// reset vote counter
+				this.startVotes = {};
 				// start the game!
 				this.startGame();
 			}
