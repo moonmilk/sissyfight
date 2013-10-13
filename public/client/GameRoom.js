@@ -482,7 +482,7 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	// show the turn results pictures
 	p.displayResults = function(results) {
-		this.items.resultsDisplay = this.layers.resultsLayer.addChild(new sf.GameRoomResultsDisplay(this.assets, results));
+		this.items.resultsDisplay = this.layers.resultsLayer.addChild(new sf.GameRoomResultsDisplay(this.assets, this.playersByID, results));
 		this.items.resultsDisplay.x = 88;  // moved right from original design enough to not cover the chat box
 		this.items.resultsDisplay.y = 119;
 		this.items.resultsDisplay.start();

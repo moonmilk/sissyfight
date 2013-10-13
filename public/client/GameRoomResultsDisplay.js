@@ -19,11 +19,13 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(assets, results) {
+	p.initialize = function(assets, playersByID, results) {
 		this.Container_initialize();
 		
 		this.assets = assets;
+		this.playersByID = playersByID;
 		this.results = results;
+		//console.log('GRRD', this.assets, this.playersByID, this.results);
 		
 		this.items = [];
 		
@@ -37,6 +39,15 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		}
 		this.items.frame = this.addChild(assets.results_frame.clone());
 		this.items.bg = this.addChild(assets.results_bg.clone());
+		
+		// layer to draw the scene in - has a mask to keep items from leaking out
+		this.items.scene = this.addChild(new createjs.Container());
+		this.items.scene.x = 6;
+		this.items.scene.y = 6;
+		this.items.scene.mask = new createjs.Shape();
+		this.items.scene.mask.graphics.beginFill('#fff').rect(0, 0, 319, 95).endFill();
+		this.items.scene.mask.x = 6;
+		this.items.scene.mask.y = 6;
 
 		this.items.caption = this.addChild(new createjs.Text());
 		this.items.caption.y = 104;
@@ -65,6 +76,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.btn_back.removeAllEventListeners();
 		this.items.btn_next.removeAllEventListeners();
 		this.items.btn_done.removeAllEventListeners();
+		this.items.scene.removeAllChildren();
 	}
 	
 	
@@ -75,6 +87,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		
 		this.items.frame.x = step;
 		this.items.bg.x = step;
+		this.items.scene.x = step;
 		
 		this.items.caption.textAlign = 'center';
 		this.items.caption.lineWidth = 237;
@@ -89,6 +102,8 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.btn_done.x = 288 + step;
 		
 		this.items.caption.text = this.results[n].text;
+		
+		this.makeScene(this.items.scene, this.results[n]);
 	}
 
 	
@@ -108,6 +123,61 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				
 		}
 	}
+	
+	
+	
+	p.makeScene = function(scene, results) {
+		// clear out previous scene, if any
+		scene.removeAllChildren();
+		
+		this.makeUnfinishedScene(scene, results);
+	}
+	
+	
+	p.makeUnfinishedScene = function(scene, results) {
+		var apology = new createjs.Text("I didn't finish coding this scene :(", '14px Arial', '#883333');
+		apology.textAlign = 'left';
+		apology.x = 10;
+		apology.y = 1
+		scene.addChild(apology);
+		
+		var tx = 50, step = 60;
+		
+		if (_.size(results.damage)==0) {
+			var nobody = new createjs.Text("Nobody gained or lost points in this round.", '14 px Arial Bold', '#000000');
+			nobody.x = 10;
+			nobody.y = 40;
+			scene.addChild(nobody);
+		}
+		
+		_.each(results.damage, function(points, id) {
+			var look = _.cloneDeep(this.playersByID[id].items.avatar.look);
+			look.remove_background = true;
+			
+			var avatar = new sf.Avatar();
+			avatar.setLook(look);
+			avatar.x = tx;
+			avatar.y = 10;
+			scene.addChild(avatar);
+			
+			var ouch;
+			if (points > 0) {
+				ouch = new createjs.Text("-" + points, '20px Arial Bold', '#ff5555');
+			}
+			else {
+				ouch = new createjs.Text("+"+(0-points), '20px Arial Bold', '#55ff55');
+			}
+			ouch.x = tx - 37;
+			ouch.y = 15;
+			scene.addChild(ouch);
+
+			
+			tx += step;
+		}, this);
+	}
+	
+	
+	
 	
 	
 	
