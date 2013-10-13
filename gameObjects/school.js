@@ -22,10 +22,19 @@ function School(params) {
 		name: 'hell room!', school:this.id
 	});
 	testGames.push({
-		name: 'jam packed', school:this.id, maxUsers:0
+		name: 'algebra 2', school:this.id
 	});	
 	testGames.push({
 		name: 'thunderdome', school:this.id
+	});	
+	testGames.push({
+		name: 'PLATE OF SHRIMP', school:this.id
+	});
+	testGames.push({
+		name: 'Lothlorien', school:this.id
+	});	
+	testGames.push({
+		name: 'preppies only!', school:this.id
 	});
 	for (var i=0; i<testGames.length; i++) {
 		this.createGame(testGames[i]);
