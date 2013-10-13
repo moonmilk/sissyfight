@@ -75,6 +75,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		// layer for action menus
 		this.layers.actionMenuLayer = this.addChild(new createjs.Container());
 		
+		// layer for results pictures 
+		this.layers.resultsLayer = this.addChild(new createjs.Container());
+		
 		// layer for dust cloud
 		this.layers.dustCloudLayer = this.addChild(new createjs.Container());
 		
@@ -118,6 +121,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		// get ticks for updating timer
 		this.handleTickBound = this.handleTick.bind(this);
 		createjs.Ticker.addEventListener('tick', this.handleTickBound);
+		
+		// 
 	}
 	
 	
@@ -206,8 +211,9 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'endTurn':
 				this.setPlayerActionTag();
-				// display turn results and give winners victory pose
-				// TODO
+				// display turn results  
+				this.displayResults(event.data.results);
+				
 				break;
 				
 			case 'endGame':
@@ -217,6 +223,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				_.each(this.playersByID, function(player) {
 					player.resetActed();
 				});
+				// give winners victory pose
+				// TODO
 				// display endgame scoreboard
 				// TODO
 				break;
@@ -472,8 +480,23 @@ var p = GameRoom.prototype = new createjs.Container();
 	}
 	
 	
+	// show the turn results pictures
+	p.displayResults = function(results) {
+		this.items.resultsDisplay = this.layers.resultsLayer.addChild(new sf.GameRoomResultsDisplay(this.assets, results));
+		this.items.resultsDisplay.x = 88;  // moved right from original design enough to not cover the chat box
+		this.items.resultsDisplay.y = 119;
+		this.items.resultsDisplay.start();
+		this.items.resultsDisplay.addEventListener('done', this.displayResultsDone.bind(this));
+	}
 	
-	
+	p.displayResultsDone = function() {
+		if (this.items.resultsDisplay) {
+			this.items.resultsDisplay.removeAllEventListeners();
+			this.layers.resultsLayer.removeChild(this.items.resultsDisplay);
+			this.items.resultsDisplay.destroy();
+			this.items.resultsDisplay = undefined;
+		}
+	}
 	
 	
 	

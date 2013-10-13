@@ -105,7 +105,8 @@ config['manifest'] = [
 			pieces: {
 				gameroom_bg:		[0, 0, 528, 276,   0,  0, 0],
 				bubble:				[4,23,  85, 78,    0,  0, 0],
-				shadow:				[23,203, 47,12,    0,  0, 0]
+				shadow:				[23,203, 47,12,    0,  0, 0],
+				results_bg:			[0, 277, 319, 95,  0,  -6, -6]  // it's really 325px wide but the frame has a 319px opening
 			}
 		}
 	},
@@ -170,8 +171,19 @@ config['manifest'] = [
 				counter_3:			[1, 56,      14, 5,  0, 0, 0],
 				counter_2:			[1, 56,       9, 5,  0, 0, 0],
 				counter_1:			[1, 56,       4, 5,  0, 0, 0],
-				counter_0:			[0, 56,		  1, 1,  0, 0, 0]
+				counter_0:			[0, 56,		  1, 1,  0, 0, 0],
 				
+				// results display
+				results_frame:		[  1, 179,  334, 132,    0, 0, 0],
+				results_frame_l:	[335, 179,    6, 132,    0, 0, 0],
+				results_frame_r:	[342, 179,    6, 132,    0, -328, 0],
+				
+				results_btn_back:	[511, 22,   49, 22,   0, 0, 0],
+				results_btn_next:	[564, 22,   46, 22,   0, 0, 0],
+				results_btn_done:	[612, 17,   55, 25,   0, 0, 0],
+				results_btn_back_pressed:	[511, 22,   49, 22,   0, -1, -1],
+				results_btn_next_pressed:	[564, 22,   46, 22,   0, -1, -1],
+				results_btn_done_pressed:	[612, 17,   55, 25,   0, -1, -1]
 			}
 		}
 	},
