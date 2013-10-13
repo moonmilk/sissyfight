@@ -118,6 +118,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		// watch for start button
 		this.items.console.addEventListener('start', this.handleStartButton.bind(this));
 		
+		// watch for show results button
+		this.items.console.addEventListener('showResults', this.handleShowResultsButton.bind(this));
+		
 		// get ticks for updating timer
 		this.handleTickBound = this.handleTick.bind(this);
 		createjs.Ticker.addEventListener('tick', this.handleTickBound);
@@ -144,6 +147,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		createjs.Ticker.removeEventListener('tick', this.handleTickBound);
 		
+		this.items.console.removeAllEventListeners();
 		this.items.console.destroy();
 	}
 	
@@ -211,12 +215,15 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'endTurn':
 				this.setPlayerActionTag();
+				this.lastTurnResults = event.data.results;
 				// display turn results  
-				this.displayResults(event.data.results);
+				this.displayResults(this.lastTurnResults);
+				this.items.console.enableShowResults();
 				
 				break;
 				
 			case 'endGame':
+				this.items.console.disableShowResults();
 				this.removeActionMenu();
 				this.state = 'pregame';
 				this.items.console.setMode('pregame');
@@ -281,6 +288,10 @@ var p = GameRoom.prototype = new createjs.Container();
 		g.comm.writeEvent("act", {action:"start"});
 	}
 
+	// handle show results button
+	p.handleShowResultsButton = function() {
+		if (this.lastTurnResults) this.displayResults(this.lastTurnResults);
+	}
 	
 	
 	p.addPlayer = function(playerInfo) {
@@ -482,6 +493,8 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	// show the turn results pictures
 	p.displayResults = function(results) {
+		this.displayResultsDone(); // get rid of previous round's results, if any
+		this.items.console.disableShowResults();
 		this.items.resultsDisplay = this.layers.resultsLayer.addChild(new sf.GameRoomResultsDisplay(this.assets, this.playersByID, results));
 		this.items.resultsDisplay.x = 88;  // moved right from original design enough to not cover the chat box
 		this.items.resultsDisplay.y = 119;
@@ -496,6 +509,7 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.items.resultsDisplay.destroy();
 			this.items.resultsDisplay = undefined;
 		}
+		this.items.console.enableShowResults();
 	}
 	
 	

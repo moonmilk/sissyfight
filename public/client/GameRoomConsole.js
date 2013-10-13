@@ -52,7 +52,12 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 		this.items.lollyCounter.y = 25;
 		this.items.tattleCounter = this.items.game.addChild(this.assets.counter_0.clone());
 		this.items.tattleCounter.x = 350;
-		this.items.tattleCounter.y = 41;		
+		this.items.tattleCounter.y = 41;	
+		
+		this.items.btn_showResults = this.items.game.addChild(this.assets.show_results_btn.clone());
+		this.items.btn_showResults.x = 388;
+		this.items.btn_showResults.y = 8;
+		this.disableShowResults();	
 		
 		this.setMode('pregame');
 	}
@@ -60,9 +65,11 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 	
 	p.start = function() {
 		this.items.btn_start.addEventListener('click', function(){this.dispatchEvent('start')}.bind(this));
+		this.items.btn_showResults.addEventListener('click', function(){this.dispatchEvent('showResults')}.bind(this));
 	}
 	p.destroy = function() {
-		
+		this.items.btn_start.removeAllEventListeners();
+		this.items.btn_showResults.removeAllEventListeners();
 	}
 	
 	p.setMode = function(mode) {
@@ -94,6 +101,13 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 		this.items.tattleCounter.gotoAndStop('counter_' + tattles);
 	}
 	
+	
+	p.disableShowResults = function() {
+		this.items.btn_showResults.visible = false;
+	}
+	p.enableShowResults = function() {
+		this.items.btn_showResults.visible = true;
+	}
 		
 		
 	sf.GameRoomConsole = GameRoomConsole;
