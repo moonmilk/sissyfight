@@ -755,7 +755,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	var code = null; // TODO!
 	_.each(actions, function(player) {
 		if (player.action=='tattle') tattlers.push(player);
-		else if (player.action=='lick') lickers.push(player);
+		else if (player.action=='lick' && !player.lostLolly) lickers.push(player); 
 		else if (player.action=='cower') cowerers.push(player);
 		else sufferers.push(player);
 	}, this);
