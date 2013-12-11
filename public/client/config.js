@@ -176,7 +176,7 @@ config['manifest'] = [
 				// results display
 				results_frame:		[  1, 179,  334, 132,    0, 0, 0],
 				results_frame_l:	[335, 179,    6, 132,    0, 0, 0],
-				results_frame_r:	[342, 179,    6, 132,    0, -328, 0],
+				results_frame_r:	[342, 179,    6, 132,    0, -327, 0],
 				
 				show_results_btn:	[668, 13,   51, 31,  0, 0, 0],
 				show_results_btn_pressed:	[668, 13,   51, 31,  0, -1, -1],

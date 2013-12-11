@@ -35,7 +35,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			f.x = i * GameRoomResultsDisplay.X_STEP;
 			
 			f = this.addChild(assets.results_frame_r.clone());
-			f.x = i * GameRoomResultsDisplay.X_STEP;
+			f.x = (i+1) * GameRoomResultsDisplay.X_STEP;
 		}
 		this.items.frame = this.addChild(assets.results_frame.clone());
 		this.items.bg = this.addChild(assets.results_bg.clone());
