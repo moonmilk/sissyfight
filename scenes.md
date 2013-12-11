@@ -1,7 +1,7 @@
 # sissyfight game narrative scenes
 
 
-* 1: cowering for no reason (1 cowerer per scene)
+* 1: cowering successfully or for no reason (1 cowerer per scene)
 * 2: grabbed by one, no lolly
 * 3: grabbed by more than one, no lolly
 * 4: cowering from grab

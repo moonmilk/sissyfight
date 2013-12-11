@@ -27,6 +27,8 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.results = results;
 		//console.log('GRRD', this.assets, this.looksByID, this.results);
 		
+		this.MIDPOINT = 210; // half the width of the display area
+		
 		this.items = [];
 		
 		// draw the fake frames that give the illusion of overlapping pictures
@@ -132,7 +134,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		
 		switch (results.scene) {
 			case 1:
-				this.makeScene1BadCower(scene, results);
+				this.makeSceneCowering(scene, results);
 				break;
 				
 			default:
@@ -142,10 +144,47 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		
 	}
 	
-	p.makeScene1BadCower = function(scene, results) {
+	
+	
+	// shortcut: make the avatar for a given player id, including damage if that ID is listed in damageList
+	//   expression is look items to override default look
+	p.makeAvatar = function(playerID, damageList, expression, x) {
+		var look = _.cloneDeep(this.looksByID[playerID]);
+		if (expression) _.assign(look, expression);
+		look.remove_background = true;
+		look.damage = damageList[playerID];
+		var avatar = new sf.Avatar();
+		avatar.setLook(look);
+		if (x) avatar.x = x;
+		avatar.y = 12;
 		
+		return avatar
 	}
 	
+
+	// One player cowering, successfully or not
+	// code: {cowerer: playerID, cower: 'good' | 'useless' | 'penalty'}
+	p.makeSceneCowering = function(scene, results) {
+		var expression;
+		switch (results.code.cower) {
+			case 'good': 
+				expression = sf.Avatar.expressions.CONTENT;
+				break;
+			
+			case 'useless':
+				expression = sf.Avatar.expressions.SAD;
+				break;
+				
+			case 'penalty':
+				expression = sf.Avatar.expressions.PAINED;
+				break;
+			
+		}
+
+		var avatar = this.makeAvatar(results.code.cowerer, results.damage, {expression: expression, pose: sf.Avatar.poses.COWERING}, this.MIDPOINT-30);
+		scene.addChild(avatar);
+	}
+
 	
 	p.makeUnfinishedScene = function(scene, results) {
 		var apology = new createjs.Text("I didn't finish coding this scene :(", '14px Arial', '#883333');

@@ -492,7 +492,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			narrative.push({
 				scene: 1,
 				text: cow.nickname + " cowered and looked innocent while the other girls fought.",
-				code: null, // TODO
+				code: {cowerer: cow.id, cower:'good'},
 				damage: {}
 			});
 		}
@@ -504,7 +504,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				narrative.push({
 					scene: 1,
 					text: cow.nickname + " cowered from nothing like a scaredy-cat.  If she does that again next turn, she's gonna be sorry!",
-					code: null, // TODO
+					code: {cowerer: cow.id, cower:'useless'},
 					damage: {}
 				});
 			}
@@ -516,7 +516,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				narrative.push({
 					scene: 1,
 					text: cow.nickname + " cowered again for no reason! She feels like a little wimp and loses self-esteem.",
-					code: null, // TODO
+					code: {cowerer: cow.id, cower:'penalty'},
 					damage: damage
 				})
 				
