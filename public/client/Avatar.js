@@ -174,6 +174,20 @@ var p = Avatar.prototype = new createjs.Container();
 				}
 			}, this);
 		}, this);
+		
+		// add damage display if it's in the look
+		if (this.look.damage) {
+			var damageDisplay;
+			if (this.look.damage > 0) {
+				damageDisplay = new createjs.Text("-" + this.look.damage, '20px Arial Bold', '#ff5555');
+			}
+			else {
+				damageDisplay = new createjs.Text("+"+(0-this.look.damage), '20px Arial Bold', '#55ff55');
+			}
+			damageDisplay.x = -37;
+			damageDisplay.y = 5;
+			this.layers[9].addChild(damageDisplay);
+		}
 	}
 	
 	

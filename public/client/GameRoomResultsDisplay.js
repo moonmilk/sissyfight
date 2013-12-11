@@ -130,7 +130,20 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		// clear out previous scene, if any
 		scene.removeAllChildren();
 		
-		this.makeUnfinishedScene(scene, results);
+		switch (results.scene) {
+			case 1:
+				this.makeScene1BadCower(scene, results);
+				break;
+				
+			default:
+				this.makeUnfinishedScene(scene, results);
+				break;
+		}
+		
+	}
+	
+	p.makeScene1BadCower = function(scene, results) {
+		
 	}
 	
 	
@@ -153,6 +166,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		_.each(results.damage, function(points, id) {
 			var look = _.cloneDeep(this.looksByID[id]);
 			look.remove_background = true;
+			look.damage = points;
 			
 			var avatar = new sf.Avatar();
 			avatar.setLook(look);
@@ -160,17 +174,6 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			avatar.y = 10;
 			scene.addChild(avatar);
 			
-			var ouch;
-			if (points > 0) {
-				ouch = new createjs.Text("-" + points, '20px Arial Bold', '#ff5555');
-			}
-			else {
-				ouch = new createjs.Text("+"+(0-points), '20px Arial Bold', '#55ff55');
-			}
-			ouch.x = tx - 37;
-			ouch.y = 15;
-			scene.addChild(ouch);
-
 			
 			tx += step;
 		}, this);
