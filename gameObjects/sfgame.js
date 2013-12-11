@@ -308,7 +308,7 @@ SFGame.prototype.resetTurnResolution = function(act) {
 	act.grabbed = false;
 	act.timeout = false;
 	act.licking = false;
-	act.lostlolly = false;
+	act.lostLolly = false;
 	act.tattling = false;
 	act.resolved = false;
 	act.scratchers = [];
@@ -754,10 +754,20 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	var text = "";
 	var code = null; // TODO!
 	_.each(actions, function(player) {
-		if (player.action=='tattle') tattlers.push(player);
-		else if (player.action=='lick' && !player.lostLolly) lickers.push(player); 
-		else if (player.action=='cower') cowerers.push(player);
-		else sufferers.push(player);
+		switch(player.action) {
+			case 'tattle': 
+				tattlers.push(player);
+				break;
+			case 'lick':
+				if (player.lostLolly) sufferers.push(player);
+				else lickers.push(player);
+				break;
+			case 'cower':
+				cowerers.push(player);
+				break;
+			default:
+				sufferers.push(player);
+		}
 	}, this);
 	
 	if (tattlers.length==1) {
