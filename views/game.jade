@@ -44,16 +44,24 @@ block javascript
 		// sissyfight namespace
 		this.sf = this.sf||{};
 				
-		// createJS says they'll change the name in next release.  Meanwhile:
-		//createjs.Sprite = createjs.BitmapAnimation;
 
 		sf.start = function(SockJS, auth, school) {
+			var appCanvas = document.getElementById('appCanvas');
+		
+			// disable browser drag-and-drop on game canvas 
+			//		http://developer.nokia.com/Community/Wiki/How_to_disable_dragging_of_images_and_text_selection_in_web_pages
+			//		http://stackoverflow.com/questions/704564/disable-drag-and-drop-on-html-elements
+			appCanvas.draggable = false;
+			appCanvas.onmousedown = function(event) {
+				if (event.preventDefault) event.preventDefault();
+				return false;
+			}
 			
 			if (g.gameScale==1) {
-				document.getElementById('appCanvas').className = 'singleCanvas';
+				appCanvas.className = 'singleCanvas';
 			}
 			else if (g.gameScale==2) {
-				document.getElementById('appCanvas').className = 'doubleCanvas';
+				appCanvas.className = 'doubleCanvas';
 			}
 			
 			
