@@ -164,6 +164,8 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 
 	// One player cowering, successfully or not
 	// code: {cowerer: playerID, cower: 'good' | 'useless' | 'penalty'}
+	// template for testing using player id 1:
+	//		[{scene:1, text:'cower test', damage:{1:1}, code:{cowerer:1, cower:'penalty'}}]
 	p.makeSceneCowering = function(scene, results) {
 		var expression;
 		switch (results.code.cower) {

@@ -86,6 +86,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		// prepare timer
 		this.timerTime = 0;  // seconds on timer;
 		this.timerNextTick = undefined;   // time in msec for next countdown, or falsey if timer's not running	
+
 	}
 	
 	
@@ -126,7 +127,10 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.handleTickBound = this.handleTick.bind(this);
 		createjs.Ticker.addEventListener('tick', this.handleTickBound);
 		
-		// 
+				
+		// for testing results displays from the console
+		window.r = this.displayResults.bind(this);
+		window.i = {looks:this.looksByID, players:this.playersByID};
 	}
 	
 	
@@ -150,6 +154,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		this.items.console.removeAllEventListeners();
 		this.items.console.destroy();
+		
+		window.r = null;
 	}
 	
 	
