@@ -490,7 +490,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 		if (successfulTattle) {
 			cow.cowardice = 0;
 			narrative.push({
-				scene: 1,
+				scene: 'cower', // 1
 				text: cow.nickname + " cowered and looked innocent while the other girls fought.",
 				code: {cowerer: cow.id, cower:'good'},
 				damage: {}
@@ -502,7 +502,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				// first unproductive cower
 				cow.cowardice = 1;
 				narrative.push({
-					scene: 1,
+					scene: 'cower',
 					text: cow.nickname + " cowered from nothing like a scaredy-cat.  If she does that again next turn, she's gonna be sorry!",
 					code: {cowerer: cow.id, cower:'useless'},
 					damage: {}
@@ -514,7 +514,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				var damage = {};
 				damage[cow.id] = SFGame.DAMAGE_COWER_SCARED;
 				narrative.push({
-					scene: 1,
+					scene: 'cower',
 					text: cow.nickname + " cowered again for no reason! She feels like a little wimp and loses self-esteem.",
 					code: {cowerer: cow.id, cower:'penalty'},
 					damage: damage
@@ -577,6 +577,8 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			else {
 			
 				// OK, you have a player who has been grabbed and/or scratched by at least one attacker.
+		
+				var code = {victim: victim.id, grabbers: _.pluck(victim.grabbers, 'id'), scratchers: _.pluck(victim.scratchers, 'id')};
 				
 				// If player had a lolly, it's gone now!
 				victim.lostLolly = true;
@@ -593,39 +595,42 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 					
 					if (victim.grabbers.length==0) {
 						// lolly + scratch
+						code['lolly'] = 'scratch';
 						var scene = (victim.scratchers.length > 1) ? 12 : 11;
 						var damage = {};
 						damage[victim.id] = victim.scratchers.length * SFGame.DAMAGE_LOLLY_SCRATCH;
 						narrative.push({
-							scene: scene,
+							scene: 'grabscratch', // 11 or 12
 							text: _.pluck(victim.scratchers, 'nickname').join(' and ') + ' scratched ' + victim.nickname + " and she choked on her lollipop, suffering extra humiliation.",
-							code: null, // TODO
+							code: code,
 							damage: damage
 						});
 					}
 					
 					else if (victim.scratchers.length==0) {
 						// lolly + grab
+						code['lolly'] = 'grab';
 						var scene = (victim.grabbers.length > 1) ? 7 : 6;
 						var damage = {};
 						damage[victim.id] = (victim.grabbers.length-1) * SFGame.DAMAGE_GRAB;
 						narrative.push({
-							scene: scene,
+							scene: 'grabscratch', // 6 or 7
 							text: _.pluck(victim.grabbers, 'nickname').join(' and ') + ' grabbed ' + victim.nickname + " and she couldn't lick her lollipop.",
-							code: null, // TODO
+							code: code,
 							damage: damage
 						});
 					}
 					
 					else {
 						// lolly + grab & scratch
+						code['lolly'] = 'grab';
 						var damage = {};
 						damage[victim.id] = victim.scratchers.length * SFGame.DAMAGE_GRAB_SCRATCH + (victim.grabbers.length-1) * SFGame.DAMAGE_GRAB;
 						narrative.push({
-							scene: 13,
+							scene: 'grabscratch', // 13
 							text: _.pluck(victim.grabbers, 'nickname').join(' and ') + ' grabbed ' + victim.nickname 
 								+ ' and ' + _.pluck(victim.scratchers, 'nickname').join(' and ') + ' scratched her.  She never got to lick her lollipop.',
-							code: null, // TODO
+							code: code,
 							damage: damage
 						})
 					}
@@ -633,15 +638,17 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				else {
 					// No lolly - similar to three scenes above but without lolly
 					
+					code['lolly'] = 'none';
+					
 					if (victim.grabbers.length==0) {
 						// just scratch
 						var scene = (victim.scratchers.length > 1) ? 9 : 8;
 						var damage = {};
 						damage[victim.id] = victim.scratchers.length * SFGame.DAMAGE_SCRATCH;
 						narrative.push({
-							scene: scene,
+							scene: 'grabscratch', // 8 or 9
 							text: _.pluck(victim.scratchers, 'nickname').join(' and ') + ' scratched ' + victim.nickname + ".",
-							code: null, // TODO
+							code: code,
 							damage: damage
 						});
 					}
@@ -657,9 +664,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 						}
 						text += _.pluck(victim.grabbers, 'nickname').join(' and ') + ' grabbed ' + victim.nickname + "."
 						narrative.push({
-							scene: scene,
+							scene: 'grabscratch', // 2 or 3
 							text: text,
-							code: null, // TODO
+							code: code,
 							damage: damage
 						});
 					}
@@ -669,10 +676,10 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 						var damage = {};
 						damage[victim.id] = victim.scratchers.length * SFGame.DAMAGE_GRAB_SCRATCH + SFGame.DAMAGE_GRAB * (victim.grabbers.length-1);
 						narrative.push({
-							scene: 10,
+							scene: 'grabscratch', // 10
 							text: _.pluck(victim.grabbers, 'nickname').join(' and ') + ' grabbed ' + victim.nickname 
 								+ ' and ' + _.pluck(victim.scratchers, 'nickname').join(' and ') + ' scratched her.',
-							code: null, // TODO
+							code: code,
 							damage: damage
 						})
 					}				

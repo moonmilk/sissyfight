@@ -1,13 +1,18 @@
 # sissyfight game narrative scenes
-
+with example of scene description from server (the 'code' component of scene object)
 
 * 1: cowering successfully or for no reason (1 cowerer per scene)
+	cower, {cowerer:123, cower:'penalty'}
 * 2: grabbed by one, no lolly
+	grabscratch, {grabbers: [123], victim: 789, lolly:none}
 * 3: grabbed by more than one, no lolly
+	grabscratch, {grabbers: [123, 456], victim: 789, lolly:none}
 * 4: cowering from grab
 * 5: cowering from scratch
 * 6: grabbed by one while licking lolly
+	grabscratch, {grabbers: [123], victim: 789, lolly:hold}
 * 7: grabbed by more than one while licking lolly
+	grabscratch, {grabbers: [123, 456], victim: 789, lolly:hold}
 * 8: scratched by one, no lolly
 * 9: scratched by more than one, no lolly
 * 10: grabbed and scratched, no lolly
