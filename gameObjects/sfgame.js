@@ -753,7 +753,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			narrative.push({
 				scene: 'tease', // 15 or 16
 				text: text,
-				code: {victim:victim.id, teasers:_.pluck(victim.teasers, 'id'), teased:false},
+				code: {victim:victim.id, teasers:_.pluck(victim.teasers, 'id'), teased:successful},
 				damage: damage
 			});
 		}
