@@ -153,7 +153,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	// shortcut: make the avatar for a given player id, including damage if that ID is listed in damageList
 	//   expression is look items to override default look
 	p.makeAvatar = function(playerID, damageList, expression, x) {
-		console.log('GameRoomResultsDisplay.makeAvatar: ', playerID, damageList, expression, x);
+		//console.log('GameRoomResultsDisplay.makeAvatar: ', playerID, damageList, expression, x);
 		var look = _.cloneDeep(this.looksByID[playerID]);
 		if (expression) _.assign(look, expression);
 		look.remove_background = true;
