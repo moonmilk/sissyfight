@@ -363,7 +363,7 @@ config.addons = [
             9
         ],
         "name": "Boxing Gloves",
-        "poses": 2,
+        "poses": 9,
         "tier": 1
     },
     {
