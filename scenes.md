@@ -1,5 +1,5 @@
 # sissyfight game narrative scenes
-with example of scene description from server (the 'code' component of scene object)
+with example of scene name and scene description from server (the 'code' component of scene object)
 
 * 1: cowering alone successfully or for no reason (1 cowerer per scene)
 	cower, {victim:123, cower:'penalty', from:null, attacker:null} // good, useless, or penalty
@@ -27,9 +27,12 @@ with example of scene description from server (the 'code' component of scene obj
 	grabscratch, {scratchers: [123, 456], victim: 789, lolly:scratch}
 * 13: grabbed and scratched while licking lolly
 	grabscratch, {grabbers: [123, 456], scratchers: [321, 654], victim: 789, lolly:grab}
-* 14: failed mutual tease
+* 14: failed mutual tease (always two)
+	mutualtease, {teasers: [123, 456]}
 * 15: failed tease (only one teaser)
+	tease, {victim: 123, teasers:[456], teased:false}
 * 16: successful tease (more than one teaser)
+	tease, {victim: 123, teasers:[456, 789], teased:true}
 * 17: successful tattle (only one tattler)
 * 18: failed tattle (more than one tattler)
 * 19: lick lolly (one or more players)
