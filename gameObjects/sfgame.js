@@ -748,6 +748,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				scene = 16;
 				damage = {};
 				damage[victim.id] = SFGame.DAMAGE_TEASE_ADD + SFGame.DAMAGE_TEASE_MULT * victim.teasers.length;
+				successful = true;
 			}
 			
 			narrative.push({
