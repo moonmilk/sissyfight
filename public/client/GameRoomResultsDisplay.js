@@ -90,6 +90,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.frame.x = step;
 		this.items.bg.x = step;
 		this.items.scene.x = step;
+		this.items.scene.mask.x = step + 6;
 		
 		this.items.caption.textAlign = 'center';
 		this.items.caption.lineWidth = 237;

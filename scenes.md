@@ -34,7 +34,9 @@ with example of scene name and scene description from server (the 'code' compone
 * 16: successful tease (more than one teaser)
 	tease, {victim: 123, teasers:[456, 789], teased:true}
 * 17: successful tattle (only one tattler)
+	tattle, {tattler:123, victims:[456, 789], innocents:[234,567]}
 * 18: failed tattle (more than one tattler)
+	failedtattle, {tattlers:[123,456]}
 * 19: lick lolly (one or more players)
 * 20: humiliation
 * 21: *list of survivors (not used)*
