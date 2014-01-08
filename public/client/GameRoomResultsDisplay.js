@@ -157,7 +157,14 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			case 'failedtattle':
 				this.makeSceneFailedTattle(scene, results);
 				break;
-			
+				
+			case 'lolly':
+				this.makeSceneLolly(scene, results);
+				break;
+				
+				
+				
+			case 'servererror':
 			default:
 				this.makeUnfinishedScene(scene, results);
 				break;
@@ -344,7 +351,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	// failed tattle (>1 tattlers)
 	//   r([{tattlers:[1,1]}])
 	p.makeSceneFailedTattle = function(scene, results) {
-		var avX = -30-60*results.code.tattlers.length;
+		var avX = -30-30*results.code.tattlers.length;
 			
 		for (var i=0; i<results.code.tattlers.length; i++) {
 			var tattlerAvatar = this.makeAvatar(results.code.tattlers[i], results.damage,
@@ -353,6 +360,21 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			avX += 60;
 		}
 	}
+
+
+	// licking lolly (1+ lickers) 
+	//	r([{lickers:[1,1]}])
+	p.makeSceneLolly = function(scene, results) {
+		var avX = -30-30*results.code.lickers.length;
+			
+		for (var i=0; i<results.code.lickers.length; i++) {
+			var tattlerAvatar = this.makeAvatar(results.code.lickers[i], results.damage,
+				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.LICKING, overlays:[sf.Avatar.overlays.LICK], headdir:0, bodydir:0}, this.MIDPOINT+avX);
+			scene.addChild(tattlerAvatar);
+			avX += 60;
+		}
+	}
+
 
 	
 	p.makeUnfinishedScene = function(scene, results) {

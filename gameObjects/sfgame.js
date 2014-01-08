@@ -843,9 +843,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			text = _.pluck(lickers, 'nickname').join(' and ') + " all licked their lollipops and felt better.";
 		}
 		narrative.push({
-			scene: 19,
+			scene: 'lolly', // 19
 			text: text,
-			code: null, // TODO
+			code: {lickers: _.pluck(lickers, 'id')}, 
 			damage: damage
 		});
 	}
