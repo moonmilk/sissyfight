@@ -43,8 +43,10 @@ with example of scene name and scene description from server (the 'code' compone
 	humiliated, {loser: 123}
 * 21: *list of survivors (not used)*
 * 22: timeout (didn't choose action before end of turn)
+	timeout, {loser: 123}
 * 23: **game over, no winners**
 * 24: **game over, one winner**
 * 25: **game over, two winners**
 * 26: mutual scratch
 * 27: leave the room
+	leave, {loser: 123}

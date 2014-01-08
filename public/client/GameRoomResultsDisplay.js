@@ -166,6 +166,14 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				this.makeSceneHumiliated(scene, results);
 				break;
 				
+			case 'timeout':
+				this.makeSceneTimeout(scene, results);
+				break;
+			
+			case 'leave':
+				this.makeSceneLeave(scene, results);
+				break;
+				
 				
 			case 'servererror':
 			default:
@@ -326,7 +334,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	
 	
 	// successful tattle (1 tattler, 0+ victims, 0+ innocents)
-	//	r([{tattler:1, victims:[1, 1], innocents:[1,1]}])
+	//	r([scene:'tattle', text:'tattle test', damage:{}, code:{tattler:1, victims:[1, 1], innocents:[1,1]}}])
 	p.makeSceneTattle = function(scene, results) {
 		var avX = -120;
 		var tattlerAvatar = this.makeAvatar(results.code.tattler, results.damage,
@@ -352,7 +360,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	}
 	
 	// failed tattle (>1 tattlers)
-	//   r([{tattlers:[1,1]}])
+	//   r([{scene:'failedtattle', text:'failed tattle test', damage:{}, code:{tattlers:[1,1]}}])
 	p.makeSceneFailedTattle = function(scene, results) {
 		var avX = -30-30*results.code.tattlers.length;
 			
@@ -366,7 +374,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 
 
 	// licking lolly (1+ lickers) 
-	//	r([{lickers:[1,1]}])
+	//	r([{scene:'lolly', text:'lolly test', damage:{1:-2}, code:{lickers:[1,1]}}])
 	p.makeSceneLolly = function(scene, results) {
 		var avX = -30-30*results.code.lickers.length;
 			
@@ -380,7 +388,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	
 	
 	// humiliated
-	//	r([{loser:1}])
+	//	r([{scene:'humiliated', text:'humiliated test', damage:{}, code:{loser:1}}])
 	p.makeSceneHumiliated = function(scene, results) {
 		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
 			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.HUMILIATED, overlays:[sf.Avatar.overlays.TEARS], headdir:1, bodydir:1}, this.MIDPOINT-30);
@@ -389,7 +397,26 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		
 	}
 
+	
+	// timeout
+	//	r([{scene:'timeout', text:'humiliated test', damage:{}, code:{loser:1}}])
+	p.makeSceneTimeout = function(scene, results) {
+		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
+			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL,  headdir:1, bodydir:1}, this.MIDPOINT-30);
+		scene.addChild(loserAvatar);		
+	}
 
+
+	// premature departure
+	//	r([{scene:'leave', text:'humiliated test', damage:{}, code:{loser:1}}])
+	p.makeSceneLeave = function(scene, results) {
+		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
+			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL,  headdir:0, bodydir:0}, 0); // halfway out the door
+		scene.addChild(loserAvatar);		
+	}
+
+
+	
 	
 	p.makeUnfinishedScene = function(scene, results) {
 		var apology = new createjs.Text("I didn't finish coding this scene :(", '14px Arial', '#883333');

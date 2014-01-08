@@ -861,17 +861,17 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			damage[player.id] = SFGame.DAMAGE_TIMEOUT;
 
 			narrative.push({
-				scene: 22,
+				scene: 'timeout',  // 22
 				text: player.nickname + " couldn't make up her mind what to do. How humiliating!",
-				code: null, // TODO!
+				code: {loser:player.id}, 
 				damage: damage
 			});
 		}
 		else if (player.action=='leave') {
 			narrative.push({
-				scene: 27,
+				scene: 'leave', // 27
 				text: player.nickname + " ran away like a big loser.",
-				code: null, //TODO!
+				code: {loser:player.id},
 				damage: {}
 			});
 		}
