@@ -766,7 +766,6 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	var tattlers = [], lickers = [], cowerers = [], sufferers = []; // sufferers are everyone else - those without defense against tattle
 	var damage = {};
 	var text = "";
-	var code = null; // TODO!
 	_.each(actions, function(player) {
 		switch(player.action) {
 			case 'tattle': 
@@ -802,9 +801,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 		}
 		
 		narrative.push({
-			scene: 17,
+			scene: 'tattle', // 17
 			text: text,
-			code: code,
+			code: {tattler:tattlers[0].id, victims:_.pluck(sufferers, 'id'), innocents:_.pluck(lick_cowerers, 'id')},
 			damage: damage
 		});
 	}
@@ -817,9 +816,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 		code = null; // TODO!!!
 		
 		narrative.push({
-			scene: 18,
+			scene: 'failedtattle', // 18
 			text: text,
-			code: code,
+			code: {tattlers: _.pluck(tattlers, 'id')},
 			damage: damage
 		})
 	}

@@ -148,6 +148,14 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			case 'tease':
 				this.makeSceneTease(scene, results);
 				break;	
+				
+			case 'tattle':
+				this.makeSceneTattle(scene, results);
+				break;
+				
+			case 'failedtattle':
+				this.makeSceneFailedTattle(scene, results);
+				break;
 			
 			default:
 				this.makeUnfinishedScene(scene, results);
@@ -303,6 +311,46 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			scene.addChild(teaserAvatar);	
 		}	
 		
+	}
+	
+	
+	// successful tattle (1 tattler, 0+ victims, 0+ innocents)
+	//	r([{tattler:1, victims:[1, 1], innocents:[1,1]}])
+	p.makeSceneTattle = function(scene, results) {
+		var avX = -120;
+		var tattlerAvatar = this.makeAvatar(results.code.tattler, results.damage,
+			{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.TATTLING, headdir:0, bodydir:0}, this.MIDPOINT+avX);
+		scene.addChild(tattlerAvatar);
+		avX += 80;
+		
+		for (var i=0; i<results.code.victims.length; i++) {
+			var victimAvatar = this.makeAvatar(results.code.victims[i], results.damage,
+				{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT+avX);
+			scene.addChild(victimAvatar);
+			avX += 60;
+		}
+		avX += 20;
+		
+		for (var i=0; i<results.code.innocents.length; i++) {
+			var victimAvatar = this.makeAvatar(results.code.innocents[i], results.damage,
+				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT+avX);
+			scene.addChild(victimAvatar);
+			avX += 60;
+		}		
+		
+	}
+	
+	// failed tattle (>1 tattlers)
+	//   r([{tattlers:[1,1]}])
+	p.makeSceneFailedTattle = function(scene, results) {
+		var avX = -30-60*results.code.tattlers.length;
+			
+		for (var i=0; i<results.code.tattlers.length; i++) {
+			var tattlerAvatar = this.makeAvatar(results.code.tattlers[i], results.damage,
+				{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT+avX);
+			scene.addChild(tattlerAvatar);
+			avX += 60;
+		}
 	}
 
 	
