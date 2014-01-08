@@ -38,7 +38,9 @@ with example of scene name and scene description from server (the 'code' compone
 * 18: failed tattle (more than one tattler)
 	failedtattle, {tattlers:[123,456]}
 * 19: lick lolly (one or more players)
+	lolly, {lickers:[123, 456]}
 * 20: humiliation
+	humiliated, {loser: 123}
 * 21: *list of survivors (not used)*
 * 22: timeout (didn't choose action before end of turn)
 * 23: **game over, no winners**

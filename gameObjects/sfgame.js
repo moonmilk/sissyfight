@@ -895,15 +895,15 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 					if (player.health > SFGame.MAX_HEALTH) player.health = SFGame.MAX_HEALTH;
 				}
 				
-				if (player.health==0) {
+				if (player.health==0 && player.loser != true) {
 					// set the loser flag so can be skipped in future rounds
 					player.loser = true;
 					
 					// if newly humiliated, make a scene
 					narrative.push({
-						scene: 20,
+						scene: 'humiliated', // 20
 						text: player.nickname + _.sample(SFGame.HUMILIATION_TEXTS),
-						code: null, // TODO
+						code: {loser: player.id},
 						damage: {}
 					});
 				}

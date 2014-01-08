@@ -162,6 +162,9 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				this.makeSceneLolly(scene, results);
 				break;
 				
+			case 'humiliated':
+				this.makeSceneHumiliated(scene, results);
+				break;
 				
 				
 			case 'servererror':
@@ -373,6 +376,17 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			scene.addChild(tattlerAvatar);
 			avX += 60;
 		}
+	}
+	
+	
+	// humiliated
+	//	r([{loser:1}])
+	p.makeSceneHumiliated = function(scene, results) {
+		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
+			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.HUMILIATED, overlays:[sf.Avatar.overlays.TEARS], headdir:1, bodydir:1}, this.MIDPOINT-30);
+		loserAvatar.y -= 25;
+		scene.addChild(loserAvatar);
+		
 	}
 
 
