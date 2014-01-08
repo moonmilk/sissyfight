@@ -255,7 +255,7 @@ SFGame.prototype.resolveTurn = function() {
 	catch (err) {
 		console.log('game resolution error '+err, err.stack);
 		narrative.push({
-			scene: 0,
+			scene: 'servererror',
 			text: "Server broke down like a crybaby: " + err.stack.split('\n').slice(0,3).join(', ').replace(/\s+/g, ' '),
 			code: null,
 			damage: {}
@@ -674,11 +674,16 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 					else {
 						// grab & scratch
 						var damage = {};
+						var text='';
+						if (victim.interrupted) {
+							text = victim.nickname+" was going to "+victim.interrupted+" but "
+						}
+						text += _.pluck(victim.grabbers, 'nickname').join(' and ') + ' grabbed ' + victim.nickname 
+								+ ' and ' + _.pluck(victim.scratchers, 'nickname').join(' and ') + ' scratched her.',
 						damage[victim.id] = victim.scratchers.length * SFGame.DAMAGE_GRAB_SCRATCH + SFGame.DAMAGE_GRAB * (victim.grabbers.length-1);
 						narrative.push({
 							scene: 'grabscratch', // 10
-							text: _.pluck(victim.grabbers, 'nickname').join(' and ') + ' grabbed ' + victim.nickname 
-								+ ' and ' + _.pluck(victim.scratchers, 'nickname').join(' and ') + ' scratched her.',
+							text: text, 
 							code: code,
 							damage: damage
 						})
@@ -701,9 +706,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			p1.target.resolved = true;
 			
 			narrative.push({
-				scene: 14,
+				scene: 'mutualtease', // 14
 				text: p1.nickname + " and " + p1.target.nickname + " teased each other. But nobody else joined in, so it didn't work.",
-				code: null, //TODO
+				code: {teasers:[p1.id, p1.target.id]},
 				damage: {}
 			});	
 		}
@@ -728,6 +733,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			var text =_.pluck(victim.teasers, 'nickname').join(" and ") + " teased " + victim.nickname + ".";
 			var scene;
 			var damage;
+			var successful;
 			
 			// it takes 2 or more teasers for a successful tease
 			if (victim.teasers.length == 1) {
@@ -735,6 +741,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				scene = 15;
 				text += " But nobody else joined in, so it didn't work.",
 				damage = {};
+				successful = false;
 			}
 			else {
 				// > 1 teaser: tease succeeded
@@ -744,9 +751,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			}
 			
 			narrative.push({
-				scene: scene,
+				scene: 'tease', // 15 or 16
 				text: text,
-				code: null, // TODO
+				code: {victim:victim.id, teasers:_.pluck(victim.teasers, 'id'), teased:false},
 				damage: damage
 			});
 		}
