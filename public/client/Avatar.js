@@ -298,7 +298,8 @@ var p = Avatar.prototype = new createjs.Container();
 		'SCRATCH'	: 1,
 		'LICK'		: 2,
 		'HOLDLOLLY'	: 3,
-		'CHOKE'		: 4
+		'CHOKE'		: 4,
+		'TEARS'		: 5
 	}
 	
 	// make up a random look for testing
