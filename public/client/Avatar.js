@@ -92,7 +92,7 @@ var p = Avatar.prototype = new createjs.Container();
 	
 	p.clear = function() {
 		this.look = _.cloneDeep(this.look);
-		_.defaults(this.look, {remove_background:false, name:"{NO NAME}", face:0,skincolor:0,expression:0,hairstyle:0,haircolor:0,pose:0,bodydir:0,headdir:0,uniform:0,uniformcolor:0, addons:[]});
+		_.defaults(this.look, {remove_background:false, name:"{NO NAME}", face:0,skincolor:0,expression:0,hairstyle:0,haircolor:0,pose:0,bodydir:0,headdir:0,uniform:0,uniformcolor:0, addons:[], overlays:[]});
 		if (this.sprites) _.each(this.sprites, function(sprite){ if (sprite.parent) sprite.parent.removeChild(sprite)});
 		if (this.addonSprites) _.each(this.addonSprites, function(sprite){ if (sprite.parent) sprite.parent.removeChild(sprite)});
 		

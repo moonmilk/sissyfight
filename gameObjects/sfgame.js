@@ -347,9 +347,9 @@ SFGame.prototype.testActionStage1 = function(narrative, act) {
 			if (act.target.cowering && !act.target.resolved) {
 				// log a scene 4: cowering from grab
 				narrative.push({
-					scene: 4,
+					scene: 'cower', // 4 
 					text: act.nickname + " tried to grab " + act.target.nickname + " but she cowered away.",
-					code: null, // TODO
+					code: {victim:act.target.id, from:'grab', attacker:act.id, cower:'good'},
 					damage: {}
 				})
 				
@@ -384,9 +384,9 @@ SFGame.prototype.testActionStage1 = function(narrative, act) {
 			if (act.target.cowering && !act.target.resolved) {
 				// log a scene 5: cowering from scratch
 				narrative.push({
-					scene: 5,
+					scene: 'cower', // 5
 					text: act.nickname + " tried to scratch " + act.target.nickname + " but she cowered away.",
-					code: null, // TODO
+					code: {victim:act.target.id, from:'scratch', attacker:act.id, cower:'good'},
 					damage: {}
 				});
 				// both original cower and this scratch are resolved.
@@ -492,7 +492,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			narrative.push({
 				scene: 'cower', // 1
 				text: cow.nickname + " cowered and looked innocent while the other girls fought.",
-				code: {cowerer: cow.id, cower:'good'},
+				code: {victim: cow.id, cower:'good'},
 				damage: {}
 			});
 		}
@@ -504,7 +504,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				narrative.push({
 					scene: 'cower',
 					text: cow.nickname + " cowered from nothing like a scaredy-cat.  If she does that again next turn, she's gonna be sorry!",
-					code: {cowerer: cow.id, cower:'useless'},
+					code: {victim: cow.id, cower:'useless'},
 					damage: {}
 				});
 			}
@@ -516,7 +516,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				narrative.push({
 					scene: 'cower',
 					text: cow.nickname + " cowered again for no reason! She feels like a little wimp and loses self-esteem.",
-					code: {cowerer: cow.id, cower:'penalty'},
+					code: {victim: cow.id, cower:'penalty'},
 					damage: damage
 				})
 				

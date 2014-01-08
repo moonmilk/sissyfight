@@ -167,29 +167,41 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	}
 	
 
-	// One player cowering, successfully or not
-	// code: {cowerer: playerID, cower: 'good' | 'useless' | 'penalty'}
+	// One player cowering, successfully or not, alone or with grabber or scratcher
+	// code: {victim: playerID, cower: 'good' | 'useless' | 'penalty', from: 'grab' | 'scratch' | null, attacker: attackerID | null}
 	// template for testing using player id 1:
-	//		{scene:1, text:'cower test', damage:{1:1}, code:{cowerer:1, cower:'penalty'}}
+	//		r([{scene:'cower', text:'cower test', damage:{1:1}, code:{victim:1, cower:'penalty'}}])
+	//		r([{scene:'cower', text:'cower test', damage:{}, code:{victim:1, cower:'good', from:'scratch', attacker:1}}])
 	p.makeSceneCowering = function(scene, results) {
-		var expression;
+		var victimExpression;
 		switch (results.code.cower) {
 			case 'good': 
-				expression = sf.Avatar.expressions.CONTENT;
+				victimExpression = sf.Avatar.expressions.CONTENT;
 				break;
 			
 			case 'useless':
-				expression = sf.Avatar.expressions.SAD;
+				victimExpression = sf.Avatar.expressions.SAD;
 				break;
 				
 			case 'penalty':
-				expression = sf.Avatar.expressions.PAINED;
+				victimExpression = sf.Avatar.expressions.PAINED;
 				break;
 			
 		}
 
-		var avatar = this.makeAvatar(results.code.cowerer, results.damage, {expression: expression, pose: sf.Avatar.poses.COWERING}, this.MIDPOINT-30);
-		scene.addChild(avatar);
+		var victimAvatar = this.makeAvatar(results.code.victim, results.damage, {expression: victimExpression, pose: sf.Avatar.poses.COWERING, headdir:1, bodydir:1}, this.MIDPOINT-60);
+		scene.addChild(victimAvatar);
+		
+		if (results.code.attacker) {
+			var attackerPose = sf.Avatar.poses.SCRATCHING;
+			if (results.code.from=='grab') attackerPose = sf.Avatar.poses.GRABBING;
+			
+			var attackerOffset = 55;
+		
+			var attackerAvatar = this.makeAvatar(results.code.attacker, results.damage, {expression: sf.Avatar.expressions.NEUTRAL, pose:attackerPose, headdir:0, bodydir:0}, this.MIDPOINT-60+attackerOffset);
+			scene.addChild(attackerAvatar);
+		}
+		
 	}
 
 
@@ -226,7 +238,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 
 		// draw the grabbed victim
 		var grabbedAvatar = this.makeAvatar(results.code.victim, results.damage, 
-			{expression: victimExpression, pose: victimPose, overlays: victimOverlays}, this.MIDPOINT-30);
+			{expression: victimExpression, pose: victimPose, overlays: victimOverlays, headdir:1, bodydir:1}, this.MIDPOINT-30);
 		scene.addChild(grabbedAvatar);
 		
 		// draw the grabbers
@@ -239,7 +251,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		// draw the scratchers
 		for (var i=0; i<results.code.scratchers.length; i++) {
 			var grabberAvatar = this.makeAvatar(results.code.scratchers[i], results.damage, 
-				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.SCRATCHING}, this.MIDPOINT-66-20*i);
+				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.SCRATCHING, headdir:1, bodydir:1}, this.MIDPOINT-66-20*i);
 			scene.addChild(grabberAvatar);
 		}
 		
