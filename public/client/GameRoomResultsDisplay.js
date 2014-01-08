@@ -141,6 +141,14 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				this.makeSceneGrabScratch(scene, results);
 				break;
 				
+			case 'mutualtease':
+				this.makeSceneMutualTease(scene, results);
+				break;
+				
+			case 'tease':
+				this.makeSceneTease(scene, results);
+				break;	
+			
 			default:
 				this.makeUnfinishedScene(scene, results);
 				break;
@@ -254,6 +262,46 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.SCRATCHING, headdir:1, bodydir:1}, this.MIDPOINT-66-20*i);
 			scene.addChild(grabberAvatar);
 		}
+		
+	}
+	
+	// two players tease each other, tease fails
+	//  r([{scene:'mutualtease', text:'mutual tease test', damage:{}, code:{teasers:[1,1]}}])
+	p.makeSceneMutualTease = function(scene,results) {
+		
+		var leftTeaser = this.makeAvatar(results.code.teasers[0], results.damage,
+			{expression: sf.Avatar.expressions.NEUTRAL, pose:sf.Avatar.poses.TEASING, headdir:1, bodydir:1}, this.MIDPOINT-90);
+		scene.addChild(leftTeaser);
+		
+		var rightTeaser = this.makeAvatar(results.code.teasers[1], results.damage,
+			{expression: sf.Avatar.expressions.NEUTRAL, pose:sf.Avatar.poses.TEASING, headdir:0, bodydir:0}, this.MIDPOINT+10);
+		scene.addChild(rightTeaser);
+	}
+	
+	// victim is teased by one or more players
+	//   r([{scene:'tease', text:'tease test', damage:{1:2}, code:{victim:1, teasers:[1,1], teased:true}}])
+	//   r([{scene:'tease', text:'tease test', damage:{}, code:{victim:1, teasers:[1], teased:false}}])
+	p.makeSceneTease = function(scene, results) {
+		var victimExpression;
+		var teasersExpression;
+		if (results.code.teased) {
+			victimExpression = sf.Avatar.expressions.SAD;
+			teasersExpression = sf.Avatar.expressions.CONTENT;
+		}
+		else {
+			victimExpression = sf.Avatar.expressions.CONTENT;
+			var teasersExpression = sf.Avatar.expressions.SAD;
+		}
+		
+		var victimAvatar = this.makeAvatar(results.code.victim, results.damage,
+			{expression: victimExpression, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT + 30);
+		scene.addChild(victimAvatar);
+		
+		for (var i=0; i<results.code.teasers.length; i++) {
+			var teaserAvatar = this.makeAvatar(results.code.teasers[i], results.damage,
+				{expression: teasersExpression, pose: sf.Avatar.poses.TEASING, headdir:1, bodydir:1}, this.MIDPOINT-35 - 45*i);
+			scene.addChild(teaserAvatar);	
+		}	
 		
 	}
 
