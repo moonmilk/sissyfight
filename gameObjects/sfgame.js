@@ -543,9 +543,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			damage[act.id] = SFGame.DAMAGE_SCRATCH;
 			damage[act.target.id] = SFGame.DAMAGE_SCRATCH;
 			narrative.push({
-				scene: 26,
+				scene: 'mutualscratch', // 26
 				text: act.nickname + " and " + act.target.nickname + " scratched each other.",
-				code: null, // TODO
+				code: {scratchers:[act.id, act.target.id]},
 				damage: damage
 			});
 		}

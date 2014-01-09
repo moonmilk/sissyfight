@@ -142,6 +142,10 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				this.makeSceneGrabScratch(scene, results);
 				break;
 				
+			case 'mutualscratch':
+				this.makeSceneMutualScratch(scene, results);
+				break;
+				
 			case 'mutualtease':
 				this.makeSceneMutualTease(scene, results);
 				break;
@@ -291,6 +295,19 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		}
 		
 	}
+	
+	// two players scratch each other
+	//  r([{scene:'mutualscratch', text:'mutual scratch test', damage:{}, code:{scratchers:[1,1]}}])
+	p.makeSceneMutualScratch = function(scene,results) {
+		
+		var leftScratcher = this.makeAvatar(results.code.scratchers[0], results.damage,
+			{expression: sf.Avatar.expressions.PAINED, pose:sf.Avatar.poses.SCRATCHING, overlays:[sf.Avatar.overlays.SCRATCH], headdir:0, bodydir:1}, this.MIDPOINT-80);
+		scene.addChild(leftScratcher);
+		
+		var rightScratcher = this.makeAvatar(results.code.scratchers[1], results.damage,
+			{expression: sf.Avatar.expressions.PAINED, pose:sf.Avatar.poses.SCRATCHING, overlays:[sf.Avatar.overlays.SCRATCH], headdir:1, bodydir:0}, this.MIDPOINT-10);
+		scene.addChild(rightScratcher);
+	}	
 	
 	// two players tease each other, tease fails
 	//  r([{scene:'mutualtease', text:'mutual tease test', damage:{}, code:{teasers:[1,1]}}])
