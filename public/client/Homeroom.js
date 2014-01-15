@@ -39,6 +39,12 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.gameList.y = 39;
 		this.addChild(this.gameList);
 		
+		// make a mask to keep game listings inside the blackboard
+		this.gameList.mask = new createjs.Shape();
+		this.gameList.mask.graphics.beginFill('#fff').rect(0, 0, 340, 145).endFill();
+		this.gameList.mask.x = 148;
+		this.gameList.mask.y = 39;
+		
 		_.forOwn(games, function(game) {
 			this.addGameListing(game);
 		}, this);
