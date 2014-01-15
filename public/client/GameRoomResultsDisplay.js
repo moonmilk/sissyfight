@@ -281,23 +281,25 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			victimOverlays.push(sf.Avatar.overlays.SCRATCH);
 		}
 		
+		var centering = 45 - results.code.grabbers.length*25 + results.code.scratchers.length*20;
+		var midpoint = Math.floor(this.MIDPOINT - centering / 2); 
 
 		// draw the grabbed victim
 		var grabbedAvatar = this.makeAvatar(results.code.victim, results.damage, 
-			{expression: victimExpression, pose: victimPose, overlays: victimOverlays, headdir:1, bodydir:1}, this.MIDPOINT-30);
+			{expression: victimExpression, pose: victimPose, overlays: victimOverlays, headdir:0, bodydir:0}, midpoint-30);
 		scene.addChild(grabbedAvatar);
 		
 		// draw the grabbers
 		for (var i=results.code.grabbers.length-1; i>=0; i--) {
 			var grabberAvatar = this.makeAvatar(results.code.grabbers[i], results.damage, 
-				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.GRABBING, headdir:0, bodydir:0}, this.MIDPOINT-30+37+25*i);
+				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.GRABBING, headdir:1, bodydir:1}, midpoint-66-20*i);
 			scene.addChild(grabberAvatar);
 		}
 
 		// draw the scratchers
 		for (var i=0; i<results.code.scratchers.length; i++) {
 			var grabberAvatar = this.makeAvatar(results.code.scratchers[i], results.damage, 
-				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.SCRATCHING, headdir:1, bodydir:1}, this.MIDPOINT-66-20*i);
+				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.SCRATCHING, headdir:0, bodydir:0}, midpoint-30+37+25*i);
 			scene.addChild(grabberAvatar);
 		}
 		
