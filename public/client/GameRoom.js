@@ -155,6 +155,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.console.removeAllEventListeners();
 		this.items.console.destroy();
 		
+		this.displayResultsDone('destroy');
+		
 		window.r = null;
 	}
 	
@@ -510,14 +512,16 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.resultsDisplay.addEventListener('done', this.displayResultsDone.bind(this));
 	}
 	
-	p.displayResultsDone = function() {
+	// hide turn results and re-enable results button
+	// (pass destroy='destroy' when tearing down the gameroom to skip the re-enabling)
+	p.displayResultsDone = function(destroy) {
 		if (this.items.resultsDisplay) {
 			this.items.resultsDisplay.removeAllEventListeners();
 			this.layers.resultsLayer.removeChild(this.items.resultsDisplay);
 			this.items.resultsDisplay.destroy();
 			this.items.resultsDisplay = undefined;
 		}
-		this.items.console.enableShowResults();
+		if (destroy!='destroy') this.items.console.enableShowResults();
 	}
 	
 	
