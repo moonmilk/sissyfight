@@ -70,6 +70,14 @@ block javascript
 			stage.addChild(main);
 			main.start(SockJS, auth, school);
 		}
+		
+		// prevent accidentally leaving game by hitting backspace
+		// http://stackoverflow.com/a/19394745
+		$(document).on("keydown", function (e) {
+			if (e.which === 8 && !$(e.target).is("input[type='text']:not([readonly]), textarea")) {
+				e.preventDefault();
+			}
+		});
 
 
 		
