@@ -151,6 +151,21 @@ block content
 			
 			border: none;
 		}
+		
+		.captionText {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 11px;
+			line-height: 12px;
+			text-align: center;
+			
+			resize: none;
+			visibility: hidden;
+			
+			overflow: hidden;
+			
+			border: none;	
+		}
+		
 		.wordwrap { // http://stackoverflow.com/a/1638824
 			white-space: pre-wrap;      /* CSS3 */   
 			white-space: -moz-pre-wrap; /* Firefox */    
@@ -170,5 +185,7 @@ block content
 		textarea.gameroomText#gameroomTextEntry(width=79, height=43)
 		each i in [0,1,2,3,4,5]
 			div.gameroomText.disableSelect.wordwrap(id='gameroomChatBubble'+i)
+			
+		div.captionText.disableSelect.wordwrap#gameroomCaption(unselectable="yes")
 		
 	

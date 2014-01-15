@@ -51,8 +51,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.scene.mask.x = 6;
 		this.items.scene.mask.y = 6;
 
-		this.items.caption = this.addChild(new createjs.Text());
-		this.items.caption.y = 104;
+		this.items.caption = new createjs.DOMElement(document.getElementById('gameroomCaption'));
 		
 		this.items.btn_back = this.addChild(assets.results_btn_back.clone());
 		this.items.btn_back.y = 105;
@@ -72,6 +71,11 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.btn_next.addEventListener('click', function() {this.click('next')}.bind(this));
 		this.items.btn_done.helper = new createjs.ButtonHelper(this.items.btn_done, 'results_done', 'results_done', 'results_done_pressed');
 		this.items.btn_done.addEventListener('click', function() {this.click('done')}.bind(this));
+		
+		// set up caption html text
+		this.items.caption.setFakeScale(g.gameScale);
+		this.items.caption.setSize(245, 25);
+		this.items.caption.setVisible(true);
 	}
 	
 	p.destroy = function() {
@@ -79,6 +83,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.btn_next.removeAllEventListeners();
 		this.items.btn_done.removeAllEventListeners();
 		this.items.scene.removeAllChildren();
+		this.items.caption.setVisible(false);
 	}
 	
 	
@@ -104,7 +109,9 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.btn_next.x = 294 + step;
 		this.items.btn_done.x = 288 + step;
 		
-		this.items.caption.text = this.results[n].text;
+		this.items.caption.htmlElement.textContent = this.results[n].text;
+		this.items.caption.setPosition(134+step, 222); // HTMLElement is positioned relative to canvas rather than parent
+		this.items.caption.setVisible(true);
 		
 		this.makeScene(this.items.scene, this.results[n]);
 	}
