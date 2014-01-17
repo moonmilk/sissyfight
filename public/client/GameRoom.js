@@ -196,6 +196,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'startGame':	// game is starting!
 				this.removeActionMenu();
+				this.displayResultsDone();
+				this.items.console.disableShowResults();
 				this.state = 'game';
 				this.items.console.setMode('game');
 				_.each(this.playersByID, function(player) {
@@ -326,6 +328,8 @@ var p = GameRoom.prototype = new createjs.Container();
 	// start game button clicked
 	p.handleStartButton = function() {
 		g.comm.writeEvent("act", {action:"start"});
+		// hide previous game's results, if any
+		this.displayResultsDone();
 	}
 
 	// handle show results button
