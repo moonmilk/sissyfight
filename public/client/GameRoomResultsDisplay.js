@@ -343,7 +343,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		}
 		else {
 			victimExpression = sf.Avatar.expressions.CONTENT;
-			var teasersExpression = sf.Avatar.expressions.SAD;
+			var teasersExpression = sf.Avatar.expressions.NEUTRAL;
 		}
 		
 		var victimAvatar = this.makeAvatar(results.code.victim, results.damage,
@@ -445,7 +445,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	
 	
 	p.makeUnfinishedScene = function(scene, results) {
-		var apology = new createjs.Text("I didn't finish coding this scene :(", '14px Arial', '#883333');
+		var apology = new createjs.Text("Unknown scene :(", '14px Arial', '#883333');
 		apology.textAlign = 'left';
 		apology.x = 10;
 		apology.y = 1
