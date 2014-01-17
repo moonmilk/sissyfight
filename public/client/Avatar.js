@@ -181,15 +181,20 @@ var p = Avatar.prototype = new createjs.Container();
 		
 		// add damage display if it's in the look
 		if (this.look.damage) {
-			var damageDisplay;
+			var damageDisplay, damageDisplayShadow;
 			if (this.look.damage > 0) {
-				damageDisplay = new createjs.Text("-" + this.look.damage, '20px Arial Bold', '#ff5555');
+				damageDisplay = new createjs.Text("-" + this.look.damage, '18px Arial Black', '#ff9988');
+				damageDisplayShadow = new createjs.Text("-" + this.look.damage, '18px Arial Black', '#333333');
 			}
 			else {
-				damageDisplay = new createjs.Text("+"+(0-this.look.damage), '20px Arial Bold', '#55ff55');
+				damageDisplay = new createjs.Text("+"+(0-this.look.damage), '18px Arial Black', '#55ff55');
+				damageDisplayShadow = new createjs.Text("+"+(0-this.look.damage), '18px Arial Black', '#333333');
 			}
-			damageDisplay.x = -37;
-			damageDisplay.y = 5;
+			damageDisplay.x = -7;
+			damageDisplay.y = -15;
+			damageDisplayShadow.x = -5;
+			damageDisplayShadow.y = -13;
+			this.layers[9].addChild(damageDisplayShadow);
 			this.layers[9].addChild(damageDisplay);
 		}
 	}
