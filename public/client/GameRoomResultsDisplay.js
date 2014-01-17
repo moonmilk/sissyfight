@@ -266,7 +266,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				victimOverlays = [sf.Avatar.overlays.HOLDLOLLY];
 				break;
 			case 'choke':
-				victimExpression = sf.Avatar.expressions.SAD;
+				victimExpression = sf.Avatar.expressions.PAINED;
 				victimPose = sf.Avatar.expressions.NEUTRAL;
 				victimOverlays = [sf.Avatar.overlays.CHOKE];	
 				break;
@@ -277,7 +277,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 				break;
 		}
 		// show scratched face
-		if (results.code.grabbers.length > 0) {
+		if (results.code.scratchers.length > 0) {
 			victimOverlays.push(sf.Avatar.overlays.SCRATCH);
 		}
 		
@@ -418,7 +418,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	p.makeSceneHumiliated = function(scene, results) {
 		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
 			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.HUMILIATED, overlays:[sf.Avatar.overlays.TEARS], headdir:1, bodydir:1}, this.MIDPOINT-30);
-		loserAvatar.y -= 25;
+		loserAvatar.y -= 12;
 		scene.addChild(loserAvatar);
 		
 	}
