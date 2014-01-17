@@ -119,6 +119,28 @@ var p = DressingRoom.prototype = new createjs.Container();
 					if (!room.look.pose) room.look.pose = 0;
 					room.look.pose = (room.look.pose + 1) % config.number.of.pose;
 					break;
+				case 111: // o to flip through overlays
+					switch (room.look.overlay) {
+						case sf.Avatar.overlays.SCRATCH:
+							room.look.overlay = sf.Avatar.overlays.LICK;
+							break;
+						case sf.Avatar.overlays.LICK:
+							room.look.overlay = sf.Avatar.overlays.HOLDLOLLY;
+							break;
+						case sf.Avatar.overlays.HOLDLOLLY:
+							room.look.overlay = sf.Avatar.overlays.CHOKE;
+							break;
+						case sf.Avatar.overlays.CHOKE:
+							room.look.overlay = sf.Avatar.overlays.TEARS;
+							break;
+						case sf.Avatar.overlays.TEARS:
+							room.look.overlay = undefined;
+							break;
+						default:
+							room.look.overlay = sf.Avatar.overlays.SCRATCH;
+							break;
+					}
+					break;
 			}
 			room.setFeature();
 		}
@@ -146,6 +168,10 @@ var p = DressingRoom.prototype = new createjs.Container();
 	// can call with no args to refresh the avatar
 	p.setFeature = function(feature, value) {
 		if (feature) this.look[feature] = value;
+		
+		// turn the testing variable look.overlay into what Avatar is looking for
+		if (this.look.overlay) this.look.overlays = [this.look.overlay];
+		else this.look.overlays = [];
 		
 		// convenience for debugging from console: can set face or hairstyle back to undefined
 		var undressed = {};
