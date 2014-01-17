@@ -17,27 +17,10 @@ function School(params) {
 	this.nextGameID = 1;
 	
 	// for testing game listings
-	var testGames = [];
-	testGames.push({
-		name: 'hell room!', school:this.id
-	});
-	testGames.push({
-		name: 'algebra 2', school:this.id
-	});	
-	testGames.push({
-		name: 'thunderdome', school:this.id
-	});	
-	testGames.push({
-		name: 'PLATE OF SHRIMP', school:this.id
-	});
-	testGames.push({
-		name: 'Lothlorien', school:this.id
-	});	
-	testGames.push({
-		name: 'preppies only!', school:this.id
-	});
+	var testGames = ['hell room!', 'algebra 2', 'thunderdome', 'PLATE OF SHRIMP', 'Lothlorien', 'Preppies only!', 'ghostbusters', 'asdfgh', 'powder room', 'GOTH', 'mac & cheez', 'HYPNOTOAD', 'catfish?', 'Ow My Spleen', 'camembert', 'say NI', 'invisigoth', 'hey!', 'Windows 3.1', 'i <3 u', 'NO :[', 'Ascorbic', 'puppies', 'shAMpoO', 'Inconceivable!'];
+	
 	for (var i=0; i<testGames.length; i++) {
-		this.createGame(testGames[i]);
+		this.createGame({name:testGames[i], school:this.id});
 	}
 	
 }
