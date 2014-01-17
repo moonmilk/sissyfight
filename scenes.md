@@ -47,6 +47,7 @@ with example of scene name and scene description from server (the 'code' compone
 * 23: **game over, no winners**
 * 24: **game over, one winner**
 * 25: **game over, two winners**
+	end, {winners:[123, 456]} or {winners:[]}
 * 26: mutual scratch
 	mutualscratch, {scratchers:[123, 456]}
 * 27: leave the room

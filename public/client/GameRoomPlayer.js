@@ -161,15 +161,15 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	p.setPose = function(pose) {
 		switch (pose) {
 			case 'normal':
-				this.items.avatar.setLook({pose:0, expression:0});
+				this.items.avatar.setLook({pose:0, expression:0, overlays:[]});
 				break
 			
 			case 'crying':
-				this.items.avatar.setLook({pose:1, expression:3});
+				this.items.avatar.setLook({pose:1, expression:3, overlays:[sf.Avatar.overlays.TEARS]});
 				break			
 				
 			case 'victory':
-				this.items.avatar.setLook({pose:2, expression:2});
+				this.items.avatar.setLook({pose:2, expression:1, overlays:[]});
 				break
 				
 		}

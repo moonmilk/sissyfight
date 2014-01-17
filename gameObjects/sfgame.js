@@ -924,9 +924,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	else if (survivors.length > 1) {
 		// SCENE 25: dual win!
 		narrative.push({
-			scene: 25,
+			scene: 'end',
 			text: _.pluck(survivors, 'nickname').join(' and ') + ' became best friends and won the game!',
-			code: null, //TODO
+			code: {winners:_.pluck(survivors, 'id')},
 			damage: {}
 		});
 		gameOver = true; 
@@ -934,9 +934,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	else if (survivors.length == 1) {
 		// SCENE 24: solo win!
 		narrative.push({
-			scene: 24,
+			scene: 'end',
 			text: survivors[0].nickname + " won the game all by herself!",
-			code: null, //TODO
+			code: {winners:_.pluck(survivors, 'id')},
 			damage: {}
 		});
 		gameOver = true;
@@ -944,9 +944,9 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	else {
 		// SCENE 23: no winner!
 		narrative.push({
-			scene: 23,
+			scene: 'end',
 			text: "Everybody was humiliated and nobody won!",
-			code: null, //TODO
+			code: {winners:[]},
 			damage: {}
 		});
 		gameOver = true;

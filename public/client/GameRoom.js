@@ -232,10 +232,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 			case 'endTurn':
 				this.setPlayerActionTag();
-				this.lastTurnResults = event.data.results;
-				// display turn results  
-				this.displayResults(this.lastTurnResults);
-				this.items.console.enableShowResults();
+				this.handleTurnResults(event.data.results);
 				
 				break;
 				
@@ -260,6 +257,32 @@ var p = GameRoom.prototype = new createjs.Container();
 		}
 	}
 	
+	
+	
+	p.handleTurnResults = function(results) {
+		// check if results include an end of game scene - that needs special handling
+		var endScenes = _.where(results, {scene:'end'});
+		var nonEndScenes = _.reject(results, {scene:'end'});
+		
+		if (endScenes.length > 0) this.handleEndScene(endScenes[0]); // assumption: there's never more than one end scene!
+				
+		this.lastTurnResults = nonEndScenes;
+		this.displayResults(this.lastTurnResults);
+		this.items.console.enableShowResults();
+	}
+		
+		
+	p.handleEndScene = function(scene) {
+		// victory poses for winners, if any 
+		// (losers will have already had their lose poses set by the health status report)
+		_.forEach(scene.code.winners, function(winnerID) {
+			var playerAvatar = this.playersByID[winnerID];
+			playerAvatar.setPose('victory');
+		}, this);
+		
+		// TODO: display the caption
+	}		
+
 	
 	// time is passing!
 	p.handleTick = function() {
