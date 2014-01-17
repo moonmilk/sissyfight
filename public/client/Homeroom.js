@@ -85,6 +85,15 @@ var p = Homeroom.prototype = new createjs.Container();
 		// catch enter in chat entry
 		this.handlechatkeypressBound = this.handlechatkeypress.bind(this);
 		this.chatEntry.htmlElement.onkeypress = this.handlechatkeypressBound;
+		
+		// catch scroll events
+		// http://stackoverflow.com/questions/10313142/javascript-capture-mouse-wheel-event-and-do-not-scroll-the-page
+		this.getStage().canvas.onmousewheel = function(event) {
+			this.scrollGameList(event.wheelDeltaY);
+			event.preventDefault(); 
+			return false;
+		}.bind(this);
+			
 	}
 	
 
@@ -97,6 +106,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatEntry.setVisible(false);
 		this.chatRecord.setVisible(false);
 		this.chatEntry.htmlElement.onkeypress = null;
+		this.getStage().canvas.onmousewheel = null;
 	}
 	
 	
@@ -176,6 +186,16 @@ var p = Homeroom.prototype = new createjs.Container();
 	p.handlebtn_chat = function(event) {
 		this.sendChatText();
 	}
+	
+	p.handlebtn_chalkboard_up = function(event) {
+		this.scrollGameList('up');
+	}
+	
+	p.handlebtn_chalkboard_down = function(event) {
+		this.scrollGameList('down');
+	}
+
+
 
 
 	// update chat box
@@ -192,7 +212,9 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.buttons = {};
 		var someButtons = {
 			btn_dressingroom:	[9, 189],
-			btn_chat:			[88, 246]
+			btn_chat:			[88, 246],
+			btn_chalkboard_up:	[440, 187],
+			btn_chalkboard_down:[467, 188]
 		};
 		_.forOwn(someButtons, function(what, who) {
 		var b = this.addChild(this.assets[who].clone());
@@ -240,6 +262,12 @@ var p = Homeroom.prototype = new createjs.Container();
 				victim.destroy();
 			}
 		}
+		
+		// scroll down if gamelist is now out of scroll window
+		if (this.gameList.y < (config.homeroom.chalkboard.TALL_PX - this.getGameListHeight())) {
+			this.gameList.y = config.homeroom.chalkboard.TALL_PX - this.getGameListHeight();
+		}
+		
 	}
 	
 	p.updateGameListing = function(game) {
@@ -248,6 +276,47 @@ var p = Homeroom.prototype = new createjs.Container();
 			updated.update(game);
 		}
 	}
+	
+	
+	// get total height of game listings, for scroll calculations
+	p.getGameListHeight = function() {
+		return this.gameList.children.length*25;
+	}
+	
+
+
+	// scroll the list of games on chalkboard
+	p.scrollGameList = function(how) {
+		if (how=='down') {
+			var destY = this.gameList.y + 120;
+			if (destY > 39) destY = 39;
+			var slide = createjs.Tween
+				.get(this.gameList)
+				.to({y:destY}, 100+2*Math.abs(this.gameList.y-destY), createjs.Ease.quadOut);
+		}
+	
+		else if (how=='up') {
+			var destY = this.gameList.y - 120;
+			if (destY < (config.homeroom.chalkboard.TALL_PX - this.getGameListHeight())) {
+				destY = config.homeroom.chalkboard.TALL_PX - this.getGameListHeight();
+			}
+			var slide = createjs.Tween
+				.get(this.gameList)
+				.to({y:destY}, 100+2*Math.abs(this.gameList.y-destY), createjs.Ease.quadOut);
+		}
+		else {
+			// deltaY from mouse wheel
+			this.gameList.y += how;
+		}
+		if (this.gameList.y > 39) this.gameList.y = 39;
+		if (this.gameList.y < (config.homeroom.chalkboard.TALL_PX - this.getGameListHeight())) {
+			this.gameList.y = config.homeroom.chalkboard.TALL_PX - this.getGameListHeight();
+		}
+	}
+
+
+
+	
 	
 	
 	

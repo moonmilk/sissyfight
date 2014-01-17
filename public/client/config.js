@@ -96,7 +96,12 @@ config['manifest'] = [
 				btn_dressingroom:			[2, 2,	85,31,	0, 0,0],
 				btn_dressingroom_pressed:	[2, 2,	85,31,	0, -1,-1],
 				btn_chat:					[89,2,  47,27,  0, 0,0],
-				btn_chat_pressed:			[89,2,  47,27,  0, -1,-1]
+				btn_chat_pressed:			[89,2,  47,27,  0, -1,-1],
+				
+				btn_chalkboard_up:			[138, 2,	21,18,		0,	0,0],
+				btn_chalkboard_up_pressed:	[138, 2,	21,18,		0,	-1,-1],
+				btn_chalkboard_down:	[161, 2,	21,18,		0,	0,0],
+				btn_chalkboard_down_pressed:[161, 2,	21,18,		0,	-1,-1]
 			}
 		}
 	},
@@ -308,6 +313,11 @@ config.dressing.addons = {
 	stripe_color: '#52EC7E',
 	hole_color: '#222'
 }
+
+config.homeroom = {};
+config.homeroom.chalkboard = {
+	TALL_PX: 144 // height in pixels of scroll window
+};
 
 
 config.game = {};
