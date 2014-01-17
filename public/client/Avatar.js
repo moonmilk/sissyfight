@@ -87,6 +87,8 @@ var p = Avatar.prototype = new createjs.Container();
 			this.layers[l].y = this.offset.y;
 		}
 		
+		this.prepareAssets();
+		
 		//this.clear();
 	}
 	
@@ -175,6 +177,8 @@ var p = Avatar.prototype = new createjs.Container();
 			}, this);
 		}, this);
 		
+		this.applyOverlays();
+		
 		// add damage display if it's in the look
 		if (this.look.damage) {
 			var damageDisplay;
@@ -256,6 +260,40 @@ var p = Avatar.prototype = new createjs.Container();
 		//console.log("setDir", dir, this.look);
 	}
 	
+	
+	
+	p.applyOverlays = function() {
+		if (!this.look.overlays) return;
+		_.forEach(this.look.overlays, function(overlay) {
+			var overlaySprite = this.overlayAssets[overlay].clone();
+			overlaySprite.info = "avatar overlay " + overlay;
+			this.layers[config.avatar.overlayLayer].addChild(overlaySprite);
+			// handle left-right flip
+			// have to treat holdlolly differently because it's a body overlay and the rest are head overlays
+			var dir;
+			if (overlay=='ovl_holdlolly') {
+				dir = this.look.bodydir;
+			}
+			else {
+				dir = this.look.headdir;	
+				// check for crying (crouched on ground)
+				if (this.look.pose==Avatar.poses.HUMILIATED) {
+					overlaySprite.y = config.avatar.cryOffset; 
+				}
+			}
+			if (dir) {
+				overlaySprite.scaleX = -1;
+				overlaySprite.x = -1;
+			}
+			else {
+				overlaySprite.scaleX = 1;
+				overlaySprite.x = 0;
+			}
+			
+			//console.log('Avatar.applyOverlays: applying ' + overlay + ' as sprite', overlaySprite);
+			
+		}, this);
+	}
 
 	
 	
@@ -265,6 +303,16 @@ var p = Avatar.prototype = new createjs.Container();
 		this.sprites.uniform.gotoAndStop(this.look.pose + config.avatar.numPoses * uniform);
 	}
 	
+
+	p.prepareAssets = function() {
+		this.overlayAssets = {};
+		_.each(['overlays'], function(s) {
+			g.load.unpack(s, this.overlayAssets);
+		}, this);
+	}
+	
+
+
 
 
 	// "static" stuff
@@ -294,12 +342,11 @@ var p = Avatar.prototype = new createjs.Container();
 		'RIGHT'		: 1
 	}
 	Avatar.overlays = {
-		'NONE'		: 0,
-		'SCRATCH'	: 1,
-		'LICK'		: 2,
-		'HOLDLOLLY'	: 3,
-		'CHOKE'		: 4,
-		'TEARS'		: 5
+		'SCRATCH'	: 'ovl_scratch',
+		'LICK'		: 'ovl_lick',
+		'HOLDLOLLY'	: 'ovl_holdlolly',
+		'CHOKE'		: 'ovl_choke',
+		'TEARS'		: 'ovl_tears'
 	}
 	
 	// make up a random look for testing

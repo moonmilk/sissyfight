@@ -49,8 +49,21 @@ config['manifest'] = [
 		src:	'avatar/all_uniforms.png',
 		data:	{colors:'uniforms', grid:[81,116], reg:[0+xoffset,9]}
 	},
-	
-	
+	{
+		id:		'overlays',
+		src:	'avatar/overlays.png',
+		data:	{
+			pieces:	{
+				ovl_tears:		[0,  0,	24,13, 	0, 	22,-42],
+				ovl_scratch:	[44, 1,	 8, 8,	0,	 3,-45],
+				ovl_choke:		[26, 0,	14,13,	0,	20,-41],
+				ovl_lick:		[54, 0,  8, 8,	0,	17,-47],
+				ovl_holdlolly:	[64, 0,	16, 8,	0,	 2,-74]
+			}
+		}
+	},
+
+
 	// dressing room
 	{ 	id: 	'dressing_behind', 	src: 'dressing/dressing_behind.png' },
 	{ 	id: 	'dressing_frame', 	src: 'dressing/dressing_frame.png' },
@@ -279,6 +292,7 @@ config.avatar['addonsDims'] = {width:81, height:115, regX:40, regY:9}; // they'r
 config.avatar['cryOffset'] = 19; // head items drop down this far in cry pose
 
 config.avatar['numAvatarLayers'] = 10;
+config.avatar['overlayLayer'] = 9; // put overlays on topmost layer
 config.avatar['numPoses'] = 9;
 config.avatar['numExpressions'] = 7;
 
