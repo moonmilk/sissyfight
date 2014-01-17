@@ -1,6 +1,6 @@
 {
   "name": "sissyfight",
-  "version": "0.0.1-20",
+  "version": "0.0.1-30",
   "private": true,
   "scripts": {
     "start": "node app.js",
@@ -12,7 +12,7 @@
     "express": "3.3.1",
     "redis": "*",
     "connect-redis": "*",
-    "jade": "*",
+    "jade": "0.34.1",
     "sockjs": "*",
     "mysql": ">= 2.0.0-alpha8",
     "passport": "*",
