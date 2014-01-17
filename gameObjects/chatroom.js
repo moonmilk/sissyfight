@@ -74,7 +74,7 @@ ChatRoom.prototype.leave = function(conn, done) {
 // callback: done() (no error conditions)
 ChatRoom.prototype.say = function(conn, text, done) {
 	// escape HTML and limit text length
-	text = text.substring(0,255);
+	text = text.substring(0,140); // for now - 140 chars like a tweet
 	text = text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
