@@ -28,7 +28,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.prepareAssets();
 		
 		this.me = me; // id of this player, so I don't need any memory to know which one is me
-		this.gameInfo = gameInfo; // game(id), gameName, occupants:[{id,nickname,avatar}]
+		this.gameInfo = gameInfo; // game(id), roomName, occupants:[{id,nickname,avatar}]
 		
 		this.state = 'pregame'; // can be pregame or game
 		
@@ -66,6 +66,14 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.btn_exitgame.y = 3;
 		this.items.btn_exitgame.helper = new createjs.ButtonHelper(this.items.btn_exitgame, "btn_exitgame", "btn_exitgame", "btn_exitgame_pressed");
 		this.items.btn_exitgame.addEventListener("click", this.handleExitButton);
+		
+		
+		// put the name of the game up
+		console.log(this.gameInfo);
+		var gameName = new createjs.Text(this.gameInfo.roomName, '10px Arial', '#eeeeee');
+		gameName.x = 192;
+		gameName.y = 6;
+		this.addChild(gameName);
 		
 		
 		// action status tag displays which game action you've chosen
