@@ -458,10 +458,11 @@ var p = GameRoom.prototype = new createjs.Container();
 						action.target = player.playerInfo.id;
 					}
 					g.comm.writeEvent('act', action);
-				}
 				
-				// show the choice on target player
-				this.setPlayerActionTag(player, selectedAction);
+					// show the choice on target player
+					this.setPlayerActionTag(player, selectedAction);
+				}
+
 				// get rid of menu
 				this.removeActionMenu();
 			}
