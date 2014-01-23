@@ -7,6 +7,9 @@ var GameRoom = require('./gameroom');
 
 var _ = require('lodash');
 
+// globals
+School.EMPTY_ROOM_PURGE_TIME = 30; // get rid of an empty room after 30 seconds
+School.GAME_NAMES = _.shuffle(['hell room!', 'algebra 2', 'thunderdome', 'PLATE OF SHRIMP', 'Lothlorien', 'Preppies only!', 'ghostbusters', 'asdfgh', 'powder room', 'GOTH', 'mac & cheez', 'HYPNOTOAD', 'catfish?', 'Ow My Spleen', 'camembert', 'say NI', 'invisigoth', 'hey!', 'Windows 3.1', 'i <3 u', 'NO :[', 'Ascorbic', 'puppies', 'shAMpoO', 'Inconceivable!', 'grab this', 'ugli']);
 
 function School(params) {
 	this.id = params.id;
@@ -16,12 +19,18 @@ function School(params) {
 	this.games = {};
 	this.nextGameID = 1;
 	
+	// timer for periodic updates
+	this.interval = setInterval(this.update.bind(this), 5000); 
+	this.interval.unref(); // timer shouldn't prevent shutdown
+	
+	/*
 	// for testing game listings
 	var testGames = ['hell room!', 'algebra 2', 'thunderdome', 'PLATE OF SHRIMP', 'Lothlorien', 'Preppies only!', 'ghostbusters', 'asdfgh', 'powder room', 'GOTH', 'mac & cheez', 'HYPNOTOAD', 'catfish?', 'Ow My Spleen', 'camembert', 'say NI', 'invisigoth', 'hey!', 'Windows 3.1', 'i <3 u', 'NO :[', 'Ascorbic', 'puppies', 'shAMpoO', 'Inconceivable!'];
 	
 	for (var i=0; i<testGames.length; i++) {
 		this.createGame({name:testGames[i], school:this.id});
 	}
+	*/
 	
 }
 
@@ -58,6 +67,7 @@ School.prototype.getGameRoomsInfo = function(done) {
 // callback: done(err, room object)
 School.prototype.createGame = function(params, done) {
 	params.id = this.nextGameID++;
+	params.school = this.id;
 	var game = new GameRoom(params);
 	this.games[params.id] = game;
 	
@@ -68,9 +78,11 @@ School.prototype.createGame = function(params, done) {
 }
 
 // callback: done(err)
-School.prototype.destroyGame = function(done) {
+School.prototype.destroyGame = function(game, done) {
+	var gameID = game.id;
 	game.destroy();
-	game.removeAllEventListeners();
+	game.removeAllListeners();
+	delete this.games[gameID];
 	
 	if (done) done(null);
 }
@@ -83,7 +95,6 @@ School.prototype.userCreateGameRoom = function(args, done) {
 	// todo: sanity checking on name
 	params = {};
 	params.name = args.name || "no name";
-	params.school = this.id;
 	
 	this.createGame(params, done);
 }
@@ -101,7 +112,38 @@ School.prototype.gameUpdateListener = function(event) {
 
 // periodic maintenance: throw away old empty game rooms, but make sure there's always at least one empty room.
 School.prototype.update = function() {
-	// TODO
+	// find rooms that have been empty for more than threshold time
+	_.each(this.games, function(game) {
+		if (game.getInfo().occupants.length > 0) {
+			game._lastOccupiedTime = process.uptime(); // in seconds
+			game._purgeable = false;
+			game._empty = false;
+		}
+		else {
+			game._empty = true;
+			game._lastOccupiedTime = game._lastOccupiedTime || 0;
+			if ((process.uptime() - game._lastOccupiedTime) > School.EMPTY_ROOM_PURGE_TIME) {
+				game._purgeable = true;
+			}
+		}
+	}, this);
+	
+	// console.log("school update: time=", process.uptime(), _.map(this.games, function(g) {return{name:g.name, occ:g._lastOccupiedTime, empty:g._empty, purge:g._purgeable}}));
+	
+	var empties = _.filter(this.games, '_empty');
+	if (empties.length==0) {
+		// no empties - make a new room and move name to end of list
+		var name = School.GAME_NAMES.shift();
+		School.GAME_NAMES.push(name);
+		
+		this.createGame({name:name});
+	}
+	else if (empties.length > 1) {
+		// more empties than necessary - get rid of one if any are old enough
+		var purge = _.sample(_.filter(this.games, '_purgeable'));
+		if (purge) this.destroyGame(purge);
+	}
+	
 }
 
 

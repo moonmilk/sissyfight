@@ -23,6 +23,9 @@ ChatRoom.prototype.start = function() {
 }
 
 ChatRoom.prototype.destroy = function() {
+	// School should only purge empty rooms, but log error just in case
+	if (this.occupants.length > 0) console.log("ChatRoom trouble: I got purged when I had occupants",this.getInfo());
+	
 	this.emit('update', {update:'destroy', roomInfo:this.getInfo()});
 }
 
