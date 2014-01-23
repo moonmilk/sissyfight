@@ -22,14 +22,6 @@ var p = Homeroom.prototype = new createjs.Container();
 		
 		this.addChild(this.assets.homeroom_bg.clone());
 		
-		// display avatar without background layer, if any (like phone booth or bodyguard)
-		this.avatar = this.addChild(new sf.Avatar());
-		var nobg = {remove_background:true};
-		_.defaults(nobg, look);
-		this.avatar.setLook(nobg);
-		this.avatar.x = 323;
-		this.avatar.y = 162;
-		
 		this.chatRecord = new createjs.DOMElement(document.getElementById('homeroomChat'));
 		this.chatEntry = new createjs.DOMElement(document.getElementById('homeroomTextEntry'));
 		this.chatBuffer = [];
@@ -55,6 +47,17 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.assets.bg_newgame.y = 40;
 		this.createGameDialog.buttons = {};
 		this.createGameDialog.gameName = new createjs.DOMElement(document.getElementById('homeroomCreateGameEntry'));
+		
+		
+				
+		// display avatar without background layer, if any (like phone booth or bodyguard)
+		this.avatar = this.addChild(new sf.Avatar());
+		var nobg = {remove_background:true};
+		_.defaults(nobg, look);
+		this.avatar.setLook(nobg);
+		this.avatar.x = 323;
+		this.avatar.y = 162;
+		
 		
 		_.forOwn(games, function(game) {
 			this.addGameListing(game);
