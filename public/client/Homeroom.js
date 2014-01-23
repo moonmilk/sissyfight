@@ -308,8 +308,8 @@ var p = Homeroom.prototype = new createjs.Container();
 	
 	p.removeGameListing = function(id) {
 		var victim;
-		for (var i=0; i<this.gameList.children.length; i++) {
-			var gameListing = this.gameList.children[i];
+		// sort by y can move up listings that follow deleted listing
+		_.each(_.sortBy(this.gameList.children, 'y'), function(gameListing) {
 			// slide rooms below the deleted room up to fill space
 			if (victim) {
 				gameListing.y -= 25;
@@ -319,11 +319,11 @@ var p = Homeroom.prototype = new createjs.Container();
 				this.gameList.removeChild(victim);
 				victim.destroy();
 			}
-		}
+		}, this);
 		
 		// scroll down if gamelist is now out of scroll window
 		if (this.gameList.y < (config.homeroom.chalkboard.TALL_PX - this.getGameListHeight())) {
-			this.gameList.y = config.homeroom.chalkboard.TALL_PX - this.getGameListHeight();
+			this.gameList.y = 39; //config.homeroom.chalkboard.TALL_PX - this.getGameListHeight();
 		}
 		
 	}
@@ -345,6 +345,11 @@ var p = Homeroom.prototype = new createjs.Container();
 
 	// scroll the list of games on chalkboard
 	p.scrollGameList = function(how) {
+		// if all the games fit in one screen, always scroll to 0:
+		if (this.getGameListHeight() < config.homeroom.chalkboard.TALL_PX) {
+			this.gameList.y = 39;
+			return;
+		}
 		if (how=='down') {
 			var destY = this.gameList.y + 120;
 			if (destY > 39) destY = 39;
