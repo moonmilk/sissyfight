@@ -503,7 +503,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 				cow.cowardice = 1;
 				narrative.push({
 					scene: 'cower',
-					text: cow.nickname + " cowered from nothing like a scaredy-cat.  If she does that again next turn, she's gonna be sorry!",
+					text: cow.nickname + " cowered from nothing. If she does that again next turn, she's gonna be sorry!",
 					code: {victim: cow.id, cower:'useless'},
 					damage: {}
 				});
