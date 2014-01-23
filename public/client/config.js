@@ -98,6 +98,15 @@ config['manifest'] = [
 				btn_chat:					[89,2,  47,27,  0, 0,0],
 				btn_chat_pressed:			[89,2,  47,27,  0, -1,-1],
 				
+				btn_creategame:				[2,34,	143,17,	0,	0,0],
+				btn_creategame_pressed:		[147,34,143,17,	0,	0,0],
+				
+				bg_newgame:					[1,57,	198,19,	0,	0,0],
+				btn_newgame_cancel:			[200,57,64,21,	0,	0,0],
+				btn_newgame_cancel_pressed:	[200,57,64,21,	0,	-1,-1],
+				btn_newgame_ok:				[265,52,34,29,	0,	0,5],
+				btn_newgame_ok_pressed:		[265,52,34,29,	0,	-1,4],
+				
 				btn_chalkboard_up:			[138, 2,	21,18,		0,	0,0],
 				btn_chalkboard_up_pressed:	[138, 2,	21,18,		0,	-1,-1],
 				btn_chalkboard_down:	[161, 2,	21,18,		0,	0,0],

@@ -45,6 +45,17 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.gameList.mask.x = 148;
 		this.gameList.mask.y = 39;
 		
+		// create new game dialog box
+		this.createGameDialog = this.addChild(new createjs.Container());
+		this.createGameDialog.x = 148;
+		this.createGameDialog.y = 39;
+		this.createGameDialog.visible = false;
+		this.createGameDialog.addChild(this.assets.bg_newgame);
+		this.assets.bg_newgame.x = 32;
+		this.assets.bg_newgame.y = 40;
+		this.createGameDialog.buttons = {};
+
+		
 		_.forOwn(games, function(game) {
 			this.addGameListing(game);
 		}, this);
@@ -197,6 +208,23 @@ var p = Homeroom.prototype = new createjs.Container();
 
 
 
+	p.handlebtn_creategame = function(event) {
+		// show the create game dialog
+		this.gameList.visible = false;
+		this.createGameDialog.visible = true;
+	}
+	
+	p.handlebtn_newgame_cancel = function(event) {
+		this.gameList.visible = true;
+		this.createGameDialog.visible = false;
+	}
+	
+	p.handlebtn_newgame_ok = function(event) {
+		this.gameList.visible = true;
+		this.createGameDialog.visible = false;		
+	}
+
+
 
 	// update chat box
 	p.chatLog = function(text) {
@@ -211,14 +239,19 @@ var p = Homeroom.prototype = new createjs.Container();
 	p.prepareButtons = function() {
 		this.buttons = {};
 		var someButtons = {
-			btn_dressingroom:	[9, 189],
-			btn_chat:			[88, 246],
-			btn_chalkboard_up:	[440, 187],
-			btn_chalkboard_down:[467, 188]
+			btn_dressingroom:	[9, 189, this],
+			btn_chat:			[88, 246, this],
+			btn_chalkboard_up:	[440, 187, this],
+			btn_chalkboard_down:[467, 188, this],
+			
+			btn_creategame:		[147, 188, this],
+			
+			btn_newgame_cancel:	[143, 70, this.createGameDialog],
+			btn_newgame_ok:		[210, 70, this.createGameDialog]
 		};
 		_.forOwn(someButtons, function(what, who) {
-		var b = this.addChild(this.assets[who].clone());
-			this.buttons[who] = b
+		var b = what[2].addChild(this.assets[who].clone());
+			what[2].buttons[who] = b
 			b.x = what[0];
 			b.y = what[1];
 			b.helper = new createjs.ButtonHelper(b, who, who, who+"_pressed");
