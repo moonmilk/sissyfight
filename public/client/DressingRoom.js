@@ -272,7 +272,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 		
 	p.scrollAddons = function(how) {
-		if (how=='down') {
+		if (how=='up') {
 			var destY = this.addonsLayer.y + 120;
 			if (destY > 0) destY = 0;
 			var slide = createjs.Tween
@@ -280,7 +280,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 				.to({y:destY}, 100+2*Math.abs(this.addonsLayer.y-destY), createjs.Ease.quadOut);
 		}
 	
-		else if (how=='up') {
+		else if (how=='down') {
 			var destY = this.addonsLayer.y - 120;
 			if (destY < (config.dressing.addons.TALL_PX - this.addonsList.getScrollHeight())) {
 				destY = config.dressing.addons.TALL_PX - this.addonsList.getScrollHeight();

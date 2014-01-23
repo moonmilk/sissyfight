@@ -350,7 +350,7 @@ var p = Homeroom.prototype = new createjs.Container();
 			this.gameList.y = 39;
 			return;
 		}
-		if (how=='down') {
+		if (how=='up') {
 			var destY = this.gameList.y + 120;
 			if (destY > 39) destY = 39;
 			var slide = createjs.Tween
@@ -358,7 +358,7 @@ var p = Homeroom.prototype = new createjs.Container();
 				.to({y:destY}, 100+2*Math.abs(this.gameList.y-destY), createjs.Ease.quadOut);
 		}
 	
-		else if (how=='up') {
+		else if (how=='down') {
 			var destY = this.gameList.y - 120;
 			if (destY < (config.homeroom.chalkboard.TALL_PX - this.getGameListHeight())) {
 				destY = config.homeroom.chalkboard.TALL_PX - this.getGameListHeight();
