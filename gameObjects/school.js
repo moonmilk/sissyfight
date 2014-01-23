@@ -55,7 +55,7 @@ School.prototype.getGameRoomsInfo = function(done) {
 
 
 
-// callback: done(err, room info)
+// callback: done(err, room object)
 School.prototype.createGame = function(params, done) {
 	params.id = this.nextGameID++;
 	var game = new GameRoom(params);
@@ -64,7 +64,7 @@ School.prototype.createGame = function(params, done) {
 	game.on('update', this.gameUpdateListener.bind(this));
 	game.start();
 	
-	if (done) done(null, game.getInfo());
+	if (done) done(null, game);
 }
 
 // callback: done(err)
@@ -74,6 +74,21 @@ School.prototype.destroyGame = function(done) {
 	
 	if (done) done(null);
 }
+
+
+// user request to create a game room 
+// args: {name: 'room name'} -- custom game properties to come later
+// callback: done(err, room object)
+School.prototype.userCreateGameRoom = function(args, done) {
+	// todo: sanity checking on name
+	params = {};
+	params.name = args.name || "no name";
+	params.school = this.id;
+	
+	this.createGame(params, done);
+}
+
+
 
 
 // receive updates from games

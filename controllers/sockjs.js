@@ -6,6 +6,7 @@
 */
 
 var User = require("../models/user");
+var Homeroom = require('../gameObjects/homeroom');
 
 var _ = require('lodash');
 
@@ -63,6 +64,7 @@ module.exports = function(app, sockjs) {
 		conn.on("homeroom", returnToHomeroomListener);
 		conn.on("joingame", joinGameListener);
 		conn.on("act", gameActionListener);
+		conn.on("newgame", newGameListener);
 	}
 	
 	
@@ -281,24 +283,54 @@ module.exports = function(app, sockjs) {
 							conn.writeEvent("error", err);
 						}
 						else {
-							gameRoom.join(conn, function(err, gameRoomInfo) {
-								if (err) {
-									conn.writeEvent("error", err);
-								}
-								else {
-									// sort game occupants so that current player always appears first
-									gameRoomInfo.occupants = _.sortBy(gameRoomInfo.occupants, function(occupant) {
-										return (occupant.id != conn.user.id);
-									});
-									conn.writeEvent("go", {to:'gameroom', room:gameRoomInfo, me:conn.user.id});
-								}
-							});
+							joinGameRoom(conn, gameRoom);
 						}
 					});
 					
 				}
 			});
 			
+		}
+	}
+	
+	function joinGameRoom(conn, gameRoom) {
+		gameRoom.join(conn, function(err, gameRoomInfo) {
+			if (err) {
+				conn.writeEvent("error", err);
+			}
+			else {
+				// sort game occupants so that current player always appears first
+				gameRoomInfo.occupants = _.sortBy(gameRoomInfo.occupants, function(occupant) {
+					return (occupant.id != conn.user.id);
+				});
+				conn.writeEvent("go", {to:'gameroom', room:gameRoomInfo, me:conn.user.id});
+			}
+		});
+	}
+	
+	
+	function newGameListener(data) {
+		var conn = this;
+		// user must be in homeroom to create a game
+		if (conn.room && conn.room instanceof Homeroom) {
+			conn.school.userCreateGameRoom(data, function(err, gameRoom) {
+				if (err) {
+					conn.writeEvent("error", err);
+				}
+				else {
+					conn.room.leave(conn, function(err) {
+						if (err) {
+							conn.writeEvent("error", err);
+						}
+						else {
+							joinGameRoom(conn, gameRoom);
+						}
+					})
+				}
+			})
+		}
+		else {
+			conn.writeEvent("error", {error:"newgamenothome", message:"Can't create game room - not in homeroom"});
 		}
 	}
 	

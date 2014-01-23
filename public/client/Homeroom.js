@@ -54,7 +54,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.assets.bg_newgame.x = 32;
 		this.assets.bg_newgame.y = 40;
 		this.createGameDialog.buttons = {};
-
+		this.createGameDialog.gameName = new createjs.DOMElement(document.getElementById('homeroomCreateGameEntry'));
 		
 		_.forOwn(games, function(game) {
 			this.addGameListing(game);
@@ -81,6 +81,12 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatRecord.setVisible(true);
 		
 		this.chatRecord.htmlElement.innerHTML = "";
+		
+		this.createGameDialog.gameName.setFakeScale(g.gameScale);
+		this.createGameDialog.gameName.setPosition(293, 81);
+		this.createGameDialog.gameName.setSize(83, 12);
+		this.createGameDialog.gameName.setVisible(false);
+		this.createGameDialog.gameName.htmlElement.value = "";
 		
 		// set up message handlers
 		_.forOwn(this.MESSAGES, function(type) {
@@ -117,6 +123,8 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatEntry.setVisible(false);
 		this.chatRecord.setVisible(false);
 		this.chatEntry.htmlElement.onkeypress = null;
+		this.createGameDialog.gameName.setVisible(false);
+		this.createGameDialog.gameName.htmlElement.onkeypress = null;
 		this.getStage().canvas.onmousewheel = null;
 	}
 	
@@ -212,16 +220,33 @@ var p = Homeroom.prototype = new createjs.Container();
 		// show the create game dialog
 		this.gameList.visible = false;
 		this.createGameDialog.visible = true;
+		this.createGameDialog.gameName.setVisible(true);
+		this.createGameDialog.gameName.htmlElement.value = "";
+		this.createGameDialog.gameName.htmlElement.focus();
 	}
 	
 	p.handlebtn_newgame_cancel = function(event) {
 		this.gameList.visible = true;
 		this.createGameDialog.visible = false;
+		this.createGameDialog.gameName.setVisible(false);
 	}
 	
 	p.handlebtn_newgame_ok = function(event) {
 		this.gameList.visible = true;
-		this.createGameDialog.visible = false;		
+		this.createGameDialog.visible = false;	
+		this.createGameDialog.gameName.setVisible(false);
+		
+		var gameName = this.createGameDialog.gameName.htmlElement.value.trim();
+		if (gameName.length > 0) {
+			this.createGame(gameName);
+			// todo: overlay to block ui events until server response
+		}	
+	}
+	
+	p.createGame = function(gameName) {
+		g.comm.writeEvent("newgame", {name: gameName});
+		// expected response: go to=gameroom
+		// todo: display error responses - name taken, too many rooms
 	}
 
 
