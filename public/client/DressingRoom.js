@@ -336,6 +336,9 @@ var p = DressingRoom.prototype = new createjs.Container();
 		}, this);
 		
 		// randomizer lever
+		// make a larger hit area
+		var hitbox = new createjs.Shape(new createjs.Graphics().f("#f00").dr(-1,-1, 18,53));
+		this.buttons.lever.hitArea = hitbox;
 		this.buttons.lever.addEventListener("click", function(event) {
 			var look = sf.Avatar.randomLook();
 			_.each(['face','skincolor','hairstyle','haircolor','uniform'], function(feature) {
