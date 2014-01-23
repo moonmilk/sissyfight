@@ -65,6 +65,11 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	
 	
 	p.start = function() {
+		// make a larger hit area for back and next buttons
+		var hitbox = new createjs.Shape(new createjs.Graphics().f("#f00").dr(-2,-2, 54,27));
+		this.items.btn_back.hitArea = hitbox;
+		this.items.btn_next.hitArea = hitbox;
+		
 		this.items.btn_back.helper = new createjs.ButtonHelper(this.items.btn_back, 'results_back', 'results_back', 'results_back_pressed');
 		this.items.btn_back.addEventListener('click', function() {this.click('back')}.bind(this));
 		this.items.btn_next.helper = new createjs.ButtonHelper(this.items.btn_next, 'results_next', 'results_next', 'results_next_pressed');
