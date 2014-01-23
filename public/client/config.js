@@ -204,7 +204,10 @@ config['manifest'] = [
 				results_btn_done:	[612, 17,   55, 25,   0, 0, 0],
 				results_btn_back_pressed:	[511, 22,   49, 22,   0, -1, -1],
 				results_btn_next_pressed:	[564, 22,   46, 22,   0, -1, -1],
-				results_btn_done_pressed:	[612, 17,   55, 25,   0, -1, -1]
+				results_btn_done_pressed:	[612, 17,   55, 25,   0, -1, -1],
+				
+				// end of game chalkboard display
+				chalkboard:			[430,655,	295,143,	0,	0, 0]
 			}
 		}
 	},

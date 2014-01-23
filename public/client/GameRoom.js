@@ -59,6 +59,19 @@ var p = GameRoom.prototype = new createjs.Container();
 		// layer for players
 		this.layers.playerLayer = this.addChild(new createjs.Container());
 		
+		// layer for end of game results chalkboard
+		this.layers.chalkboardLayer = this.addChild(new createjs.Container());
+		this.layers.chalkboardLayer.x = -300;
+		this.items.chalkboard = this.assets.chalkboard;
+		this.items.chalkboard.x = 0;
+		this.items.chalkboard.y = 78;
+		this.layers.chalkboardLayer.addChild(this.items.chalkboard);
+		this.items.chalkboardText = new createjs.Text('', '12px Arial', '#ffffff');
+		this.items.chalkboardText.lineWidth = 276;
+		this.items.chalkboardText.x = 10;
+		this.items.chalkboardText.y = 100;
+		this.layers.chalkboardLayer.addChild(this.items.chalkboardText);
+		
 		
 		// permanent buttons
 		this.items.btn_exitgame = this.addChild(this.assets.btn_exitgame.clone());
@@ -137,7 +150,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 				
 		// for testing results displays from the console
-		window.r = this.displayResults.bind(this);
+		window.r = this.handleTurnResults.bind(this);
 		window.i = {looks:this.looksByID, players:this.playersByID};
 	}
 	
@@ -164,6 +177,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.console.destroy();
 		
 		this.displayResultsDone('destroy');
+		
+		createjs.Tween.removeTweens(this.layers.chalkboardLayer);
 		
 		window.r = null;
 	}
@@ -269,11 +284,15 @@ var p = GameRoom.prototype = new createjs.Container();
 		if (endScenes.length > 0) this.handleEndScene(endScenes[0]); // assumption: there's never more than one end scene!
 				
 		this.lastTurnResults = nonEndScenes;
-		this.displayResults(this.lastTurnResults);
-		this.items.console.enableShowResults();
+		if (this.lastTurnResults.length > 0) {
+			this.displayResults(this.lastTurnResults);
+			this.items.console.enableShowResults();
+		}
 	}
 		
-		
+
+	// sample data for testing: 
+	// r([{scene:'end', code:{winners:[1]}, text:'Porgy and Bess won the game and became best friends forever.\n\nThey each earned 50 points.\n\nEveryone else earned 10 points for playing.', damage:{}}]);		
 	p.handleEndScene = function(scene) {
 		// victory poses for winners, if any 
 		// (losers will have already had their lose poses set by the health status report)
@@ -282,7 +301,10 @@ var p = GameRoom.prototype = new createjs.Container();
 			playerAvatar.setPose('victory');
 		}, this);
 		
-		// TODO: display the caption
+		// display the caption on the rolling chalkboard
+		this.items.chalkboardText.text = scene.text;
+		this.layers.chalkboardLayer.x = 500;
+		this.items.chalkboardTween = createjs.Tween.get(this.layers.chalkboardLayer).to({x:-300}, 15000);
 	}		
 
 	
