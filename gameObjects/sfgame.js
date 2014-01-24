@@ -768,19 +768,21 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	var damage = {};
 	var text = "";
 	_.each(actions, function(player) {
-		switch(player.action) {
-			case 'tattle': 
-				tattlers.push(player);
-				break;
-			case 'lick':
-				if (player.lostLolly) sufferers.push(player);
-				else lickers.push(player);
-				break;
-			case 'cower':
-				cowerers.push(player);
-				break;
-			default:
-				sufferers.push(player);
+		if (!player.loser) {
+			switch(player.action) {
+				case 'tattle': 
+					tattlers.push(player);
+					break;
+				case 'lick':
+					if (player.lostLolly) sufferers.push(player);
+					else lickers.push(player);
+					break;
+				case 'cower':
+					cowerers.push(player);
+					break;
+				default:
+					sufferers.push(player);
+			}
 		}
 	}, this);
 	
