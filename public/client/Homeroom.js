@@ -49,6 +49,36 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.createGameDialog.gameName = new createjs.DOMElement(document.getElementById('homeroomCreateGameEntry'));
 		
 		
+		// attendance list button and popup
+		this.attendanceLayer = this.addChild(new createjs.Container());
+		this.attendanceLayer.list_closed = this.attendanceLayer.addChild(new createjs.Container());
+		this.attendanceLayer.list_closed.addChild(this.assets.attendance_closed);
+		this.attendanceLayer.list_closed.x = 353;
+		this.attendanceLayer.list_closed.y = 229;
+		this.attendanceLayer.list_closed.buttons = [];
+		
+		this.attendanceLayer.list_open = this.attendanceLayer.addChild(new createjs.Container());
+		this.attendanceLayer.list_open.x = 353;
+		this.attendanceLayer.list_open.y = 12;
+		this.attendanceLayer.list_open.addChild(this.assets.attendance_open);
+		this.attendanceLayer.textContainer = this.attendanceLayer.list_open.addChild(new createjs.Container());
+		this.attendanceLayer.textContainer.x = 12;
+		this.attendanceLayer.textContainer.y = 26;
+		this.attendanceLayer.textContainer.mask = new createjs.Shape();
+		this.attendanceLayer.textContainer.mask.graphics.beginFill('#fff').rect(12,26, 71,193);
+		this.attendanceLayer.attendanceText = this.attendanceLayer.textContainer.addChild(new createjs.Text('', '10px Arial', '#444444'));
+		this.attendanceLayer.attendanceText.lineHeight = 10;
+		this.attendanceLayer.list_open.visible = false;
+		this.attendanceLayer.list_open.buttons = [];
+
+		this.attendanceLayer.attendanceCount = this.attendanceLayer.addChild(new createjs.Text('', '10px Arial', '#000000'));
+		this.attendanceLayer.attendanceCount.x = 420;
+		this.attendanceLayer.attendanceCount.y = 254;
+		this.attendanceLayer.attendanceCount.lineWidth = 19;
+		this.attendanceLayer.attendanceCount.textAlign = 'center';
+		this.attendanceLayer.list_open.buttons = [];
+		
+		
 				
 		// display avatar without background layer, if any (like phone booth or bodyguard)
 		this.avatar = this.addChild(new sf.Avatar());
@@ -59,9 +89,27 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.avatar.y = 162;
 		
 		
-		_.forOwn(games, function(game) {
+		_.each(games, function(game) {
 			this.addGameListing(game);
 		}, this);
+		
+		this.attendanceList = [];
+		this.attendanceListOffset = 0;
+		_.each(occupants, function(occupant) {
+			this.addToAttendanceList(occupant);
+		}, this);
+		
+		/*
+		// put extra games in for testing scrolling
+		for (var i=1;i<26; i++) {
+			this.addGameListing({room:i+1000,roomName:"testRoom"+i,"occupants":[],"type":"GameRoom","status":"full"});
+		}
+		
+		// put extra users in for testing scrolling
+		for (var i=1000;i<1080; i++) {
+			this.addToAttendanceList({id:i, nickname:'test'+i});
+		};
+		*/
 	}
 	
 	
@@ -109,7 +157,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		// catch scroll events
 		// http://stackoverflow.com/questions/10313142/javascript-capture-mouse-wheel-event-and-do-not-scroll-the-page
 		this.getStage().canvas.onmousewheel = function(event) {
-			this.scrollGameList(event.wheelDeltaY);
+			this.handleScrollWheel(event.wheelDeltaY);
 			event.preventDefault(); 
 			return false;
 		}.bind(this);
@@ -132,17 +180,33 @@ var p = Homeroom.prototype = new createjs.Container();
 	}
 	
 	
+	// mousewheel handler: scroll attendance list if it's visible and mouse is over it; else scroll game list
+	p.handleScrollWheel = function(deltaY) {
+		if (this.attendanceLayer.list_open.isVisible()) {
+			var mouseX = this.getStage().mouseX;
+			var mouseY = this.getStage().mouseY;
+			var local = this.attendanceLayer.list_open.globalToLocal(mouseX, mouseY);
+			if (this.attendanceLayer.list_open.hitTest(local.x, local.y)) {
+				this.scrollAttendanceList(deltaY);
+				return;
+			}
+		}
+		
+		this.scrollGameList(deltaY);
+	}
 
 	// message handlers -----
 	
 	// someone joined the room
 	p.handlejoin = function(event) {
-		this.chatLog(event.data.nickname + " is here");
+		//this.chatLog(event.data.nickname + " is here");
+		this.addToAttendanceList(event.data);
 	}
 	
 	// someone left the room
 	p.handleleave = function(event) {
-		this.chatLog(event.data.nickname + " just left");
+		//this.chatLog(event.data.nickname + " just left");
+		this.removeFromAttendanceList(event.data);
 	}
 	
 	// someone said something
@@ -171,6 +235,57 @@ var p = Homeroom.prototype = new createjs.Container();
 		}
 	}
 	
+	
+	// update attendance list
+	p.addToAttendanceList = function(who) {
+		_.remove(this.attendanceList, {id:who.id}); // just to be sure nobody's in there twice
+		this.attendanceList.unshift({id:who.id, nickname:who.nickname});
+		this.updateAttendanceList();
+	}
+	
+	p.removeFromAttendanceList = function(who) {
+		_.remove(this.attendanceList, {id:who.id});
+		this.updateAttendanceList();
+	}
+	
+	p.updateAttendanceList = function() {
+		this.attendanceLayer.attendanceText.text = _.pluck(this.attendanceList, 'nickname').join('\n');
+		this.attendanceLayer.attendanceCount.text = this.attendanceList.length;
+	}
+	
+	p.scrollAttendanceList = function(how) {
+		// if all the players fit in one screen, always scroll to 0:
+		if (this.attendanceList.length < 19) {
+			this.attendanceListOffset = 0;
+		}
+		else {
+			if (how=='up') {
+				var destY = this.attendanceLayer.attendanceText.y + 120;
+				if (destY > 0) destY = 0;
+				var slide = createjs.Tween
+					.get(this.attendanceLayer.attendanceText)
+					.to({y:destY}, 100+2*Math.abs(this.attendanceLayer.attendanceText.y-destY), createjs.Ease.quadOut);
+			}
+		
+			else if (how=='down') {
+				var destY = this.attendanceLayer.attendanceText.y - 120;
+				if (destY < (190 - this.attendanceList.length*10)) {
+					destY = 190 - this.attendanceList.length*10;
+				}
+				var slide = createjs.Tween
+					.get(this.attendanceLayer.attendanceText)
+					.to({y:destY}, 100+2*Math.abs(this.attendanceLayer.attendanceText.y-destY), createjs.Ease.quadOut);
+			}
+			else {
+				// deltaY from mouse wheel
+				this.attendanceLayer.attendanceText.y += how;
+			}
+			if (this.attendanceLayer.attendanceText.y > 0) this.attendanceLayer.attendanceText.y = 0;
+			if (this.attendanceLayer.attendanceText.y < (190 - this.attendanceList.length*10)) {
+				this.attendanceLayer.attendanceText.y = 190 - this.attendanceList.length*10;
+			}
+		}
+	}
 	
 	
 	// local interactions
@@ -215,6 +330,28 @@ var p = Homeroom.prototype = new createjs.Container();
 	
 	p.handlebtn_chalkboard_down = function(event) {
 		this.scrollGameList('down');
+	}
+	
+	
+	p.handlebtn_attendance_up = function(event) {
+		this.scrollAttendanceList('up');
+	}
+	p.handlebtn_attendance_down = function(event) {
+		this.scrollAttendanceList('down');
+	}
+	
+	
+	
+	p.handlebtn_attendance_open = function(event) {
+		this.showAttendanceList(true);
+	}
+	p.handlebtn_attendance_close = function(event) {
+		this.showAttendanceList(false);
+	}
+	
+	
+	p.showAttendanceList = function(flag) {
+		this.attendanceLayer.list_open.visible = flag;
 	}
 
 
@@ -275,7 +412,14 @@ var p = Homeroom.prototype = new createjs.Container();
 			btn_creategame:		[147, 188, this],
 			
 			btn_newgame_cancel:	[143, 70, this.createGameDialog],
-			btn_newgame_ok:		[210, 70, this.createGameDialog]
+			btn_newgame_ok:		[210, 70, this.createGameDialog],
+			
+			btn_attendance_open:[55, 2, this.attendanceLayer.list_closed],
+			btn_attendance_close:[57, 2, this.attendanceLayer.list_open],
+			
+			btn_attendance_up:	[16, 220, this.attendanceLayer.list_open],
+			btn_attendance_down:[47, 221, this.attendanceLayer.list_open]
+			
 		};
 		_.forOwn(someButtons, function(what, who) {
 		var b = what[2].addChild(this.assets[who].clone());

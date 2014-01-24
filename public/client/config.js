@@ -109,8 +109,19 @@ config['manifest'] = [
 				
 				btn_chalkboard_up:			[138, 2,	21,18,		0,	0,0],
 				btn_chalkboard_up_pressed:	[138, 2,	21,18,		0,	-1,-1],
-				btn_chalkboard_down:	[161, 2,	21,18,		0,	0,0],
-				btn_chalkboard_down_pressed:[161, 2,	21,18,		0,	-1,-1]
+				btn_chalkboard_down:		[161, 2,	21,18,		0,	0,0],
+				btn_chalkboard_down_pressed:[161, 2,	21,18,		0,	-1,-1],
+				
+				attendance_closed:			[214,83,	86,39,		0,	0,0],
+				attendance_open:			[302, 1,	86,256,		0,	0,0],
+				btn_attendance_open:		[232, 2,	21,18,		0,	0,0],
+				btn_attendance_open_pressed:[232, 2,	21,18,		0,	-1,-1],
+				btn_attendance_close:		[255, 2,	21,18,		0, 	0,0],
+				btn_attendance_close_pressed:[255, 2,	21,18,		0, 	-1,-1],
+				btn_attendance_up:			[186, 2,	21,18,		0,	0,0],
+				btn_attendance_up_pressed:	[186, 2,	21,18,		0,	-1,-1],
+				btn_attendance_down:		[209, 2,	21,18,		0,	0,0],
+				btn_attendance_down_pressed:[209, 2,	21,18,		0,	-1,-1]
 			}
 		}
 	},
