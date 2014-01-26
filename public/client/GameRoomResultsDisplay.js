@@ -258,19 +258,19 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 
 
 	// 2, 3, 6, 7: One player grabbed/scratched by one or more opponents, with or without a lolly
-	//		{grabbers: [123, 456], scratchers:[], victim: 789, overlay:(hold, choke, or none)}
+	//		{grabbers: [123, 456], scratchers:[], victim: 789, lolly:(grab, scratch, or none)}
 	// r([{scene:'grabscratch', text:'hello', damage:{}, code:{victim:1, lolly:'none', grabbers:[1,1], scratchers:[]}}])
 	p.makeSceneGrabScratch = function(scene, results) {
 		var victimExpression, victimPose, victimOverlays;
 		
 		// show what happened to the lolly
 		switch (results.code.lolly) {
-			case 'hold':
+			case 'grab':
 				victimExpression = sf.Avatar.expressions.SAD;
 				victimPose = sf.Avatar.expressions.NEUTRAL;
 				victimOverlays = [sf.Avatar.overlays.HOLDLOLLY];
 				break;
-			case 'choke':
+			case 'scratch':
 				victimExpression = sf.Avatar.expressions.PAINED;
 				victimPose = sf.Avatar.expressions.NEUTRAL;
 				victimOverlays = [sf.Avatar.overlays.CHOKE];	
