@@ -3,6 +3,16 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+@media only screen and (max-device-width : 1024px) {
+	body {
+		padding: 0px;
+		margin: 0px;
+	}
+	#notOnTablet {
+		display: none;
+	}
+}
+
 a {
   color: #00B7FF;
 }
