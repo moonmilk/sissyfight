@@ -12,9 +12,9 @@ with example of scene name and scene description from server (the 'code' compone
 * 5: cowering from scratch
 	cower, {victim:123, cower:'good', from:'scratch', attacker:456}
 * 6: grabbed by one while licking lolly
-	grabscratch, {grabbers: [123], victim: 789, lolly:hold}
+	grabscratch, {grabbers: [123], victim: 789, lolly:grab}
 * 7: grabbed by more than one while licking lolly
-	grabscratch, {grabbers: [123, 456], victim: 789, lolly:hold}
+	grabscratch, {grabbers: [123, 456], victim: 789, lolly:grab}
 * 8: scratched by one, no lolly
 	grabscratch, {grabbers: [123], victim: 789, lolly:none}
 * 9: scratched by more than one, no lolly
