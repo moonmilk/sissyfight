@@ -41,6 +41,7 @@ if (basic_auth_str) {
 	var basic_auth_users = _.map(basic_auth_str.split('|'), function(userAndPassword) {
 		return userAndPassword.split(',');
 	});
+	console.log(JSON.stringify(basic_auth_users));
 	// basic_auth_users now contains [[username, password], [username, password]....]
 	
 	// now set up the basic auth middleware as in http://stackoverflow.com/a/12148212
@@ -57,9 +58,9 @@ if (basic_auth_str) {
 var redisClient;
 var sissyfight_redis_str = process.env.SISSYFIGHT_REDIS;
 if (sissyfight_redis_str) {
-	var sissyfight_redis = sissyfight_redis_str.split('|'); // redis|host|database|auth
-	redisClient = redis.createClient(6379, sissyfight_redis[1]);
-	redisClient.auth(sissyfight_redis[3], function (err) {
+	var sissyfight_redis = sissyfight_redis_str.split('|'); // redis|host|port|database|auth|
+	redisClient = redis.createClient(sissyfight_redis[2], sissyfight_redis[1]); // port, host
+	redisClient.auth(sissyfight_redis[4], function (err) {
 		if (err) {
 			console.log('redis connection trouble');
 			throw(err);
