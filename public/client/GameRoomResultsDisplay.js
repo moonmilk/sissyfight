@@ -123,6 +123,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 
 	
 	p.click = function(which) {
+		sf.Sound.buttonClick();
 		switch (which) {
 			case 'back':
 				if (this.currentPicture > 0) this.showResult(this.currentPicture - 1);
