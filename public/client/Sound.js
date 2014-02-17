@@ -11,7 +11,8 @@ var Sound = function() {
 }
 
 	Sound.play = function(sound, loopFlag) {
-		var soundInstance = createjs.Sound.play(sound, 0, 0, (loopFlag?1:0));
+		var soundInstance = createjs.Sound.play(sound, {loop:(loopFlag?-1:0)}); // -1 is infinite loops
+		return soundInstance;
 	}
 	
 	Sound.setMute = function(muteFlag) {

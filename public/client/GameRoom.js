@@ -148,6 +148,11 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.handleTickBound = this.handleTick.bind(this);
 		createjs.Ticker.addEventListener('tick', this.handleTickBound);
 		
+		this.sounds = {};
+		// start the playground audio loop
+		this.sounds.playloop = sf.Sound.play('snd_playloop', true);
+		this.sounds.playloop.setVolume(0.5);
+		
 				
 		// for testing results displays from the console
 		window.r = this.handleTurnResults.bind(this);
@@ -156,6 +161,11 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	
 	p.destroy = function() {
+		// stop all long sounds
+		_.each(this.sounds, function(soundInstance) {
+			soundInstance.stop();	
+		}, this);
+		
 		// remove message handlers
 		_.forOwn(this.MESSAGES, function(type) {
 			g.comm.removeEventListener(type, this["handle"+type+"Bound"]);
