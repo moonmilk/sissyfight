@@ -316,7 +316,10 @@ var p = DressingRoom.prototype = new createjs.Container();
 				box.cursor = 'pointer';
 				this.touch.addChild(box);
 				box.info = {feature:feature, value:i};
-				box.addEventListener("click",function(event){room.setFeature(event.target.info.feature, event.target.info.value)});
+				box.addEventListener("click",function(event){
+					sf.Sound.buttonClick();
+					room.setFeature(event.target.info.feature, event.target.info.value);
+				});
 			}			
 		}, this);
 		
@@ -340,6 +343,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		var hitbox = new createjs.Shape(new createjs.Graphics().f("#f00").dr(-1,-1, 18,53));
 		this.buttons.lever.hitArea = hitbox;
 		this.buttons.lever.addEventListener("click", function(event) {
+			sf.Sound.buttonClick();
 			var look = sf.Avatar.randomLook();
 			_.each(['face','skincolor','hairstyle','haircolor','uniform'], function(feature) {
 				room.setFeature(feature, look[feature]);
@@ -348,9 +352,15 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.buttons.lever.helper = new createjs.ButtonHelper(this.buttons.lever, "lever", "lever", "lever_pulled");
 		
 		if (this.addonsList.getScrollable()) {
-			this.buttons.btn_scroll_up.addEventListener("click", function() { this.scrollAddons("up") }.bind(this));
+			this.buttons.btn_scroll_up.addEventListener("click", function() { 
+				sf.Sound.buttonClick();
+				this.scrollAddons("up") 
+			}.bind(this));
 			this.buttons.btn_scroll_up.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_up, "btn_scroll_up", "btn_scroll_up", "btn_scroll_up_pressed");
-			this.buttons.btn_scroll_down.addEventListener("click", function() { this.scrollAddons("down") }.bind(this));
+			this.buttons.btn_scroll_down.addEventListener("click", function() { 
+				sf.Sound.buttonClick();
+				this.scrollAddons("down") 
+			}.bind(this));
 			this.buttons.btn_scroll_down.helper = new createjs.ButtonHelper(this.buttons.btn_scroll_down, "btn_scroll_down", "btn_scroll_down", "btn_scroll_down_pressed");
 		}
 	}
@@ -362,6 +372,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 			this.buttons.btn_ok.unlocked = true;
 			this.buttons.btn_ok.helper = new createjs.ButtonHelper(this.buttons.btn_ok, 'btn_ok', 'btn_ok', 'btn_ok_pressed');
 			this.buttons.btn_ok.addEventListener("click", function(event){
+				sf.Sound.buttonClick();
 				this.saveAndDone();
 			}.bind(this));
 		}
@@ -385,6 +396,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 	
 	p.addonsListClick = function(item) {
 		//console.log(item);
+		sf.Sound.buttonClick();
 		if (item.feature=='uniform') this.look.uniform = item.value;
 		else if (item.feature=='addon') {
 			if (item.selected) {
