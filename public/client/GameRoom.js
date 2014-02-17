@@ -326,6 +326,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		event = event || window.event;
 
 		if (event.keyCode == 13) {
+			sf.Sound.keyClick();
 			this.sendChatText();
 			return false;
 		}
@@ -342,6 +343,7 @@ var p = GameRoom.prototype = new createjs.Container();
 	// exit button clicked
 	p.handleExitButton = function() {
 		// request to return to homeroom
+		sf.Sound.buttonClick();
 		g.comm.writeEvent("homeroom");
 	}
 
@@ -356,6 +358,7 @@ var p = GameRoom.prototype = new createjs.Container();
 
 	// handle show results button
 	p.handleShowResultsButton = function() {
+		sf.Sound.buttonClick();
 		if (this.lastTurnResults) this.displayResults(this.lastTurnResults);
 	}
 	

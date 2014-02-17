@@ -34,6 +34,10 @@ var Sound = function() {
 
 	Sound.buttonClick = function() {
 		Sound.play("snd_click");
+	}	
+	
+	Sound.keyClick = function() {
+		Sound.play("snd_keyclick");
 	}
 
 	sf.Sound = Sound;

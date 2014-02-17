@@ -59,14 +59,37 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 		this.items.btn_showResults.y = 8;
 		this.disableShowResults();	
 		
+		// items layered on top because they're on both consoles
+		this.items.btn_mute = this.addChild(this.assets.btn_mute.clone());
+		this.items.btn_mute.x = 445;
+		this.items.btn_mute.y = 7;
+		this.items.btn_mute.helper = new createjs.ButtonHelper(this.items.btn_mute, 'btn_mute', 'btn_mute', 'btn_mute_pressed');
+		
+		this.items.btn_help = this.addChild(this.assets.btn_help.clone());
+		this.items.btn_help.x = 480;
+		this.items.btn_help.y = 7;
+		this.items.btn_help.helper = new createjs.ButtonHelper(this.items.btn_help, 'btn_help', 'btn_help', 'btn_help_pressed');
+		
 		this.setMode('pregame');
 	}
 	
 	
 	p.start = function() {
-		this.items.btn_start.addEventListener('click', function(){this.dispatchEvent('start')}.bind(this));
-		this.items.btn_showResults.addEventListener('click', function(){this.dispatchEvent('showResults')}.bind(this));
+		this.items.btn_start.addEventListener('click', function(){
+			sf.Sound.buttonClick();
+			this.dispatchEvent('start')
+		}.bind(this));
+		this.items.btn_showResults.addEventListener('click', function(){
+			sf.Sound.buttonClick();
+			this.dispatchEvent('showResults');
+		}.bind(this));
+		
+		this.items.btn_mute.addEventListener('click', this.handlebtn_mute.bind(this));
+		
+		this.setMuteButton();
+		this.items.btn_help.addEventListener('click', this.handlebtn_help.bind(this));
 	}
+	
 	p.destroy = function() {
 		this.items.btn_start.removeAllEventListeners();
 		this.items.btn_showResults.removeAllEventListeners();
@@ -108,6 +131,43 @@ var p = GameRoomConsole.prototype = new createjs.Container();
 	p.enableShowResults = function() {
 		this.items.btn_showResults.visible = true;
 	}
+	
+	
+	p.handlebtn_mute = function(event) {
+		if (sf.Sound.getMute()) {
+			sf.Sound.setMute(false);
+		}
+		else {
+			sf.Sound.setMute(true);
+		}
+		// attempt to play click sound even if muted
+		// because (in osx chrome at least) the first sound after a mute seems to play at least the first few samples
+		// so this will use up that bit of sound, and is harmless if mute really works
+		sf.Sound.buttonClick();
+		this.setMuteButton();
+	}
+	p.setMuteButton = function(muteFlag) {
+		if (sf.Sound.getMute()) {
+			this.items.btn_mute.helper.downLabel = 'btn_mute_on_pressed';
+			this.items.btn_mute.helper.outLabel = 'btn_mute_on';
+			this.items.btn_mute.helper.overLabel = 'btn_mute_on';
+			this.items.btn_mute.gotoAndStop('btn_mute_on');
+		}
+		else {
+			this.items.btn_mute.helper.downLabel = 'btn_mute_pressed';
+			this.items.btn_mute.helper.outLabel = 'btn_mute';
+			this.items.btn_mute.helper.overLabel = 'btn_mute';
+			this.items.btn_mute.gotoAndStop('btn_mute');
+		}
+	}
+	
+		
+	p.handlebtn_help = function() {
+		sf.Sound.buttonClick();
+		console.log("Sorry, haven't done help yet");
+	}
+	
+	
 		
 		
 	sf.GameRoomConsole = GameRoomConsole;

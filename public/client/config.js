@@ -36,6 +36,7 @@ config['manifest'] = [
 	{	id:		'music_loser',		src: 'music/' + SCHOOL_ASSETS_TAG + '/loser.ogg'	},
 	//  - sounds (same for all schools)
 	{	id:		'snd_click',		src: 'sound/click.ogg'	},
+	{	id:		'snd_keyclick',		src: 'sound/keyclick.ogg' },
 	{	id:		'snd_action_select',src: 'sound/action-select.ogg'	},
 	{	id:		'snd_countdown',	src: 'sound/countdown.ogg'	},
 	{	id:		'snd_buzzer',		src: 'sound/buzzer.ogg'	},
@@ -178,6 +179,11 @@ config['manifest'] = [
 				btn_exitgame_pressed:[0, 19, 79,17, 	0, 0, 0],
 				btn_help:			[82, 19, 42, 39, 0, 0, 0],
 				btn_help_pressed:	[82, 19, 42, 39, 0, -1,-1],
+				
+				btn_mute:			[350,225,  29, 39, 0, 0, 0],
+				btn_mute_pressed:	[350,225,  29, 39, 0, -1,-1],
+				btn_mute_on:		[350,185,  29, 39, 0, 0, 0],
+				btn_mute_on_pressed:[350,185,  29, 39, 0, -1,-1],
 				
 				console_pregame:	[0, 122,  528, 54,   0, 0, 0],
 				console_game:		[0,  66,  528, 54,   0, 0, 0],

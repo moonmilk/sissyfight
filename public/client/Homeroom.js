@@ -305,7 +305,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		event = event || window.event;
 
 		if (event.keyCode == 13) {
-			sf.Sound.buttonClick();
+			sf.Sound.keyClick();
 			this.sendChatText();
 			return false;
 		}
@@ -354,11 +354,12 @@ var p = Homeroom.prototype = new createjs.Container();
 	}
 	
 	p.handlebtn_help = function() {
+		sf.Sound.buttonClick();
 		console.log("Sorry, haven't done help yet");
 	}
 	
 	p.handlebtn_chat = function(event) {
-		sf.Sound.buttonClick();
+		sf.Sound.keyClick();
 		this.sendChatText();
 	}
 	
@@ -456,8 +457,8 @@ var p = Homeroom.prototype = new createjs.Container();
 			btn_chalkboard_up:	[440, 187, this],
 			btn_chalkboard_down:[467, 188, this],
 			
-			btn_mute:			[446, 229, this],
-			btn_help:			[480, 231, this],
+			btn_mute:			[445, 229, this],
+			btn_help:			[480, 229, this],
 			
 			btn_creategame:		[147, 188, this],
 			
