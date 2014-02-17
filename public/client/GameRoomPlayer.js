@@ -82,6 +82,8 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.chatText.setFakeScale(g.gameScale);
 		this.items.chatText.setPosition(5, 7);
 		this.items.chatText.setSize(76, 59);
+		
+		this.items.chatText.bigChat = false;
 
 		
 		this.chatBuffer = [];
@@ -111,12 +113,27 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	
 	// incoming chat
 	p.handlesay = function(text) {
+		// big text starts with !
+		var bigChat = false;
+		var textClass = 'gameroomChatNormal';
+		if (text.charAt(0)=='!') {
+			bigChat = true;
+			textClass = 'gameroomChatBig';
+			text = text.substr(1);
+		}
+		
+		if (bigChat != this.items.chatText.bigChat) {
+			// clear chat buffer whenever size changes
+			this.chatBuffer = [];
+			this.items.chatText.bigChat = bigChat;
+		}
+		
 		this.chatBuffer.push(text);
+		
 		while(this.chatBuffer.length > 8) this.chatBuffer.shift();
-		this.items.chatText.htmlElement.innerHTML = this.chatBuffer.join('<br/>');
+		this.items.chatText.htmlElement.innerHTML = '<div class="' + textClass + '">' + this.chatBuffer.join('<br/>') + '</div>';
 		this.items.chatText.htmlElement.scrollTop = this.items.chatText.htmlElement.scrollHeight;
 	}
-	
 	
 	
 	// requests from gameroom

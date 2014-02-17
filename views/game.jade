@@ -152,9 +152,8 @@ block content
 			border: none;
 		}
 		
-		.gameroomText {
+		.gameroomText {			
 			font-family: Arial, Helvetica, sans-serif;
-			font-size: 11px;
 			
 			resize: none;
 			visibility: hidden;
@@ -162,6 +161,18 @@ block content
 			overflow: hidden;
 			
 			border: none;
+		}
+		
+		.gameroomChatNormal {
+			line-height: 12px;
+			font-size: 11px;
+			font-weight: normal;
+		}
+		
+		.gameroomChatBig {
+			line-height: 20px;
+			font-size: 18px;
+			font-weight: 550;		
 		}
 		
 		.captionText {
@@ -194,9 +205,9 @@ block content
 		div.homeroomText.disableSelect.wordwrap#homeroomChat(width=120, height=150, unselectable="yes")
 		textarea.homeroomText#homeroomTextEntry(width=79, height=43)
 		
-		textarea.gameroomText#gameroomTextEntry(width=79, height=43)
+		textarea.gameroomText.gameroomChatNormal#gameroomTextEntry(width=79, height=43)
 		each i in [0,1,2,3,4,5]
-			div.gameroomText.disableSelect.wordwrap(id='gameroomChatBubble'+i)
+			div.gameroomText.gameroomChatNormal.disableSelect.wordwrap(id='gameroomChatBubble'+i)
 			
 		div.captionText.disableSelect.wordwrap#gameroomCaption(unselectable="yes")
 		
