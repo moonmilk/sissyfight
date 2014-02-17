@@ -233,6 +233,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				break;
 				
 			case 'startTurn':
+				delete this.sounds.countdown; // reset countdown sound so it can play again this turn
 				this.removeActionMenu();
 				this.setTimer(event.data.time);
 				_.each(this.playersByID, function(player){player.resetActed()}, this);
@@ -256,8 +257,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				break;
 				
 			case 'countdown': // every player has moved; final countdown gives everyone [10] seconds to change their minds
-				// play countdown sound unless it's already playing
-				if (!this.sounds.countdown || this.sounds.countdown.playState!=createjs.Sound.PLAY_SUCCEEDED) {
+				// play countdown sound unless it's already played this turn
+				if (!this.sounds.countdown) {
 					this.sounds.countdown = sf.Sound.play('snd_countdown');
 				}
 				if (this.getTimer() > event.data.time) this.setTimer(event.data.time);
