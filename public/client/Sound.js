@@ -14,7 +14,7 @@ var Sound = function() {
 		var soundInstance = createjs.Sound.play(sound, 0, 0, (loopFlag?1:0));
 	}
 	
-	Sound.mute = function(muteFlag) {
+	Sound.setMute = function(muteFlag) {
 		createjs.Sound.setMute(muteFlag);
 		
 		// make mute choice persistent in cookie for a year
@@ -24,7 +24,7 @@ var Sound = function() {
 	
 	// call checkMute on startup to see if user had mute set
 	Sound.checkMute = function() {
-		if (document.cookie.match(/sfmute=1/)) Sound.mute(true);
+		if (document.cookie.match(/sfmute=1/)) Sound.setMute(true);
 		else Sound.mute(false);
 	}
 	
