@@ -220,6 +220,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				break;
 				
 			case 'startGame':	// game is starting!
+				if (this.sounds.music) this.sounds.music.stop();
+				this.sounds.music = sf.Sound.play('music_intro');
 				this.removeActionMenu();
 				this.displayResultsDone();
 				this.items.console.disableShowResults();
@@ -254,10 +256,15 @@ var p = GameRoom.prototype = new createjs.Container();
 				break;
 				
 			case 'countdown': // every player has moved; final countdown gives everyone [10] seconds to change their minds
+				// play countdown sound unless it's already playing
+				if (!this.sounds.countdown || this.sounds.countdown.playState!=createjs.Sound.PLAY_SUCCEEDED) {
+					this.sounds.countdown = sf.Sound.play('snd_countdown');
+				}
 				if (this.getTimer() > event.data.time) this.setTimer(event.data.time);
 				break;	
 				
 			case 'endTurn':
+				sf.Sound.play('snd_buzzer');
 				this.setPlayerActionTag();
 				this.handleTurnResults(event.data.results);
 				
