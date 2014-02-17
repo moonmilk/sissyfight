@@ -26,6 +26,9 @@ var p = Main.prototype = new createjs.Container();
 		this.auth = auth;
 		this.school = school;
 		
+		// check mute preferences
+		sf.Sound.checkMute();
+		
 		// start mouseover testing
 		this.getStage().enableMouseOver();
 		
