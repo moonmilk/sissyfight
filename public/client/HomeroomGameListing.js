@@ -32,6 +32,7 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		this.items.join = this.addChild(this.assets.btn_join.clone());
 		this.items.join.helper = new createjs.ButtonHelper(this.items.join, 'btn_join', 'btn_join', 'btn_join_pressed');
 		this.items.join.addEventListener('click', function() {
+			sf.Sound.buttonClick();
 			this.dispatchEvent({type:'joingame', room:gameInfo.room})
 		}.bind(this));
 		

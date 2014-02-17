@@ -302,6 +302,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		event = event || window.event;
 
 		if (event.keyCode == 13) {
+			sf.Sound.buttonClick();
 			this.sendChatText();
 			return false;
 		}
@@ -317,35 +318,43 @@ var p = Homeroom.prototype = new createjs.Container();
 	// button handlers
 	p.handlebtn_dressingroom = function(event) {
 		// request server to send client back to dressing room
+		sf.Sound.buttonClick();
 		g.comm.writeEvent('dressingRoom');	
 	}
 	
 	p.handlebtn_chat = function(event) {
+		sf.Sound.buttonClick();
 		this.sendChatText();
 	}
 	
 	p.handlebtn_chalkboard_up = function(event) {
+		sf.Sound.buttonClick();
 		this.scrollGameList('up');
 	}
 	
 	p.handlebtn_chalkboard_down = function(event) {
+		sf.Sound.buttonClick();
 		this.scrollGameList('down');
 	}
 	
 	
 	p.handlebtn_attendance_up = function(event) {
+		sf.Sound.buttonClick();
 		this.scrollAttendanceList('up');
 	}
 	p.handlebtn_attendance_down = function(event) {
+		sf.Sound.buttonClick();
 		this.scrollAttendanceList('down');
 	}
 	
 	
 	
 	p.handlebtn_attendance_open = function(event) {
+		sf.Sound.buttonClick();
 		this.showAttendanceList(true);
 	}
 	p.handlebtn_attendance_close = function(event) {
+		sf.Sound.buttonClick();
 		this.showAttendanceList(false);
 	}
 	
@@ -358,6 +367,7 @@ var p = Homeroom.prototype = new createjs.Container();
 
 	p.handlebtn_creategame = function(event) {
 		// show the create game dialog
+		sf.Sound.buttonClick();
 		this.gameList.visible = false;
 		this.createGameDialog.visible = true;
 		this.createGameDialog.gameName.setVisible(true);
@@ -366,12 +376,14 @@ var p = Homeroom.prototype = new createjs.Container();
 	}
 	
 	p.handlebtn_newgame_cancel = function(event) {
+		sf.Sound.buttonClick();
 		this.gameList.visible = true;
 		this.createGameDialog.visible = false;
 		this.createGameDialog.gameName.setVisible(false);
 	}
 	
 	p.handlebtn_newgame_ok = function(event) {
+		sf.Sound.buttonClick();
 		this.gameList.visible = true;
 		this.createGameDialog.visible = false;	
 		this.createGameDialog.gameName.setVisible(false);
