@@ -28,6 +28,20 @@ config['preloadManifest'] = [
 ]
 
 config['manifest'] = [
+	// audio
+	//	- music (different per school)
+	{	id:		'music_intro',		src: 'music/' + SCHOOL_ASSETS_TAG + '/intro.ogg'	},
+	{	id:		'music_polaroid',	src: 'music/' + SCHOOL_ASSETS_TAG + '/polaroid.ogg'	},
+	{	id:		'music_winner',		src: 'music/' + SCHOOL_ASSETS_TAG + '/winner.ogg'	},
+	{	id:		'music_loser',		src: 'music/' + SCHOOL_ASSETS_TAG + '/loser.ogg'	},
+	//  - sounds (same for all schools)
+	{	id:		'snd_click',		src: 'sound/click.ogg'	},
+	{	id:		'snd_action_select',src: 'sound/action-select.ogg'	},
+	{	id:		'snd_countdown',	src: 'sound/countdown.ogg'	},
+	{	id:		'snd_buzzer',		src: 'sound/buzzer.ogg'	},
+	{	id:		'snd_playloop',		src: 'sound/playloop.ogg'	},
+
+
 	// avatar
 	{
 		id: 	'faces',

@@ -368,12 +368,14 @@ var p = DressingRoom.prototype = new createjs.Container();
 	}
 	
 	p.incrementHairstyle = function() {
+		sf.Sound.buttonClick();
 		if (this.look.hairstyle===undefined) this.look.hairstyle = 0;
 		else this.look.hairstyle = (this.look.hairstyle + 1) % config.number.of.hairstyle;
 		this.showHair();
 		this.setFeature('hairstyle', this.look.hairstyle);
 	}	
 	p.decrementHairstyle = function() {
+		sf.Sound.buttonClick();
 		if (this.look.hairstyle===undefined) this.look.hairstyle = 0;
 		else this.look.hairstyle = this.look.hairstyle - 1;
 		if (this.look.hairstyle < 0) this.look.hairstyle = config.number.of.hairstyle - 1;

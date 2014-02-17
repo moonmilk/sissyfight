@@ -80,6 +80,11 @@ var p = Loader.prototype = new createjs.Container();
 		delete g.load['prepreloader'];
 			
 		g.load.preloader = new createjs.LoadQueue();//false);
+		
+		// set up sound plugin to support alternate sound extensions
+		createjs.Sound.alternateExtensions = ["mp3"];
+        g.load.preloader.installPlugin(createjs.Sound);
+        
 		g.load.preloader.addEventListener("complete", this.loaded.bind(this));
 		g.load.preloader.addEventListener("progress", function(e){
 			g.load.progressbar.graphics
