@@ -299,12 +299,22 @@ var p = GameRoom.prototype = new createjs.Container();
 		var endScenes = _.where(results, {scene:'end'});
 		var nonEndScenes = _.reject(results, {scene:'end'});
 		
-		if (endScenes.length > 0) this.handleEndScene(endScenes[0]); // assumption: there's never more than one end scene!
+		if (endScenes.length > 0) {
+			this.handleEndScene(endScenes[0]); // assumption: there's never more than one end scene!
+		}
 				
 		this.lastTurnResults = nonEndScenes;
 		if (this.lastTurnResults.length > 0) {
 			this.displayResults(this.lastTurnResults);
 			this.items.console.enableShowResults();
+			if (endScenes.length==0) {			
+				// not end of game, play the polaroid loop
+				if (this.sounds.music) this.sounds.music.stop();
+				if (this.sounds.polaroidloop) {
+					this.sounds.polaroidloop.stop();
+				}
+				this.sounds.polaroidloop = sf.Sound.play('music_polaroid', true);
+			}
 		}
 	}
 		
@@ -312,12 +322,22 @@ var p = GameRoom.prototype = new createjs.Container();
 	// sample data for testing: 
 	// r([{scene:'end', code:{winners:[1]}, text:'Porgy and Bess won the game and became best friends forever.\n\nThey each earned 50 points.\n\nEveryone else earned 10 points for playing.', damage:{}}]);		
 	p.handleEndScene = function(scene) {
+		var iwon = false;
 		// victory poses for winners, if any 
 		// (losers will have already had their lose poses set by the health status report)
 		_.forEach(scene.code.winners, function(winnerID) {
 			var playerAvatar = this.playersByID[winnerID];
 			playerAvatar.setPose('victory');
+			if (winnerID==this.me) iwon = true;
 		}, this);
+		
+		if (this.sounds.music) this.sounds.music.stop();
+		if (iwon) {
+			sf.Sound.play('music_winner');
+		}
+		else {
+			sf.Sound.play('music_loser');
+		}
 		
 		// display the caption on the rolling chalkboard
 		this.items.chalkboardText.text = scene.text;
@@ -523,6 +543,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 				// tell the server (cower/lick/tattle don't have a target)
 				if (selectedAction) {
+					sf.Sound.play('snd_action_select');
+				
 					var action = {action:selectedAction};
 					if (selectedAction=='grab' || selectedAction=='scratch' || selectedAction=='tease') {
 						action.target = player.playerInfo.id;
@@ -594,6 +616,9 @@ var p = GameRoom.prototype = new createjs.Container();
 	// hide turn results and re-enable results button
 	// (pass destroy='destroy' when tearing down the gameroom to skip the re-enabling)
 	p.displayResultsDone = function(destroy) {
+		if (this.sounds.polaroidloop) {
+			this.sounds.polaroidloop.stop();
+		}
 		if (this.items.resultsDisplay) {
 			this.items.resultsDisplay.removeAllEventListeners();
 			this.layers.resultsLayer.removeChild(this.items.resultsDisplay);
