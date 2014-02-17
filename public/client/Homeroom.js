@@ -149,6 +149,9 @@ var p = Homeroom.prototype = new createjs.Container();
 		
 		// set up buttons
 		this.prepareButtons();
+		
+		// make mute button state reflect mute prefs
+		this.setMuteButton();
 	
 		// catch enter in chat entry
 		this.handlechatkeypressBound = this.handlechatkeypress.bind(this);
@@ -322,6 +325,38 @@ var p = Homeroom.prototype = new createjs.Container();
 		g.comm.writeEvent('dressingRoom');	
 	}
 	
+	p.handlebtn_mute = function(event) {
+		if (sf.Sound.getMute()) {
+			sf.Sound.setMute(false);
+		}
+		else {
+			sf.Sound.setMute(true);
+		}
+		// attempt to play click sound even if muted
+		// because (in osx chrome at least) the first sound after a mute seems to play at least the first few samples
+		// so this will use up that bit of sound, and is harmless if mute really works
+		sf.Sound.buttonClick();
+		this.setMuteButton();
+	}
+	p.setMuteButton = function(muteFlag) {
+		if (sf.Sound.getMute()) {
+			this.buttons.btn_mute.helper.downLabel = 'btn_mute_on_pressed';
+			this.buttons.btn_mute.helper.outLabel = 'btn_mute_on';
+			this.buttons.btn_mute.helper.overLabel = 'btn_mute_on';
+			this.buttons.btn_mute.gotoAndStop('btn_mute_on');
+		}
+		else {
+			this.buttons.btn_mute.helper.downLabel = 'btn_mute_pressed';
+			this.buttons.btn_mute.helper.outLabel = 'btn_mute';
+			this.buttons.btn_mute.helper.overLabel = 'btn_mute';
+			this.buttons.btn_mute.gotoAndStop('btn_mute');
+		}
+	}
+	
+	p.handlebtn_help = function() {
+		console.log("Sorry, haven't done help yet");
+	}
+	
 	p.handlebtn_chat = function(event) {
 		sf.Sound.buttonClick();
 		this.sendChatText();
@@ -420,6 +455,9 @@ var p = Homeroom.prototype = new createjs.Container();
 			btn_chat:			[88, 246, this],
 			btn_chalkboard_up:	[440, 187, this],
 			btn_chalkboard_down:[467, 188, this],
+			
+			btn_mute:			[446, 229, this],
+			btn_help:			[480, 231, this],
 			
 			btn_creategame:		[147, 188, this],
 			

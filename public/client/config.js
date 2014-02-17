@@ -112,6 +112,15 @@ config['manifest'] = [
 				btn_chat:					[89,2,  47,27,  0, 0,0],
 				btn_chat_pressed:			[89,2,  47,27,  0, -1,-1],
 				
+				btn_help:					[64,78,  42, 39, 0, 0, 0],
+				btn_help_pressed:			[64,78,  42, 39, 0, -1,-1],
+				
+				btn_mute:					[32,78,  29, 39, 0, 0, 0],
+				btn_mute_pressed:			[32,78,  29, 39, 0, -1,-1],
+				btn_mute_on:				[1, 78,  29, 39, 0, 0, 0],
+				btn_mute_on_pressed:		[1, 78,  29, 39, 0, -1,-1],
+				
+				
 				btn_creategame:				[2,34,	143,17,	0,	0,0],
 				btn_creategame_pressed:		[147,34,143,17,	0,	0,0],
 				

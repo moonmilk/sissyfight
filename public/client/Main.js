@@ -26,9 +26,6 @@ var p = Main.prototype = new createjs.Container();
 		this.auth = auth;
 		this.school = school;
 		
-		// check mute preferences
-		sf.Sound.checkMute();
-		
 		// start mouseover testing
 		this.getStage().enableMouseOver();
 		
@@ -49,6 +46,9 @@ var p = Main.prototype = new createjs.Container();
 	
 	
 	p.loaded = function(event) {
+		// check mute preferences
+		sf.Sound.checkMute();
+		
 		// start the socket connection
 		g.comm = new sf.Comm(this.SockJS, this.auth);
 		// have to do something with failed login

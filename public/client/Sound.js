@@ -19,13 +19,13 @@ var Sound = function() {
 		
 		// make mute choice persistent in cookie for a year
 		if (muteFlag) document.cookie = 'sfmute=1;max-age=' + 60*60*24*365;
-		else document.cookie = '';
+		else document.cookie = 'sfmute=0;max-age=' + 60*60*24*365;
 	}
 	
 	// call checkMute on startup to see if user had mute set
 	Sound.checkMute = function() {
 		if (document.cookie.match(/sfmute=1/)) Sound.setMute(true);
-		else Sound.mute(false);
+		else Sound.setMute(false);
 	}
 	
 	Sound.getMute = function() {
