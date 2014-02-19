@@ -78,7 +78,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 				
 		// put the name of the game up
-		console.log(this.gameInfo);
+		//console.log(this.gameInfo);
 		var gameName = new createjs.Text(this.gameInfo.roomName, '10px Arial', '#eeeeee');
 		gameName.x = 192;
 		gameName.y = 6;
@@ -149,6 +149,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.sounds.playloop = sf.Sound.play('snd_playloop', true);
 		this.sounds.playloop.setVolume(0.5);
 		
+		// make mute button reflect actual mute state
+		this.setMuteButton();
 				
 		// for testing results displays from the console
 		window.r = this.handleTurnResults.bind(this);
@@ -381,6 +383,43 @@ var p = GameRoom.prototype = new createjs.Container();
 		g.comm.writeEvent("homeroom");
 	}
 
+
+	p.handlebtn_mute = function(event) {
+		if (sf.Sound.getMute()) {
+			sf.Sound.setMute(false);
+		}
+		else {
+			sf.Sound.setMute(true);
+		}
+		// attempt to play click sound even if muted
+		// because (in osx chrome at least) the first sound after a mute seems to play at least the first few samples
+		// so this will use up that bit of sound, and is harmless if mute really works
+		sf.Sound.buttonClick();
+		this.setMuteButton();
+	}
+	p.setMuteButton = function() {
+		if (sf.Sound.getMute()) {
+			this.buttons.btn_mute.helper.downLabel = 'btn_mute_on_pressed';
+			this.buttons.btn_mute.helper.outLabel = 'btn_mute_on';
+			this.buttons.btn_mute.helper.overLabel = 'btn_mute_on';
+			this.buttons.btn_mute.gotoAndStop('btn_mute_on');
+		}
+		else {
+			this.buttons.btn_mute.helper.downLabel = 'btn_mute_pressed';
+			this.buttons.btn_mute.helper.outLabel = 'btn_mute';
+			this.buttons.btn_mute.helper.overLabel = 'btn_mute';
+			this.buttons.btn_mute.gotoAndStop('btn_mute');
+		}
+	}
+	
+		
+	p.handlebtn_help = function() {
+		sf.Sound.buttonClick();
+		console.log("Sorry, haven't done help yet");
+	}
+	
+	
+		
 
 
 	// start game button clicked
@@ -629,7 +668,9 @@ var p = GameRoom.prototype = new createjs.Container();
 	p.prepareButtons = function() {
 		this.buttons = {};
 		var someButtons = {
-			btn_exitgame:		[445, 3, this]
+			btn_exitgame:		[445, 3, this],
+			btn_mute:			[445, 229, this],
+			btn_help:			[480, 229, this]
 		};
 		_.forOwn(someButtons, function(what, who) {
 		var b = what[2].addChild(this.assets[who].clone());
@@ -644,7 +685,6 @@ var p = GameRoom.prototype = new createjs.Container();
 	}
 	
 
-	
 
 	p.prepareAssets = function() {
 		this.assets = {};
