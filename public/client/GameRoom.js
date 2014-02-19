@@ -151,6 +151,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// make mute button reflect actual mute state
 		this.setMuteButton();
+		
+		// default chat mode: not loud
+		this.chatLoud = false;
 				
 		// for testing results displays from the console
 		window.r = this.handleTurnResults.bind(this);
@@ -371,8 +374,47 @@ var p = GameRoom.prototype = new createjs.Container();
 		}
 	}
 	p.sendChatText = function() {
-		this.say(this.chatEntry.htmlElement.value);
+		var text = this.chatEntry.htmlElement.value;
+		if (this.chatLoud && text.charAt(0) != "!") text = "!" + text; // ! at start of line signals loud
+		this.say(text);
 		this.chatEntry.htmlElement.value = "";
+	}
+
+
+	// send chat text when button's pressed
+	p.handlebtn_chat = function() {
+		sf.Sound.buttonClick();
+		this.sendChatText();
+	}
+	
+	// toggle loud mode and switch the button assets to match
+	p.handlebtn_chatmode_loud = function() {
+		sf.Sound.buttonClick();
+		this.chatLoud = !this.chatLoud;
+		
+		if (this.chatLoud) {
+			this.buttons.btn_chat.helper.downLabel = 'btn_chat_loud_pressed';
+			this.buttons.btn_chat.helper.outLabel = 'btn_chat_loud';
+			this.buttons.btn_chat.helper.overLabel = 'btn_chat_loud';
+			this.buttons.btn_chat.gotoAndStop('btn_chat_loud');
+			
+			this.buttons.btn_chatmode_loud.helper.downLabel = 'btn_chatmode_normal_pressed';
+			this.buttons.btn_chatmode_loud.helper.outLabel = 'btn_chatmode_normal';
+			this.buttons.btn_chatmode_loud.helper.overLabel = 'btn_chatmode_normal';
+			this.buttons.btn_chatmode_loud.gotoAndStop('btn_chatmode_normal');
+		}
+		else {
+			this.buttons.btn_chat.helper.downLabel = 'btn_chat_pressed';
+			this.buttons.btn_chat.helper.outLabel = 'btn_chat';
+			this.buttons.btn_chat.helper.overLabel = 'btn_chat';
+			this.buttons.btn_chat.gotoAndStop('btn_chat');
+			
+			this.buttons.btn_chatmode_loud.helper.downLabel = 'btn_chatmode_loud_pressed';
+			this.buttons.btn_chatmode_loud.helper.outLabel = 'btn_chatmode_loud';
+			this.buttons.btn_chatmode_loud.helper.overLabel = 'btn_chatmode_loud';
+			this.buttons.btn_chatmode_loud.gotoAndStop('btn_chatmode_loud');			
+		}
+		
 	}
 
 
@@ -382,6 +424,10 @@ var p = GameRoom.prototype = new createjs.Container();
 		sf.Sound.buttonClick();
 		g.comm.writeEvent("homeroom");
 	}
+	
+	
+	
+	
 
 
 	p.handlebtn_mute = function(event) {
@@ -670,7 +716,10 @@ var p = GameRoom.prototype = new createjs.Container();
 		var someButtons = {
 			btn_exitgame:		[445, 3, this],
 			btn_mute:			[445, 229, this],
-			btn_help:			[480, 229, this]
+			btn_help:			[480, 229, this],
+			
+			btn_chat:			[87, 246, this],
+			btn_chatmode_loud:	[90, 226, this]
 		};
 		_.forOwn(someButtons, function(what, who) {
 		var b = what[2].addChild(this.assets[who].clone());

@@ -190,6 +190,13 @@ config['manifest'] = [
 				
 				btn_chat:			[535, 47, 47, 27, 0, 0, 0],
 				btn_chat_pressed:	[535, 47, 47, 27, 0, -1,-1],
+				btn_chat_loud:	[585, 45, 50, 25, 0, 0, 2],
+				btn_chat_loud_pressed:	[585, 45, 50, 25, 0, -1, 1],
+				btn_chatmode_normal:	[644, 50, 26, 16, 0, 0, 0],
+				btn_chatmode_normal_pressed:	[644, 50, 26, 16, 0, -1, -1],
+				btn_chatmode_loud:	[674, 49, 26, 17,  0, 0, 1],
+				btn_chatmode_loud_pressed:	[674, 49, 26, 17,  0, -1, 0],
+				
 				
 				btn_start:			[591, 78,   56, 32,  0, 0, 0],
 				btn_start_pressed:	[531, 77,   56, 32,  0, 0, 0],
