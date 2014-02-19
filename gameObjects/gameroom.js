@@ -30,6 +30,8 @@ util.inherits(GameRoom, ChatRoom);
 GameRoom.MAX_PLAYERS = 6;
 GameRoom.MIN_PLAYERS = 3;
 
+GameRoom.PING_TIMEOUT = 20000;  // 20 seconds without pings until disconnection!
+
 // METHODS
 
 // call with avatars=true to include avatar info in the occupants list
@@ -127,6 +129,27 @@ GameRoom.prototype.broadcastJoin = function(conn) {
 	this.broadcast("join", {room:this.id, id:conn.user.id, nickname:conn.user.nickname, avatar:conn.user.avatar}, conn);
 }
 
+
+// Client sends ping every few seconds - if pings don't arrive, assume connection is stalled and kick client out of room.
+// Take this opportunity to check for stalled connections.
+GameRoom.prototype.ping = function(conn, data) {
+	conn.pingTime = Date.now();
+	//console.log("ping " + conn.user.nickname);
+	
+	// check everyone else's ping time
+	_.each(this.occupants, function(occupant) {
+		if (!occupant.pingTime) {
+			// they have never pinged! They have one chance...
+			occupant.pingTime = Date.now();
+		}
+		else if ((occupant.pingTime+GameRoom.PING_TIMEOUT) < Date.now()) {
+			// kick client out of room and try to disconnect socket
+			this.leave(occupant);
+			occupant.end();
+			console.log("Disconnected stalled user "+conn.user.nickname+" after "+((Date.now()-occupant.pingTime)/1000)+" seconds");
+		}
+	}, this);
+}
 
 
 // handle game actions from client (events of type 'act')

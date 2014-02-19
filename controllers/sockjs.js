@@ -64,6 +64,7 @@ module.exports = function(app, sockjs) {
 		conn.on("homeroom", returnToHomeroomListener);
 		conn.on("joingame", joinGameListener);
 		conn.on("act", gameActionListener);
+		conn.on("ping", gamePingListener);
 		conn.on("newgame", newGameListener);
 	}
 	
@@ -368,6 +369,12 @@ module.exports = function(app, sockjs) {
 	function gameActionListener(data) {
 		var conn = this;
 		if (conn.room && conn.room.act) conn.room.act(conn,data);
+	}
+	
+	// forward pings to game room
+	function gamePingListener(data) {
+		var conn = this;
+		if (conn.room && conn.room.ping) conn.room.ping(conn,data);
 	}
 
 }

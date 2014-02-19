@@ -14,6 +14,8 @@ var GameRoom = function(me, gameInfo) {
 
 GameRoom.MAX_PLAYERS = 6;
 
+GameRoom.PING_INTERVAL = 5000; // send ping to server every 5 seconds
+
 var p = GameRoom.prototype = new createjs.Container();
 
 	p.MESSAGES = ['join','leave','say', 'gameEvent'];  // list of socket messages I should listen for
@@ -154,6 +156,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// default chat mode: not loud
 		this.chatLoud = false;
+		
+		// ping timer
+		this.nextPingTime = 0; // ping immediately
 				
 		// for testing results displays from the console
 		window.r = this.handleTurnResults.bind(this);
@@ -350,6 +355,11 @@ var p = GameRoom.prototype = new createjs.Container();
 	// time is passing!
 	p.handleTick = function() {
 		this.updateTimer();
+		var now = createjs.Ticker.getTime();
+		if (now > this.nextPingTime) {
+			this.nextPingTime = now + GameRoom.PING_INTERVAL;
+			g.comm.writeEvent("ping");
+		}
 	}
 	
 	
