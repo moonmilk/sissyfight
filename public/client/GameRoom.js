@@ -74,13 +74,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		
 		// permanent buttons
-		this.items.btn_exitgame = this.addChild(this.assets.btn_exitgame.clone());
-		this.items.btn_exitgame.x = 445;
-		this.items.btn_exitgame.y = 3;
-		this.items.btn_exitgame.helper = new createjs.ButtonHelper(this.items.btn_exitgame, "btn_exitgame", "btn_exitgame", "btn_exitgame_pressed");
-		this.items.btn_exitgame.addEventListener("click", this.handleExitButton);
+		this.prepareButtons();
 		
-		
+				
 		// put the name of the game up
 		console.log(this.gameInfo);
 		var gameName = new createjs.Text(this.gameInfo.roomName, '10px Arial', '#eeeeee');
@@ -379,7 +375,7 @@ var p = GameRoom.prototype = new createjs.Container();
 
 
 	// exit button clicked
-	p.handleExitButton = function() {
+	p.handlebtn_exitgame = function() {
 		// request to return to homeroom
 		sf.Sound.buttonClick();
 		g.comm.writeEvent("homeroom");
@@ -629,6 +625,25 @@ var p = GameRoom.prototype = new createjs.Container();
 	}
 	
 	
+	
+	p.prepareButtons = function() {
+		this.buttons = {};
+		var someButtons = {
+			btn_exitgame:		[445, 3, this]
+		};
+		_.forOwn(someButtons, function(what, who) {
+		var b = what[2].addChild(this.assets[who].clone());
+			what[2].buttons[who] = b
+			b.x = what[0];
+			b.y = what[1];
+			b.helper = new createjs.ButtonHelper(b, who, who, who+"_pressed");
+			var bound = this['handle'+who].bind(this);
+			this['handle'+who+"Bound"] = bound;
+			b.addEventListener('click', bound);
+		}, this);
+	}
+	
+
 	
 
 	p.prepareAssets = function() {
