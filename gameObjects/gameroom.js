@@ -73,10 +73,25 @@ GameRoom.prototype.join = function(conn, done) {
 	// future: check for password?
 
 	else {
+				
+		// before entering room and broadcasting my avatar, assign a uniform color: find first color not already taken
+		var myAvatar = _.cloneDeep(conn.user.avatar); // have to replace entire avatar object, because of the way it's serialized in the User model
+		delete myAvatar['uniformcolor'];
+		
+		for (var i=0; i<this.maxUsers; i++) {
+			if (! _.find(this.occupants, function(occupant){return (occupant != conn && occupant.user.avatar.uniformcolor==i)})) {
+				myAvatar.uniformcolor = i;
+				conn.user.avatar = myAvatar;
+				break;
+			}
+		}
+				
 		GameRoom.super_.prototype.join.call(this, conn, function(err, roomInfo) {
 			if (!err) {
 				console.log("gameroom joined by " + conn.user.nickname);
-							
+	
+				
+				// if room's full, broadcast update so client can lock it			
 				if (this.occupants.length == this.maxUsers) {
 					this.emit('update', {update:'status', roomInfo:roomInfo});
 				}

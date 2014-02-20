@@ -29,7 +29,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.playerInfo = playerInfo;	// {id, nicknamename, avatar} 
 		this.textElement = textElement;
 		
-		this.playerInfo.avatar.uniformcolor = position;
+		//this.playerInfo.avatar.uniformcolor = position;
 		/* gonna try a different facing system
 		// players on the left side of the screen face right; the other half face left
 		if (position < sf.GameRoom.MAX_PLAYERS/2) this.playerInfo.avatar.headdir = 1;
