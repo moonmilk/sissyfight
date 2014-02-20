@@ -54,7 +54,7 @@ var p = Comm.prototype;
 
 	// encode {type, data} style messages and transmit 
 	p.writeEvent = function(type, data) {
-		console.log("Comm: sending " + JSON.stringify({type:type, data:data}));
+		if (type != 'ping') console.log("Comm: sending " + JSON.stringify({type:type, data:data}));
 		this.sockjs.send(JSON.stringify({type:type, data:data}));
 	}	
 	
