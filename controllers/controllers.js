@@ -81,7 +81,9 @@ module.exports = function(app) {
 			var token = req.session.user.nickname + Math.random();
 			req.session.token = token;
 			req.session.school = app.get('schoolDefault'); // TODO: school will be set by URL path or something...
-			res.render('game', {user:req.session.user, token:req.session.token, session:req.session.id, school:req.session.school});
+			var scale = 1;
+			if (req.param('double')) scale=2;
+			res.render('game', {user:req.session.user, token:req.session.token, session:req.session.id, school:req.session.school, gameScale:scale});
 		}
 		else {
 			req.session.flash = {login: "Please log in"};

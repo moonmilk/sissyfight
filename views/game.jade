@@ -50,7 +50,21 @@ block javascript
 				
 
 		sf.start = function(SockJS, auth, school) {
-			var appCanvas = document.getElementById('appCanvas');
+			
+			var appCanvas, appCanvasID;
+			
+			if (g.gameScale==1) {
+				appCanvasID = 'appCanvas1';
+			}
+			else if (g.gameScale==2) {
+				appCanvasID = 'appCanvas2';
+			}
+			appCanvas = document.getElementById(appCanvasID); 
+			appCanvas.style.display = 'inline';
+			
+			// more attempts to disable antialiasing, via http://stackoverflow.com/a/17761798
+			var context = appCanvas.getContext('2d');
+			context.webkitImageSmoothingEnabled = context.imageSmoothingEnabled = context.mozImageSmoothingEnabled = context.oImageSmoothingEnabled = false;
 		
 			// disable browser drag-and-drop on game canvas 
 			//		http://developer.nokia.com/Community/Wiki/How_to_disable_dragging_of_images_and_text_selection_in_web_pages
@@ -61,17 +75,11 @@ block javascript
 				return false;
 			}
 			
-			if (g.gameScale==1) {
-				appCanvas.className = 'singleCanvas';
-			}
-			else if (g.gameScale==2) {
-				appCanvas.className = 'doubleCanvas';
-			}
-			
-			
-			var stage = new createjs.Stage("appCanvas");
+
+			var stage = new createjs.Stage(appCanvasID);
 			createjs.Touch.enable(stage);
 			var main = new sf.Main();
+			main.scaleX = main.scaleY = g.gameScale;
 			stage.addChild(main);
 			main.start(SockJS, auth, school);
 		}
@@ -110,7 +118,7 @@ block content
 			fails to prevent blurring on firefox and chrome, but works on safari and ios 5 and 6 browser 
 			https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering
 		*/
-		#appCanvas {   
+		.pixelated {   
 			image-rendering:-webkit-optimize-contrast; 
 			image-rendering:pixelated;  
 			image-rendering:moz-crisp-edges; 
@@ -121,14 +129,11 @@ block content
 			image-rendering:-moz-crisp-edges;           /* Firefox                        */
 			image-rendering:crisp-edges;                /* CSS3 Proposed                  */
 			}
-		.doubleCanvas {
-			width: 1056px;    
-			height: 552px;  
+
+		.hidden {
+			display: none;
 		}
-		.singleCanvas {
-			width: 528;
-			height: 276;
-		}
+
 		#container {
 			position: relative;
 		}
@@ -200,7 +205,8 @@ block content
 		
 		
 	div#container(width=528,height=276)
-		canvas#appCanvas.singleCanvas(width=528,height=276)
+		canvas.pixelated.hidden#appCanvas1(width=528,height=276)
+		canvas.pixelated.hidden#appCanvas2(width=1056,height=552)
 		
 		div.homeroomText.disableSelect.wordwrap#homeroomChat(width=120, height=150, unselectable="yes")
 		textarea.homeroomText#homeroomTextEntry(width=79, height=43)
