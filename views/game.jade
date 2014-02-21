@@ -7,6 +7,7 @@ block javascript
 	// script(src="https://getfirebug.com/firebug-lite.js#enableTrace")
 	
 	link(href='http://fonts.googleapis.com/css?family=VT323', rel='stylesheet', type='text/css')
+	link(href='http://fonts.googleapis.com/css?family=Strait', rel='stylesheet', type='text/css')
 	
 	link(href='/stylesheets/game#{gameScale}.css', rel='stylesheet')
 
@@ -117,6 +118,7 @@ block content
 			fails to prevent blurring on firefox and chrome, but works on safari and ios 5 and 6 browser 
 			https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering
 		*/
+		
 		.pixelated {   
 			image-rendering:-webkit-optimize-contrast; 
 			image-rendering:pixelated;  
@@ -141,8 +143,14 @@ block content
 
 		#container {
 			position: relative;
-			// default font:
-			font-family: 'VT323';
+			/* font for html-based text (chat and polaroid captions) */ 
+			font-family: 'Strait';
+		}
+		#container input {
+			font-family: 'Strait';
+		}
+		#container textarea {
+			font-family: 'Strait';
 		}
 		
 		.disableSelect {
