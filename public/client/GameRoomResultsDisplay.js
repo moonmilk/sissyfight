@@ -80,6 +80,9 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		// set up caption html text
 		this.items.caption.setFakeScale(g.gameScale);
 		this.items.caption.setSize(245, 25);
+		this.items.caption.setPosition(134, 222);
+		this.items.caption.htmlElement.textAlign = 'center';
+		this.items.caption.htmlElement.lineWidth = 237;
 		this.items.caption.setVisible(true);
 	}
 	
@@ -102,8 +105,8 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.scene.x = step;
 		this.items.scene.mask.x = step + 6;
 		
-		this.items.caption.textAlign = 'center';
-		this.items.caption.lineWidth = 237;
+		this.items.caption.htmlElement.textAlign = 'center';
+		this.items.caption.htmlElement.lineWidth = 237;
 		this.items.caption.x = 166 + step; // was 48
 
 		this.items.btn_back.visible = (n > 0);
