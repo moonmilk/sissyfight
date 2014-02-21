@@ -7,6 +7,36 @@ var xoffset = 40;
 var SCHOOL_ASSETS_TAG = 'angel'; // TODO: change this based on school
 
 
+// specify single font to use same font in both, or [single size font, double size font]
+var defaultFont = 'VT323';
+config['fonts'] = {
+	dressingRoomAddons:		'10px ' + defaultFont,
+	dressingRoomNickname:	'12px ' + defaultFont,
+	
+	homeroomAttendance:		'12px ' + defaultFont,
+	homeroomAttendanceCount:'10px ' + defaultFont,
+	homeroomRoomName:		'11px ' + defaultFont,
+	homeroomPlayerName:		'11px ' + defaultFont,
+	
+	gameResultsChalkboard:	'12px '	+ defaultFont,
+	gameRoomGameName:		'10px ' + defaultFont,
+	gamePlayerName:			'11px ' + defaultFont,
+	
+	polaroidDamage:			'18px ' + defaultFont
+}
+config.getFont = function(tag) {
+	var f = config.fonts[tag];
+	var r = "";
+	if (typeof f == 'object') {
+		if (g.gameScale==2) r = f[1];
+		else r = f[0];
+	}
+	r = f;
+	
+	console.log("font for "+ tag + ": " + r);
+	return r;
+}
+
 config['assetPath'] = '../client/assets/';
 
 config['preloadManifest'] = [

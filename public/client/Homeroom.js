@@ -66,12 +66,12 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.attendanceLayer.textContainer.y = 26;
 		this.attendanceLayer.textContainer.mask = new createjs.Shape();
 		this.attendanceLayer.textContainer.mask.graphics.beginFill('#fff').rect(12,26, 71,193);
-		this.attendanceLayer.attendanceText = this.attendanceLayer.textContainer.addChild(new createjs.Text('', '10px Arial', '#444444'));
+		this.attendanceLayer.attendanceText = this.attendanceLayer.textContainer.addChild(new createjs.Text('', config.getFont('homeroomAttendance'), '#444444'));
 		this.attendanceLayer.attendanceText.lineHeight = 10;
 		this.attendanceLayer.list_open.visible = false;
 		this.attendanceLayer.list_open.buttons = [];
 
-		this.attendanceLayer.attendanceCount = this.attendanceLayer.addChild(new createjs.Text('', '10px Arial', '#000000'));
+		this.attendanceLayer.attendanceCount = this.attendanceLayer.addChild(new createjs.Text('', config.getFont('homeroomAttendanceCount'), '#000000'));
 		this.attendanceLayer.attendanceCount.x = 420;
 		this.attendanceLayer.attendanceCount.y = 254;
 		this.attendanceLayer.attendanceCount.lineWidth = 19;
@@ -123,7 +123,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		*/
 		this.chatEntry.setFakeScale(g.gameScale);
 		this.chatEntry.setPosition(6, 227);
-		this.chatEntry.setSize(76, 42);
+		//this.chatEntry.setSize(76, 42);
 		this.chatEntry.setVisible(true);
 		
 		this.chatRecord.setFakeScale(g.gameScale);

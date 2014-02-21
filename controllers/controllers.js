@@ -81,9 +81,15 @@ module.exports = function(app) {
 			var token = req.session.user.nickname + Math.random();
 			req.session.token = token;
 			req.session.school = app.get('schoolDefault'); // TODO: school will be set by URL path or something...
-			var scale = 1;
-			if (req.param('double')) scale=2;
-			res.render('game', {user:req.session.user, token:req.session.token, session:req.session.id, school:req.session.school, gameScale:scale});
+			var gameScale = 1, gameWidth=528, gameHeight=276;
+			if (req.param('double')) {
+				gameScale *= 2;
+				gameWidth *= 2;
+				gameHeight *= 2;
+			}
+			res.render('game', {user:req.session.user, token:req.session.token, session:req.session.id,
+									school:req.session.school, 
+									gameScale:gameScale, gameWidth:gameWidth, gameHeight:gameHeight});
 		}
 		else {
 			req.session.flash = {login: "Please log in"};

@@ -107,7 +107,7 @@ var p = AddonsList.prototype = new createjs.Container();
 			this.column = 0;
 		}
 		var button = new createjs.Container();
-		button.text = button.addChild(new createjs.Text(item.text, "9px Courier"));
+		button.text = button.addChild(new createjs.Text(item.text, config.getFont('dressingRoomAddons')));
 		if (item.selected) {
 			var selected = button.addChild(this.assets.ptr_addon.clone());
 			if (item.width=='double') selected.scaleX = 1.7;

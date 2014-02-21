@@ -5,6 +5,10 @@ block meta
 	
 block javascript
 	// script(src="https://getfirebug.com/firebug-lite.js#enableTrace")
+	
+	link(href='http://fonts.googleapis.com/css?family=VT323', rel='stylesheet', type='text/css')
+	
+	link(href='/stylesheets/game#{gameScale}.css', rel='stylesheet')
 
 	script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js")
 	script(src="http://cdn.sockjs.org/sockjs-0.3.min.js")
@@ -43,7 +47,7 @@ block javascript
 		// big global variable for remembering stuff 
 		var g = {load:{}, dressing:{}, homeroom:{}, game:{}};
 		
-		g.gameScale = '#{gameScale}' || 1;
+		g.gameScale = '#{gameScale}';
 		
 		// sissyfight namespace
 		this.sf = this.sf||{};
@@ -51,18 +55,11 @@ block javascript
 
 		sf.start = function(SockJS, auth, school) {
 			
-			var appCanvas, appCanvasID;
-			
-			if (g.gameScale==1) {
-				appCanvasID = 'appCanvas1';
-			}
-			else if (g.gameScale==2) {
-				appCanvasID = 'appCanvas2';
-			}
+			var appCanvas, appCanvasID = 'appCanvas';
+
 			appCanvas = document.getElementById(appCanvasID); 
-			appCanvas.style.display = 'inline';
 			
-			// more attempts to disable antialiasing, via http://stackoverflow.com/a/17761798
+			// more ways to prevent antialiased scaling, via http://stackoverflow.com/a/17761798
 			var context = appCanvas.getContext('2d');
 			context.webkitImageSmoothingEnabled = context.imageSmoothingEnabled = context.mozImageSmoothingEnabled = context.oImageSmoothingEnabled = false;
 		
@@ -101,6 +98,8 @@ block content
 					input(type='submit', value='log out')
 			td: form(method='get',action='/game')
 					input(type='submit', value='reload')
+					if (gameScale==2)
+						input(type='hidden', name='double', value='1')
 			td	
 				a(HREF="https://docs.google.com/forms/d/1lLWMiJlPY2hu5SJhrNUeacD--9F_wtsIEHiddGl18UQ/viewform", target='_blank')
 					please click here to fill out a bug report
@@ -128,14 +127,22 @@ block content
 			image-rendering:optimizeSpeed;              /* Legal fallback                 */
 			image-rendering:-moz-crisp-edges;           /* Firefox                        */
 			image-rendering:crisp-edges;                /* CSS3 Proposed                  */
+			
+			// turn off font-smoothing
+			// will need to experiment with fonts and sizes to get away with unsmoothed fonts
+			// http://stackoverflow.com/a/10538659 : 
+			// font-smooth: never;
+			// -webkit-font-smoothing : none;
 			}
 
 		.hidden {
-			display: none;
+			visibility: hidden;
 		}
 
 		#container {
 			position: relative;
+			// default font:
+			font-family: 'VT323';
 		}
 		
 		.disableSelect {
@@ -145,79 +152,26 @@ block content
 			user-select: none;
 		}
 
-		.homeroomText  {
-			font-family: Arial, Helvetica, sans-serif;
-			font-size: 11px;
-			
+		.fixedText {
 			resize: none;
-			visibility: hidden;
-			
 			overflow: hidden;
-			
 			border: none;
 		}
 		
-		.gameroomText {			
-			font-family: Arial, Helvetica, sans-serif;
-			
-			resize: none;
-			visibility: hidden;
-			
-			overflow: hidden;
-			
-			border: none;
-		}
 		
-		.gameroomChatNormal {
-			line-height: 12px;
-			font-size: 11px;
-			font-weight: normal;
-		}
+	div.gameSize#container(width='#{gameWidth}', height='#{gameHeight}')
+		canvas.gameSize.pixelated#appCanvas(width='#{gameWidth}', height='#{gameHeight}')
 		
-		.gameroomChatBig {
-			line-height: 20px;
-			font-size: 18px;
-			font-weight: 550;		
-		}
+		div.homeroomText.disableSelect.wordwrap.fixedText.hidden#homeroomChat(unselectable="yes")
+		textarea.homeroomText.hidden#homeroomTextEntry
 		
-		.captionText {
-			font-family: Arial, Helvetica, sans-serif;
-			font-size: 11px;
-			line-height: 12px;
-			text-align: center;
-			
-			resize: none;
-			visibility: hidden;
-			
-			overflow: hidden;
-			
-			border: none;	
-		}
-		
-		.wordwrap { // http://stackoverflow.com/a/1638824
-			white-space: pre-wrap;      /* CSS3 */   
-			white-space: -moz-pre-wrap; /* Firefox */    
-			white-space: -pre-wrap;     /* Opera <7 */   
-			white-space: -o-pre-wrap;   /* Opera 7 */    
-			word-wrap: break-word;      /* IE */
-		}
-
-		
-		
-	div#container(width=528,height=276)
-		canvas.pixelated.hidden#appCanvas1(width=528,height=276)
-		canvas.pixelated.hidden#appCanvas2(width=1056,height=552)
-		
-		div.homeroomText.disableSelect.wordwrap#homeroomChat(width=120, height=150, unselectable="yes")
-		textarea.homeroomText#homeroomTextEntry(width=79, height=43)
-		
-		textarea.gameroomText.gameroomChatNormal#gameroomTextEntry(width=79, height=43)
+		textarea.gameroomText.gameroomChatNormal.hidden#gameroomTextEntry
 		each i in [0,1,2,3,4,5]
-			div.gameroomText.gameroomChatNormal.disableSelect.wordwrap(id='gameroomChatBubble'+i)
+			div.gameroomText.gameroomPlayerChatBubble.gameroomChatNormal.disableSelect.wordwrap.fixedText.hidden(id='gameroomChatBubble'+i)
 			
-		div.captionText.disableSelect.wordwrap#gameroomCaption(unselectable="yes")
+		div.captionText.disableSelect.wordwrap.hidden#gameroomCaption(unselectable="yes")
 		
-		input.homeroomText#homeroomCreateGameEntry(type='text', width=83, height=12, maxlength=12)
+		input.homeroomText.hidden#homeroomCreateGameEntry(type='text', maxlength=12)
 		
 
 

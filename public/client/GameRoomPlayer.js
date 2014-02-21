@@ -69,7 +69,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		// text color is the same as the 2nd color in uniform palette - convert it to css rgb form:
 		var textColor = 'rgb(' + config.colors.uniforms.vars[playerInfo.avatar.uniformcolor][1].join(',') + ')';
 		
-		this.items.nametag = this.addChild(new createjs.Text(this.playerInfo.nickname, '11px Arial', textColor));
+		this.items.nametag = this.addChild(new createjs.Text(this.playerInfo.nickname, config.getFont('gamePlayerName'), textColor));
 		this.items.nametag.textAlign = 'center';
 		this.items.nametag.x = 43;
 		this.items.nametag.y = 80;
@@ -78,10 +78,10 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.bubble.x = 0;
 		this.items.bubble.y = 0;
 		
-		this.items.chatText = this.addChild(new createjs.DOMElement(this.textElement));
-		this.items.chatText.setFakeScale(g.gameScale);
-		this.items.chatText.setPosition(5, 7);
-		this.items.chatText.setSize(76, 59);
+		this.items.chatText = {htmlElement: this.textElement}; // this.addChild(new createjs.DOMElement(this.textElement));
+		//this.items.chatText.setFakeScale(g.gameScale);
+		//this.items.chatText.setPosition(5, 7);
+		//this.items.chatText.setSize(76, 59);
 		
 		this.items.chatText.bigChat = false;
 
@@ -91,10 +91,16 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	
 	
 	p.start = function() {
-		this.items.chatText.setVisible(true);
+		//this.items.chatText.setVisible(true);
+		var p = this.localToGlobal(5, 7);
+		this.items.chatText.htmlElement.style.position = 'absolute';
+		this.items.chatText.htmlElement.style.left = p.x+"px";
+		this.items.chatText.htmlElement.style.top = p.y+"px";
+		this.items.chatText.htmlElement.style.visibility = 'visible';
 	}
 	p.destroy = function() {
-		this.items.chatText.setVisible(false);
+		//this.items.chatText.setVisible(false);
+		this.items.chatText.htmlElement.style.visibility = 'hidden';
 		this.items.chatText.htmlElement.innerHTML = '';
 	}
 	

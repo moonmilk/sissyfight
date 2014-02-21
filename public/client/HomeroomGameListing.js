@@ -40,13 +40,13 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 
 		this.updateStatus(gameInfo);
 		
-		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName, '11px Arial', '#eeeeee'));
+		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName, config.getFont('homeroomRoomName'), '#eeeeee'));
 		this.items.name.x = 73;
 		this.items.name.y = 0;
 		this.items.name.lineWidth = 63;
 		
 		var nicknames = _.pluck(gameInfo.occupants, 'nickname').join(", ");
-		this.items.occupants = this.addChild(new createjs.Text(nicknames, '11px Arial', '#ffffff'));
+		this.items.occupants = this.addChild(new createjs.Text(nicknames, config.getFont('homeroomPlayerName'), '#ffffff'));
 		this.items.occupants.lineWidth = 192;
 		this.items.occupants.lineHeight = 12;
 		this.items.occupants.x = 147;

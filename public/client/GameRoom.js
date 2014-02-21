@@ -68,7 +68,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.chalkboard.x = 0;
 		this.items.chalkboard.y = 78;
 		this.layers.chalkboardLayer.addChild(this.items.chalkboard);
-		this.items.chalkboardText = new createjs.Text('', '12px Arial', '#ffffff');
+		this.items.chalkboardText = new createjs.Text('', config.getFont('gameResultsChalkboard'), '#ffffff');
 		this.items.chalkboardText.lineWidth = 276;
 		this.items.chalkboardText.x = 10;
 		this.items.chalkboardText.y = 100;
@@ -81,7 +81,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 		// put the name of the game up
 		//console.log(this.gameInfo);
-		var gameName = new createjs.Text(this.gameInfo.roomName, '10px Arial', '#eeeeee');
+		var gameName = new createjs.Text(this.gameInfo.roomName, config.getFont('gameRoomGameName'), '#eeeeee');
 		gameName.x = 192;
 		gameName.y = 6;
 		this.addChild(gameName);
@@ -126,7 +126,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		// set up chat entry field
 		this.chatEntry.setFakeScale(g.gameScale);
 		this.chatEntry.setPosition(6, 226);
-		this.chatEntry.setSize(76, 41);
+		//this.chatEntry.setSize(76, 41);
 		this.chatEntry.setVisible(true);
 			
 		// catch enter in chat entry

@@ -41,7 +41,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		this.addChild(this.avatar);
 		
 		// nickname display
-		this.nickname = new createjs.Text(nickname, "12px Arial", '#000000');
+		this.nickname = new createjs.Text(nickname, config.getFont('dressingRoomNickname'), '#000000');
 		this.nickname.x = 458 - this.nickname.getMeasuredWidth()/2;
 		this.nickname.y = 202;
 		this.addChild(this.nickname);

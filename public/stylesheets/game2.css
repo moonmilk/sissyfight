@@ -1,0 +1,77 @@
+/*
+	 CSS for double size SF game
+*/
+
+.gameSize {
+	width: 		1056px;
+	height: 	552px;
+}
+
+.homeroomText  {
+	font-size: 	22px;
+}
+
+
+#homeroomChat {
+	width: 		240px;
+	height: 	300px;
+}
+
+#homeroomTextEntry {
+	width: 		158px;
+	height: 	86px;
+}
+
+#homeroomCreateGameEntry {
+	width: 		166px;
+	height: 	24px;
+}
+
+
+.gameroomText {			
+	font-size: 	22px;
+}
+
+#gameroomTextEntry {
+	width: 		158px;
+	height: 	86px;
+}
+
+.gameroomChatNormal {
+	line-height: 	24px;
+	font-size: 		22px;
+	font-weight: 	normal;
+}
+
+.gameroomChatBig {
+	line-height: 	40px;
+	font-size: 		36px;
+	font-weight: 	550;		
+}
+
+.gameroomPlayerChatBubble {
+	width: 			152px;
+	height: 		118px;
+}
+
+
+.captionText {
+	font-size: 		22px;
+	line-height: 	24px;
+	text-align: 	center;
+	
+	resize: 		none;
+	visibility: 	hidden;
+	
+	overflow: 		hidden;
+	
+	border: 		none;	
+}
+
+.wordwrap { /* http://stackoverflow.com/a/1638824 */
+	white-space: pre-wrap;      /* CSS3 */   
+	white-space: -moz-pre-wrap; /* Firefox */    
+	white-space: -pre-wrap;     /* Opera <7 */   
+	white-space: -o-pre-wrap;   /* Opera 7 */    
+	word-wrap:   break-word;      /* IE */
+}

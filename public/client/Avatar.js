@@ -183,12 +183,12 @@ var p = Avatar.prototype = new createjs.Container();
 		if (this.look.damage) {
 			var damageDisplay, damageDisplayShadow;
 			if (this.look.damage > 0) {
-				damageDisplay = new createjs.Text("-" + this.look.damage, '18px Arial Black', '#ff9988');
-				damageDisplayShadow = new createjs.Text("-" + this.look.damage, '18px Arial Black', '#333333');
+				damageDisplay = new createjs.Text("-" + this.look.damage, config.getFont('polaroidDamage'), '#ff9988');
+				damageDisplayShadow = new createjs.Text("-" + this.look.damage, config.getFont('polaroidDamage'), '#333333');
 			}
 			else {
-				damageDisplay = new createjs.Text("+"+(0-this.look.damage), '18px Arial Black', '#55ff55');
-				damageDisplayShadow = new createjs.Text("+"+(0-this.look.damage), '18px Arial Black', '#333333');
+				damageDisplay = new createjs.Text("+"+(0-this.look.damage), config.getFont('polaroidDamage'), '#55ff55');
+				damageDisplayShadow = new createjs.Text("+"+(0-this.look.damage), config.getFont('polaroidDamage'), '#333333');
 			}
 			damageDisplay.x = -7;
 			damageDisplay.y = -15;
