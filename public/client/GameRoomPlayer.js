@@ -92,7 +92,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	
 	p.start = function() {
 		//this.items.chatText.setVisible(true);
-		var p = this.localToGlobal(5, 7);
+		var p = this.localToGlobal(3, 7);
 		this.items.chatText.htmlElement.style.position = 'absolute';
 		this.items.chatText.htmlElement.style.left = p.x+"px";
 		this.items.chatText.htmlElement.style.top = p.y+"px";

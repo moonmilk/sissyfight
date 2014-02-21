@@ -8,13 +8,14 @@ var SCHOOL_ASSETS_TAG = 'angel'; // TODO: change this based on school
 
 
 // specify single font to use same font in both, or [single size font, double size font]
-var defaultFont = 'VT323';
+var defaultFont = 'Anaheim';
+var computerFont = 'VT323'
 config['fonts'] = {
-	dressingRoomAddons:		'10px ' + defaultFont,
+	dressingRoomAddons:		'10px ' + computerFont,
 	dressingRoomNickname:	'12px ' + defaultFont,
 	
-	homeroomAttendance:		'12px ' + defaultFont,
-	homeroomAttendanceCount:'10px ' + defaultFont,
+	homeroomAttendance:		'12px ' + computerFont,
+	homeroomAttendanceCount:'10px ' + computerFont,
 	homeroomRoomName:		'11px ' + defaultFont,
 	homeroomPlayerName:		'11px ' + defaultFont,
 	
