@@ -59,13 +59,9 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		
 		this.items.health = this.addChild(this.assets.heart_10.clone());
 		this.items.health.x = 0;
-		this.items.health.y = 77;
+		this.items.health.y = 86;
 		this.items.health.visible = false;
-		
-		this.items.status = this.addChild(this.assets.status_undecided.clone());
-		this.items.status.x = 70;
-		this.items.status.y = 77;
-		
+
 		// text color is the same as the 2nd color in uniform palette - convert it to css rgb form:
 		var textColor = 'rgb(' + config.colors.uniforms.vars[playerInfo.avatar.uniformcolor][1].join(',') + ')';
 		
@@ -73,16 +69,31 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		// make a translucent cartouche behind nametag to make it easier to read
 		this.items.nametagCartouche = this.addChild(new createjs.Shape());
 
-		this.items.nametag = this.addChild(new createjs.Text(this.playerInfo.nickname, config.getFont('gamePlayerName'), textColor));
+		this.items.nametag = new createjs.Text(this.playerInfo.nickname, config.getFont('gamePlayerName'), textColor);
+		this.items.nametag.y = 75;
+		var width = this.items.nametag.getMeasuredWidth();
+		if (width > 64) {
+			// try again with smaller font
+			this.items.nametag = new createjs.Text(this.playerInfo.nickname, config.getFont('gamePlayerNameSmall'), textColor);
+			width = this.items.nametag.getMeasuredWidth();
+			this.items.nametag.y = 76;
+		}
 		this.items.nametag.textAlign = 'center';
 		this.items.nametag.x = 43;
-		this.items.nametag.y = 75;
+		this.addChild(this.items.nametag);
 		
-		var nameBounds = this.items.nametag.getBounds();
-		var halfWidth = Math.floor(nameBounds.width/2);
+		var halfWidth = Math.floor(width/2);
 		this.items.nametagCartouche.graphics
 			.beginFill('rgba(255,255,255,0.80)')
-			.drawRoundRect(43-halfWidth-2, 76, nameBounds.width+4, 11, 1);
+			.drawRoundRect(43-halfWidth-2, 78, width+4, 9, 1);
+			
+		
+		// action status (moved or undecided) 		
+		this.items.status = this.addChild(this.assets.status_undecided.clone());
+		this.items.status.x = 70; 
+		this.items.status.y = 83;
+		
+
 		
 		this.items.bubble = this.addChild(this.assets.bubble.clone());
 		this.items.bubble.x = 0;

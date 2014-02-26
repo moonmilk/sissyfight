@@ -22,6 +22,7 @@ config['fonts'] = {
 	gameResultsChalkboard:	'12px '	+ defaultFont,
 	gameRoomGameName:		'10px ' + defaultFont,
 	gamePlayerName:			'11px ' + defaultFont,
+	gamePlayerNameSmall:	'9px ' + defaultFont,
 	
 	polaroidDamage:			'18px ' + defaultFont
 }
