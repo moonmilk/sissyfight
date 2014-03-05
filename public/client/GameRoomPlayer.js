@@ -126,8 +126,8 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		createjs.Ticker.addEventListener('tick', this.handleTickBound);
 		var time = createjs.Ticker.getTime();
 		this.faceAnim = {
-			blinkTime: time + 1000 + Math.random(5000),
-			glanceTime: time + 2000 + Math.random(9000)
+			blinkTime: time + 1000 + Math.random()*5000,
+			glanceTime: time + 2000 + Math.random()*9000
 		};
 	}
 	p.destroy = function() {
