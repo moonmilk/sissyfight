@@ -70,14 +70,16 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.nametagCartouche = this.addChild(new createjs.Shape());
 
 		this.items.nametag = new createjs.Text(this.playerInfo.nickname, config.getFont('gamePlayerName'), textColor);
-		this.items.nametag.y = 75;
 		var width = this.items.nametag.getMeasuredWidth();
 		if (width > 64) {
 			// try again with smaller font
 			this.items.nametag = new createjs.Text(this.playerInfo.nickname, config.getFont('gamePlayerNameSmall'), textColor);
 			width = this.items.nametag.getMeasuredWidth();
-			this.items.nametag.y = 76;
+			//this.items.nametag.y = 76;
 		}
+		this.items.nametag.textBaseline = 'alphabetic';
+		this.items.nametag.y = 86;
+
 		this.items.nametag.textAlign = 'center';
 		this.items.nametag.x = 43;
 		this.addChild(this.items.nametag);
@@ -85,7 +87,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		var halfWidth = Math.floor(width/2);
 		this.items.nametagCartouche.graphics
 			.beginFill('rgba(255,255,255,0.80)')
-			.drawRoundRect(43-halfWidth-2, 78, width+4, 9, 1);
+			.drawRoundRect(43-halfWidth-2, 78, width+4, 10, 1);
 			
 		
 		// action status (moved or undecided) 		
