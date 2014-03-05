@@ -412,6 +412,8 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.buttons.btn_chatmode_loud.helper.outLabel = 'btn_chatmode_normal';
 			this.buttons.btn_chatmode_loud.helper.overLabel = 'btn_chatmode_normal';
 			this.buttons.btn_chatmode_loud.gotoAndStop('btn_chatmode_normal');
+			
+			this.chatEntry.htmlElement.className = this.chatEntry.htmlElement.className.replace( /gameroomChatNormal/g , 'gameroomChatBig' );
 		}
 		else {
 			this.buttons.btn_chat.helper.downLabel = 'btn_chat_pressed';
@@ -422,7 +424,9 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.buttons.btn_chatmode_loud.helper.downLabel = 'btn_chatmode_loud_pressed';
 			this.buttons.btn_chatmode_loud.helper.outLabel = 'btn_chatmode_loud';
 			this.buttons.btn_chatmode_loud.helper.overLabel = 'btn_chatmode_loud';
-			this.buttons.btn_chatmode_loud.gotoAndStop('btn_chatmode_loud');			
+			this.buttons.btn_chatmode_loud.gotoAndStop('btn_chatmode_loud');		
+			
+			this.chatEntry.htmlElement.className = this.chatEntry.htmlElement.className.replace( /gameroomChatBig/g , 'gameroomChatNormal' );	
 		}
 		
 	}
