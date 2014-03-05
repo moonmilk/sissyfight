@@ -238,7 +238,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 		
 		// placeholder filtering - for now, just get rid of the tier -1 items (mud mask and towel) 
 		var filteredAddons = _.filter(config.addons, function(addon){return addon.tier >= 0 
-			&& addon.tier < 2}); // temporarily filter out higher tiers
+			}); //&& addon.tier < 2}); // temporarily filter out higher tiers
 		
 		this.addonsList = new sf.AddonsList(this, this.look, filteredAddons);
 		this.addonsLayer.addChild(this.addonsList);

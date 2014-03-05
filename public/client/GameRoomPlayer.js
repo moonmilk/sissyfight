@@ -118,11 +118,22 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.chatText.htmlElement.style.left = p.x+"px";
 		this.items.chatText.htmlElement.style.top = p.y+"px";
 		this.items.chatText.htmlElement.style.visibility = 'visible';
+		
+		// get ticks for face animations
+		this.handleTickBound = this.handleTick.bind(this);
+		createjs.Ticker.addEventListener('tick', this.handleTickBound);
+		var time = createjs.Ticker.getTime();
+		this.faceAnim = {
+			blinkTime: time + 1000 + Math.random(5000),
+			glanceTime: time + 2000 + Math.random(9000)
+		};
 	}
 	p.destroy = function() {
 		//this.items.chatText.setVisible(false);
 		this.items.chatText.htmlElement.style.visibility = 'hidden';
 		this.items.chatText.htmlElement.innerHTML = '';
+		
+		createjs.Ticker.removeEventListener('tick', this.handleTickBound);
 	}
 	
 	
@@ -160,10 +171,102 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		while(this.chatBuffer.length > 8) this.chatBuffer.shift();
 		this.items.chatText.htmlElement.innerHTML = '<div class="' + textClass + '">' + this.chatBuffer.join('<br/>') + '</div>';
 		this.items.chatText.htmlElement.scrollTop = this.items.chatText.htmlElement.scrollHeight;
+		
+		// count the words and do talking animation for about 300 msec per word 
+		var words = text.split(/\s+/);
+		var talkTime = words.length * 300 * (0.8 + 0.3*Math.random());
+		if (talkTime > 3500) talkTime = 3500;
+		this.talk(talkTime);
 	}
 	
 	
+	// face animations
+	p.handleTick = function(tick) {
+	
+		if (this.faceAnim.blinkTime && this.faceAnim.blinkTime < tick.time) {
+			if (this.faceAnim.blinking) {
+				this.items.avatar.setBlink(false);
+				this.faceAnim.blinking = false;
+				this.faceAnim.blinkTime = tick.time + 1500 + Math.random()*3000;
+			}
+			else {
+				if (this.faceAnim.talking || this.faceAnim.glancing) {
+					// face in use! try blinking again later
+					this.faceAnim.blinkTime = tick.time + 1000 + Math.random()*3000;
+				}
+				else {
+					this.items.avatar.setBlink(true);
+					this.faceAnim.blinking = true;
+					this.faceAnim.blinkTime = tick.time + 50;
+				}
+			}
+		}
+		
+		if (this.faceAnim.glanceTime && this.faceAnim.glanceTime < tick.time) {
+			if (this.faceAnim.glancing) {
+				this.items.avatar.setGlance(false);
+				this.faceAnim.glancing = false;
+				this.faceAnim.glanceTime = tick.time + 4000 + Math.random()*5000;
+			}
+			else {
+				if (this.faceAnim.talking) {
+					// face in use! try again later
+					this.faceAnim.glanceTime = tick.time + 3000 + Math.random()*5000;
+				}
+				else {
+					this.items.avatar.setGlance(true);
+					this.faceAnim.glancing = true;
+					this.faceAnim.glanceTime = tick.time + 2500 + Math.random(3000);
+				}
+			}
+		}
+		
+		// talking is started by incoming chat, not by timer
+		if (this.faceAnim.talkTime && this.faceAnim.talkTime < tick.time) {
+			if (this.faceAnim.talking) {
+				this.items.avatar.setTalk(false);
+				this.faceAnim.talking = false;
+				this.faceAnim.talkTime = null;
+			}
+		}
+		
+		// during talking, move the lips
+		if (this.faceAnim.talking) {
+			if (this.faceAnim.lipsTime && this.faceAnim.lipsTime < tick.time) {
+				if (this.faceAnim.lips) {
+					this.items.avatar.setTalk(false);
+					this.faceAnim.lips = false;
+					this.faceAnim.lipsTime = tick.time + 100 + Math.random(200);
+				}
+				else {
+					this.items.avatar.setTalk(true);
+					this.faceAnim.lips = true;
+					this.faceAnim.lipsTime = tick.time + 100 + Math.random(200);
+					// extend talk time to cover all of last "syllable" so talk timer doesn't cut off open mouth too quickly
+					if (this.faceAnim.lipsTime > this.faceAnim.talkTime) {
+						this.faceAnim.talkTime = this.faceAnim.lipsTime;
+					}
+				}
+			}
+		}
+		
+		
+	}
+	
+	
+	// "talk" for t msec
+	p.talk = function(t) {
+		var time = createjs.Ticker.getTime();
+		this.faceAnim.talking = true;
+		this.faceAnim.talkTime = time + t;
+		this.faceAnim.lipsTime = time;
+	}
+	
+	
+	
+	
 	// requests from gameroom
+	
 	
 	// reset the action status display to undecided
 	p.resetActed = function() {

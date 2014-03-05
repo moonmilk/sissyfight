@@ -308,6 +308,42 @@ var p = Avatar.prototype = new createjs.Container();
 		this.sprites.uniform.gotoAndStop(this.look.pose + config.avatar.numPoses * uniform);
 	}
 	
+	
+	
+	// face animations
+	
+	// setBlink(true) to close eyes
+	p.setBlink = function(flag) {
+		if (flag && this.look.expression == sf.Avatar.expressions.NEUTRAL) {
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + sf.Avatar.expressions.BLINK);
+		}
+		else {
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + this.look.expression);
+		}
+	}
+		
+	// setGlance(true) to look the other direction
+	p.setGlance = function(flag) {
+		if (flag && this.look.expression == sf.Avatar.expressions.NEUTRAL) {
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + sf.Avatar.expressions.LOOK);
+		}
+		else {
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + this.look.expression);
+		}		
+	}
+
+	// setTalk(true) to open mouth
+	p.setTalk = function(flag) {
+		if (flag) {
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + sf.Avatar.expressions.TALK);
+		}
+		else {
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + this.look.expression);
+		}
+	}
+
+	
+	
 
 	p.prepareAssets = function() {
 		this.overlayAssets = {};
