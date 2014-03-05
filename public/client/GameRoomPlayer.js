@@ -87,7 +87,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		var halfWidth = Math.floor(width/2);
 		this.items.nametagCartouche.graphics
 			.beginFill('rgba(255,255,255,0.80)')
-			.drawRoundRect(43-halfWidth-2, 78, width+4, 10, 1);
+			.drawRoundRect(43-halfWidth-2, 78, width+3, 10, 1);
 			
 		
 		// action status (moved or undecided) 		
