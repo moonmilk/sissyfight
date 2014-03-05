@@ -74,7 +74,7 @@ var p = GameActionMenu.prototype = new createjs.Container();
 		this.selectedAction = undefined;
 		_.forOwn(this.buttons, function(button) {
 			var bounds = button.getBounds();
-			if (mouse.x > 1 && mouse.x < 79 && mouse.y >= (bounds.y-1) && mouse.y <= (bounds.y+bounds.height+1)) {
+			if (mouse.x > 1 && mouse.x < 79 && mouse.y >= bounds.y && mouse.y <= (bounds.y+bounds.height+1)) {
 				button.visible = true;
 				this.selectedAction = button.actionLabel;
 			}
