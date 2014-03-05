@@ -405,6 +405,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		// show the create game dialog
 		sf.Sound.buttonClick();
 		this.gameList.visible = false;
+		this.showAttendanceList(false);
 		this.createGameDialog.visible = true;
 		this.createGameDialog.gameName.setVisible(true);
 		this.createGameDialog.gameName.htmlElement.value = "";
