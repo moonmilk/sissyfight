@@ -199,7 +199,7 @@ config['manifest'] = [
 			pieces: {
 				gameroom_bg:		[0, 0, 528, 276,   0,  0, 0],
 				bubble:				[4,23,  85, 78,    0,  0, 0],
-				shadow:				[23,203, 47,12,    0,  0, 0],
+				shadow:				[23,198, 47,12,    0,  0, 0],
 				results_bg:			[0, 277, 319, 95,  0,  -6, -6]  // it's really 325px wide but the frame has a 319px opening
 			}
 		}
