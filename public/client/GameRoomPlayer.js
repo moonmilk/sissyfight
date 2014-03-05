@@ -63,8 +63,9 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.health.visible = false;
 
 		// text color is the same as the 2nd color in uniform palette - convert it to css rgb form:
-		var textColor = 'rgb(' + config.colors.uniforms.vars[playerInfo.avatar.uniformcolor][1].join(',') + ')';
-		
+		//var textColor = 'rgb(' + config.colors.uniforms.vars[playerInfo.avatar.uniformcolor][1].join(',') + ')';
+		// try plain white text
+		var textColor = '#000000';
 
 		// experimental: move nametags down under characters
 		var nametagOffset = 110;
