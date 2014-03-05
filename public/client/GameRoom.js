@@ -66,12 +66,12 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.layers.chalkboardLayer.x = -300;
 		this.items.chalkboard = this.assets.chalkboard;
 		this.items.chalkboard.x = 0;
-		this.items.chalkboard.y = 78;
+		this.items.chalkboard.y = 91;
 		this.layers.chalkboardLayer.addChild(this.items.chalkboard);
 		this.items.chalkboardText = new createjs.Text('', config.getFont('gameResultsChalkboard'), '#ffffff');
 		this.items.chalkboardText.lineWidth = 276;
 		this.items.chalkboardText.x = 10;
-		this.items.chalkboardText.y = 100;
+		this.items.chalkboardText.y = 113;
 		this.layers.chalkboardLayer.addChild(this.items.chalkboardText);
 		
 		
