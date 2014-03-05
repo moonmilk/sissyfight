@@ -35,7 +35,7 @@ config.getFont = function(tag) {
 	}
 	r = f;
 	
-	console.log("font for "+ tag + ": " + r);
+	//console.log("font for "+ tag + ": " + r);
 	return r;
 }
 
