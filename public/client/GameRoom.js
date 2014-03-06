@@ -89,7 +89,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// action status tag displays which game action you've chosen
 		this.items.actionStatusTag = this.addChild(this.assets.act_status_grab.clone());
-		this.items.actionStatusTag.y = 210;
+		this.items.actionStatusTag.y = 199;
 		this.items.actionStatusTag.visible = false;
 		
 		// layer for action menus
