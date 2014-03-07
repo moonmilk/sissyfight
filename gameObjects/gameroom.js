@@ -153,7 +153,10 @@ GameRoom.prototype.ping = function(conn, data) {
 	
 	// check everyone else's ping time
 	_.each(this.occupants, function(occupant) {
-		if (!occupant.pingTime) {
+		if (!occupant) {
+			console.log("Hey, it's that thing where a stalled user left an undefined occupant in the gameroom.");
+		}
+		else if (!occupant.pingTime) {
 			// they have never pinged! They have one chance...
 			occupant.pingTime = Date.now();
 		}
