@@ -542,6 +542,12 @@ var p = GameRoom.prototype = new createjs.Container();
 		player.destroy();
 		
 		player.removeAllEventListeners();
+		
+		// if action tag is under this player, get rid of it
+		if (this.items.actionStatusTag.player == player) {
+			this.items.actionStatusTag.player = undefined;
+			this.items.actionStatusTag.visible = false;
+		}
 	}
 	
 	
@@ -671,6 +677,7 @@ var p = GameRoom.prototype = new createjs.Container();
 	p.setPlayerActionTag = function(targetPlayer, action) {
 		if (!targetPlayer) {
 			this.items.actionStatusTag.visible = false;
+			this.items.actionStatusTag.player = undefined;
 		}
 		else {
 			// lick, tattle, and cower are always marked on self, regardless of who the user clicked on to choose them.	
@@ -678,6 +685,7 @@ var p = GameRoom.prototype = new createjs.Container();
 			
 			this.items.actionStatusTag.gotoAndStop('act_status_' + action);
 			this.items.actionStatusTag.visible = true;
+			this.items.actionStatusTag.player = targetPlayer;
 			
 			if (action != 'tattle') {
 				this.items.actionStatusTag.x = targetPlayer.x;				
