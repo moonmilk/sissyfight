@@ -48,26 +48,37 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		
 		this.items = {};
 		
+		
+		// chat bubble
+		this.items.bubble = this.addChild(this.assets.bubble.clone());
+		this.items.bubble.x = 0;
+		this.items.bubble.y = 0;
+		
+		
 		this.items.shadow = this.addChild(this.assets.shadow.clone());
 		this.items.shadow.x = 20;
-		this.items.shadow.y = 180;
+		this.items.shadow.y = 175;
 		
 		this.items.avatar = this.addChild(new sf.Avatar());
 		this.items.avatar.setLook(this.playerInfo.avatar);
 		this.items.avatar.x = 46;
-		this.items.avatar.y = 83;
+		this.items.avatar.y = 78;
 		
 		this.items.health = this.addChild(this.assets.heart_10.clone());
 		this.items.health.x = 0;
-		this.items.health.y = 86;
+		this.items.health.y = 81;
 		this.items.health.visible = false;
 
 		// text color is the same as the 2nd color in uniform palette - convert it to css rgb form:
-		var textColor = 'rgb(' + config.colors.uniforms.vars[playerInfo.avatar.uniformcolor][1].join(',') + ')';
-		
+		//var textColor = 'rgb(' + config.colors.uniforms.vars[playerInfo.avatar.uniformcolor][1].join(',') + ')';
+		// try plain white text
+		var textColor = '#000000';
+
+		// experimental: move nametags down under characters
+		var nametagOffset = 110;
 
 		// make a translucent cartouche behind nametag to make it easier to read
-		this.items.nametagCartouche = this.addChild(new createjs.Shape());
+		//this.items.nametagCartouche = this.addChild(new createjs.Shape());
 
 		this.items.nametag = new createjs.Text(this.playerInfo.nickname, config.getFont('gamePlayerName'), textColor);
 		var width = this.items.nametag.getMeasuredWidth();
@@ -78,16 +89,16 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 			//this.items.nametag.y = 76;
 		}
 		this.items.nametag.textBaseline = 'alphabetic';
-		this.items.nametag.y = 86;
+		this.items.nametag.y = 86 + nametagOffset;
 
 		this.items.nametag.textAlign = 'center';
 		this.items.nametag.x = 43;
 		this.addChild(this.items.nametag);
 		
-		var halfWidth = Math.floor(width/2);
-		this.items.nametagCartouche.graphics
-			.beginFill('rgba(255,255,255,0.80)')
-			.drawRoundRect(43-halfWidth-2, 78, width+3, 10, 1);
+		//var halfWidth = Math.floor(width/2);
+		//this.items.nametagCartouche.graphics
+		//	.beginFill('rgba(255,255,255,0.80)')
+		//	.drawRoundRect(43-halfWidth-2, 78 + nametagOffset, width+3, 10, 1);
 			
 		
 		// action status (moved or undecided) 		
@@ -95,11 +106,6 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.status.x = 70; 
 		this.items.status.y = 83;
 		
-
-		
-		this.items.bubble = this.addChild(this.assets.bubble.clone());
-		this.items.bubble.x = 0;
-		this.items.bubble.y = 0;
 		
 		this.items.chatText = {htmlElement: this.textElement}; // this.addChild(new createjs.DOMElement(this.textElement));
 		//this.items.chatText.setFakeScale(g.gameScale);

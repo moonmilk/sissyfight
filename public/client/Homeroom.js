@@ -79,6 +79,10 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.attendanceLayer.list_open.buttons = [];
 		
 		
+		
+		// set up buttons
+		this.prepareButtons();
+		
 				
 		// display avatar without background layer, if any (like phone booth or bodyguard)
 		this.avatar = this.addChild(new sf.Avatar());
@@ -146,9 +150,6 @@ var p = Homeroom.prototype = new createjs.Container();
 			this[handler+"Bound"] = bound;
 			g.comm.addEventListener(type, bound);
 		}, this);
-		
-		// set up buttons
-		this.prepareButtons();
 		
 		// make mute button state reflect mute prefs
 		this.setMuteButton();
