@@ -48,6 +48,13 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		
 		this.items = {};
 		
+		
+		// chat bubble
+		this.items.bubble = this.addChild(this.assets.bubble.clone());
+		this.items.bubble.x = 0;
+		this.items.bubble.y = 0;
+		
+		
 		this.items.shadow = this.addChild(this.assets.shadow.clone());
 		this.items.shadow.x = 20;
 		this.items.shadow.y = 175;
@@ -99,11 +106,6 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.status.x = 70; 
 		this.items.status.y = 83;
 		
-
-		
-		this.items.bubble = this.addChild(this.assets.bubble.clone());
-		this.items.bubble.x = 0;
-		this.items.bubble.y = 0;
 		
 		this.items.chatText = {htmlElement: this.textElement}; // this.addChild(new createjs.DOMElement(this.textElement));
 		//this.items.chatText.setFakeScale(g.gameScale);
