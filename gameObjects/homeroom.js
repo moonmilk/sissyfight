@@ -7,9 +7,17 @@ var ChatRoom = require("./chatroom");
 
 function Homeroom(params) {
 	ChatRoom.call(this, params);
+	
+	// set up flood protection
+	this.setupFloodWatch(Homeroom.FLOOD_INTERVAL, Homeroom.FLOOD_MAXIMUM, Homeroom.FLOOD_SQUELCH_TIME);
 }
 
 util.inherits(Homeroom, ChatRoom);
+
+// CONSTANTS
+Homeroom.FLOOD_MAXIMUM  = 7;		// if user sends more than 7 chats
+Homeroom.FLOOD_INTERVAL = 8000; 	// in 8 seconds
+Homeroom.FLOOD_SQUELCH_TIME = 60000;// then squelch them for 60 seconds
 
 
 // METHODS

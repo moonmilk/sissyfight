@@ -33,6 +33,27 @@ ChatRoom.prototype.destroy = function() {
 
 // METHODS
 
+// initialize flood watch (call setupFloodWatch(false) to turn it off
+ChatRoom.prototype.setupFloodWatch = function(interval, maximum, squelchTime) {
+	if (!interval) {
+		this.floodwatch = undefined;
+		return;
+	}
+	this.floodwatch = {
+		interval: 		interval,
+		maximum:		maximum,
+		squelchTime:	squelchTime,
+		logs: {
+			/*
+				nickname: { // indexed by nickname rather than  so you can't get unsquelched by logging out and in again
+					squelchTime: undefined or time squelch was applied
+					record: [list of timestamps of chats that fall within the flood interval]
+				}
+			*/
+		}
+	};
+} 
+
 ChatRoom.prototype.getInfo = function() {
 	return {room:this.id, roomName:this.name, occupants:this.getOccupantProperties(['id','nickname']), type:"ChatRoom"};
 }
@@ -76,6 +97,10 @@ ChatRoom.prototype.leave = function(conn, done) {
 
 // callback: done() (no error conditions)
 ChatRoom.prototype.say = function(conn, text, done) {
+	if (this.floodSquelchTest(conn.user.nickname)) {
+		return;
+	};
+	
 	// escape HTML and limit text length
 	text = text.substring(0,140); // for now - 140 chars like a tweet
 	text = text
@@ -89,6 +114,56 @@ ChatRoom.prototype.say = function(conn, text, done) {
 	if (done) done(null);
 }
 
+
+// when user sends a chat text, maintain floodwatch log and return true if current user's been talking too much
+ChatRoom.prototype.floodSquelchTest = function(nickname) {
+	if (!this.floodwatch) return false; // flood watch disabled
+	
+	// add this chat to the logs
+	var now = Date.now();
+	// create log for user if it doesn't already exist
+	if (!this.floodwatch.logs[nickname]) {
+		this.floodwatch.logs[nickname] = {
+			squelchTime: undefined, 
+			record: []
+		};
+	}
+	this.floodwatch.logs[nickname].record.push(now);
+	
+	// trim old logs: throw away timestamps when they're too old to count against the squelch limit
+	//   Go ahead and trim everyone's logs, not just the current chatting user - otherwise logs of users who stop talking never get cleaned up.
+	//     (Don't want to clean up logs when someone leaves the room, because then they could escape squelch by leaving and re-entering)
+	//	 Alternately, could have a timed interval for cleaning the logs, but i like to avoid those.
+	var expire = now - this.floodwatch.interval;
+	_.each(this.floodwatch.logs, function(log, nickname) {
+		log.record = _.filter(log.record, function(timestamp) {return timestamp > expire}, this);
+	}, this);
+	
+
+	// check squelch times and clean up any logs where user's not squelched and has no recent chat timestamps
+	this.floodwatch.logs = _.pick(this.floodwatch.logs, function(log, nickname) {
+		if (log.squelchTime < now) {
+			log.squelchTime = undefined;
+			console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + nickname + " was unsquelched.");
+		}
+		return (log.squelchTime || log.record.length > 0)
+	}, this);
+	
+	
+	// check if current user has talked too much and should be squelched
+	//   if they are already squelched, continuing to try to flood will increase the penalty time
+	//   but if they calm down, eventually it should expire
+	if (this.floodwatch.logs[nickname].record.length > this.floodwatch.maximum) {
+		this.floodwatch.logs[nickname].squelchTime = now + this.floodwatch.squelchTime;
+		console.log("ChatRoom[" + this.id + "," + this.name + "]: connection " + nickname + " was squelched for talking too much.");
+	}
+	
+	// testing: dump state of floodwatch
+	//console.log("ChatRoom floodwatch", JSON.stringify(this.floodwatch, null, '\t'));
+	
+	// return true if squelched
+	return (this.floodwatch.logs[nickname].squelchTime > 0);
+}
 
 // broadcast that conn has joined the room 
 // -- separated out so GameRoom can override it

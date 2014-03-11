@@ -21,6 +21,9 @@ function GameRoom(params) {
 	
 	this.game = undefined;  // when game is in progress, this is a SFGame object
 	
+	
+	// set up flood protection
+	this.setupFloodWatch(GameRoom.FLOOD_INTERVAL, GameRoom.FLOOD_MAXIMUM, GameRoom.FLOOD_SQUELCH_TIME);
 }
 
 util.inherits(GameRoom, ChatRoom);
@@ -31,6 +34,13 @@ GameRoom.MAX_PLAYERS = 6;
 GameRoom.MIN_PLAYERS = 3;
 
 GameRoom.PING_TIMEOUT = 20000;  // 20 seconds without pings until disconnection!
+
+
+// flood protection - since ingame chat has separate chat windows per user, this is more to prevent bandwidth-eating
+GameRoom.FLOOD_MAXIMUM  = 30;		// if user sends more than 30 chats
+GameRoom.FLOOD_INTERVAL = 25000; 	// in 25 seconds
+GameRoom.FLOOD_SQUELCH_TIME = 60000;// then squelch them for 60 seconds
+
 
 // METHODS
 
