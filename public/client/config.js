@@ -19,6 +19,8 @@ config['fonts'] = {
 	homeroomRoomName:		'11px ' + defaultFont,
 	homeroomPlayerName:		'11px ' + defaultFont,
 	
+	cueText:				'10px ' + defaultFont,
+	
 	gameResultsChalkboard:	'12px '	+ defaultFont,
 	gameRoomGameName:		'10px ' + defaultFont,
 	gamePlayerName:			'11px ' + defaultFont,

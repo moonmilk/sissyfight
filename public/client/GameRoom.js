@@ -86,6 +86,14 @@ var p = GameRoom.prototype = new createjs.Container();
 		gameName.y = 6;
 		this.addChild(gameName);
 		
+		// game cues 
+		this.items.cueText = new createjs.Text('', config.getFont('cueText', '#111111'));
+		this.addChild(this.items.cueText);
+		this.items.cueText.x = 148;
+		this.items.cueText.y = 247;
+		this.items.cueText.lineWidth = 142;
+		this.items.cueText.textBaseline = "alphabetic";
+		
 		
 		// action status tag displays which game action you've chosen
 		this.items.actionStatusTag = this.addChild(this.assets.act_status_grab.clone());
@@ -159,6 +167,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// ping timer
 		this.nextPingTime = 0; // ping immediately
+		
+		// first cue
+		this.showCue("The game begins when everyone presses START.  You need 3 girls, but try playing with 5 or 6!");
 				
 		// for testing results displays from the console
 		window.r = this.handleTurnResults.bind(this);
@@ -236,6 +247,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				_.each(this.playersByID, function(player) {
 					player.setPose('normal');
 				})
+				//this.showCue("");
+				this.showCue("Click on any girl to choose your action for this turn.");
 				break;
 				
 			case 'startTurn':
@@ -274,7 +287,6 @@ var p = GameRoom.prototype = new createjs.Container();
 				sf.Sound.play('snd_buzzer');
 				this.setPlayerActionTag();
 				this.handleTurnResults(event.data.results);
-				
 				break;
 				
 			case 'endGame':
@@ -285,10 +297,7 @@ var p = GameRoom.prototype = new createjs.Container();
 				_.each(this.playersByID, function(player) {
 					player.resetActed();
 				});
-				// give winners victory pose
-				// TODO
-				// display endgame scoreboard
-				// TODO
+				this.showCue("The game begins when everyone presses START.  You need 3 girls, but try playing with 5 or 6!");
 				break;
 			
 			
@@ -654,6 +663,8 @@ var p = GameRoom.prototype = new createjs.Container();
 				
 					// show the choice on target player
 					this.setPlayerActionTag(player, selectedAction);
+					
+					this.showCue("You can change your action, if you want, before the turn ends.");
 				}
 
 				// get rid of menu
@@ -707,11 +718,13 @@ var p = GameRoom.prototype = new createjs.Container();
 	
 	// show the turn results pictures
 	p.displayResults = function(results) {
+		this.showCue("\nClick through the photos to see what happened last turn.");
+		
 		this.displayResultsDone(); // get rid of previous round's results, if any
 		this.items.console.disableShowResults();
 		this.items.resultsDisplay = this.layers.resultsLayer.addChild(new sf.GameRoomResultsDisplay(this.assets, this.looksByID, results));
 		this.items.resultsDisplay.x = 88;  // moved right from original design enough to not cover the chat box
-		this.items.resultsDisplay.y = 119;
+		this.items.resultsDisplay.y = 115;
 		this.items.resultsDisplay.start();
 		this.items.resultsDisplay.addEventListener('done', this.displayResultsDone.bind(this));
 	}
@@ -727,10 +740,17 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.layers.resultsLayer.removeChild(this.items.resultsDisplay);
 			this.items.resultsDisplay.destroy();
 			this.items.resultsDisplay = undefined;
+			
+			if (this.state=='game') this.showCue("Click on any girl to choose your action for this turn.");
 		}
 		if (destroy!='destroy') this.items.console.enableShowResults();
 	}
 	
+	
+	// show gameplay cues
+	p.showCue = function(text) {
+		this.items.cueText.text = text;
+	}
 	
 	
 	p.prepareButtons = function() {
