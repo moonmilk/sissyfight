@@ -16,7 +16,7 @@ block content
 			a(href='/game/?double=1') go to the game (double size)
 			
 	else
-		h2 login
+		h3 LOGIN
 		if (flash && flash.login)
 			div.errorFlash= flash.login
 		form(method='post',action='/user/login')
@@ -29,7 +29,7 @@ block content
 			input(type='submit', value='log in')
 			
 			
-		h2 register
+		h3 REGISTER
 		if (flash && flash.newUser)
 			div.errorFlash= flash.newUser
 		form(method='post',action='/user/new')
