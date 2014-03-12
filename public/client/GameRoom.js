@@ -90,8 +90,9 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.items.cueText = new createjs.Text('', config.getFont('cueText', '#111111'));
 		this.addChild(this.items.cueText);
 		this.items.cueText.x = 148;
-		this.items.cueText.y = 247;
+		this.items.cueText.y = 246;
 		this.items.cueText.lineWidth = 142;
+		this.items.cueText.lineHeight = 11;
 		this.items.cueText.textBaseline = "alphabetic";
 		
 		
