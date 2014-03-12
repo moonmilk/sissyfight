@@ -1,0 +1,244 @@
+<html>
+<head><title>SiSSYFiGHT 2000</title>
+<style>
+body {
+  font-family: Helvetica, Arial, sans-serif; background-color: #999999; color: #003366;
+}
+#sf2kmain {
+  display: block;
+  position: relative;
+  width: 650px;
+  margin: 20px auto 0;
+  padding: 1 0 0 0;
+  background: #99CCFF;
+  color: #FFFFFF;
+  outline: 1px dotted #003366;
+  min-height: 500px;
+}
+#sf2kmainheader {
+  display: block;
+  position: relative;
+  margin: 20 0 0 20;
+  width: 630px;
+  height: 68px;
+}
+#sf2klogo {
+  display: block;
+  position: relative;
+  width: 132px;
+  height: 68px;
+  float: left;
+  margin: 0 0 0 0;
+}
+#sf2kmenu {
+  display: block;
+  position: relative;
+  float: left;
+  width: 396px;
+  height: 86px;
+  margin: 0 0 0 10;
+  padding: 0 0 0 0;
+  font-size: 60%;
+  line-height: 100%;
+  font-weight: bold;
+}
+#sf2kmenuitem {
+  display: inline-block;
+  position: relative;
+  margin: 0 5 0 5;
+  float: left;
+  text-align: center;
+}
+#sf2kloginbox {
+  display: block;
+  position: relative;
+  top: -10px;
+  left: -10px;
+  float: right;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  text-align: right;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+  float: right;
+}
+#sf2kloginbox {
+  display: block;
+  position: relative;
+  background: url("imgs/sf2k-login-background.png") no-repeat;
+  height: 276px;
+  width: 528px;
+  margin: 20 0 20 61;
+  padding: 0 0 0 0;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+}
+#contentarea {
+  display: block;
+  position: relative;
+  width: 600px;
+  margin: 0 0 0 20;
+  padding: 0 0 0 0;
+  clear: both;
+  vertical-align: middle;
+  }
+.content {
+  text-align: left;
+  font-size: 85%;
+  color: #003366;
+  margin: -10 0 0 0;
+  padding: 0 0 0 10;
+  }
+.header {
+  display: block;
+  position: relative;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+}
+.headermiddle {
+  display: inline-block;
+  position: relative;
+  height: 13;
+  padding: 0 0 0 3;
+  background: #6699CC;
+  text-align: left;
+  vertical-align: middle;
+  width: 591px;
+}
+.headerleft {
+  display: inline-block;
+  position: relative;
+  float: left;
+  height: 13;
+  width: 3;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  text-align: left;
+  vertical-align: middle;
+  background: url("imgs/roundcap-left.png") no-repeat;
+}
+.headerright {
+  display: inline-block;
+  position: relative;
+  float: right;
+  height: 13;
+  width: 3;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  text-align: right;
+  vertical-align: middle;
+  background: url("imgs/roundcap-right.png") no-repeat;
+}
+#sf2knewfighter {
+  display: inline-block;
+  position: relative;
+  width: 257;
+  height: 25;
+  clear: both;
+  top: 78;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+}
+#sf2kreturnlogin {
+  display: inline-block;
+  position: relative;
+  width: 257;
+  height: 91;
+  clear: both;
+  top: 100;
+  left: 10; 
+  text-align: center;
+  vertical-align: middle;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+}
+#sf2kforgotpwbody {
+  display: inline-block;
+  position: relative;
+  width: 257;
+  height: 91;
+  clear: both;
+  top: 100;
+  left: 10; 
+  text-align: center;
+  vertical-align: middle;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+}
+#sf2kforgotpwbutton {
+  display: inline-block;
+  position: relative;
+  width: 19;
+  height: 19;
+  top: 158;
+  left: -42;
+}
+</style>
+</head>
+<body>
+    <script src="jquery-2.0.3.js"></script>
+    <script>
+    $( document ).ready(function() {
+        $( "#sf2kreturnlogin" ).show();
+        $( "#sf2kforgotpw" ).hide();
+        $( "#sf2kforgotpwbutton" ).click(function ( event ) {
+            $( "#sf2kreturnlogin" ).hide();
+            $( "#sf2kforgotpw" ).show();
+        })
+    });
+ 
+    </script>
+<div id="sf2kmain">
+<div id="sf2kmainheader">
+<div id="sf2klogo"><img src="imgs/titlesm.gif" width=132 height=68 border=0></div>
+<div id="sf2kmenu"><div id="sf2kmenuitem"><BR><a href="index.html"><img src="imgs/play-header.png" width=36 height=9 border=0><br><img src="imgs/icon_play.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><a href="help.html"><img src="imgs/help-header.png" width=34 height=9 border=0><BR><img src="imgs/icon_help.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><a href="rankings.html"><img src="imgs/rankings-header.png" width=70 height=9 border=0><BR><img src="imgs/icon_rankings.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><a href="honorcode.html"><img src="imgs/honorcode-header.png" width=46 height=18 border=0><BR><img src="imgs/icon_honor.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><a href="source.html"><img src="imgs/sf2ksource-header.png" width=57 height=18 border=0><BR><img src="imgs/icon_source.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><a href="credits.html"><img src="imgs/credits-header.png" width=57 height=9 border=0><BR><img src="imgs/icon_credits.png" border=0 vspace=3></a></div></div>
+<div id="sf2kloginbox">FifteenLetterJo<BR><img src="imgs/portrait_sample.gif" border=0><BR>LOGOUT</div>
+</div>
+<div id="sf2kloginbox">
+    <div id="sf2knewfighter">
+        <span style="vertical-align: 5">Click </span><IMG SRC="imgs/here-button.png" width="45" height="19"><span style="vertical-align: 5"> to create your SiSSYFiGHTER.</span>
+    </div>
+    <br>
+    <div id="sf2kreturnlogin">
+        <form>SiSSYFiGHTER name: <input type="text" size="13" max="13"><br>Password: <input type="text" size="10"><br><br><span style="vertical-align: 5">then click </span><IMG SRC="imgs/ok-button.png" width="30" height="19"></form>
+    </div>
+    <div id="sf2kforgotpwbody"><form>SiSSYFiGHTER name: <input type="text" size="13" max="13"><br><br>Now click <span style="vertical-align: -5"><IMG SRC="imgs/reset-button.png" width="55" height="19"></span><br><span style="line-height: 150%">and we'll e-mail you a link to reset your password.</span></form></div>
+    <div id="sf2kforgotpwbutton"><IMG SRC="imgs/question-button.png" width="19" height="19"></div>
+</div>
+<div id="sf2kforgotpwbox">
+    <div id="sf2knewfighter">
+        <span style="vertical-align: 5">Click </span><IMG SRC="imgs/here-button.png" width="45" height="19"><span style="vertical-align: 5"> to create your SiSSYFiGHTER.</span>
+    </div>
+    <br>
+    <div id="sf2kforgotpwbody"><form>SiSSYFiGHTER name: <input type="text" size="13" max="13"><br><br>Now click <span style="vertical-align: -5"><IMG SRC="imgs/reset-button.png" width="55" height="19"></span><br><span style="line-height: 150%">and we'll e-mail you a link to reset your password.</span></form></div>
+    <div id="sf2kforgotpwbutton"><IMG SRC="imgs/question-button.png" width="19" height="19"></div>
+</div>
+
+<div id="contentarea">
+<div class="header"><span class="headerleft"></span><span class="headermiddle"><img src="imgs/news-header.png" height=9 width=39 vspace=2></span><span class="headerright"></span></div>
+<div class="content"><p><strong>1/30/2014</strong> - SiSSYFiGHT is GO! The relaunch of SiSSYFiGHT 2000 has happened. Welcome back to a refreshed version of the 1999 online game. Thanks to all of our Kickstarter supporters and to Venus Patrol for making it happen.</p><br></div>
+<div class="header"><span class="headerleft"></span><span class="headermiddle"><img src="imgs/sf2kcommunity-header.png" height=9 width=121 vspace=2></span><span class="headerright"></span></div>
+<div class="content"><p>The SiSSYFiGHT 2000 community lives! Here are some links to places where SiSSYFiGHTers gather. Disclaimer: these sights aren't managed or by the SiSSYFiGHT Returns team; they're independent creations of SiSSYFiGHT community members.</p><ul><li><A HREF="http://sissyfightboards.com">The SiSSYFiGHT 2000 Message Boards</A>
+<li><A HREF="https://www.facebook.com/groups/2213567417/">The SiSSYFiGHT Facebook group</A>
+<li><A HREF="http://sissyfightschoolboard.yuku.com/">Ramona Q’s SiSSYFiGHT School Board Forums</A></ul><br></div>
+<div class="header"><span class="headerleft"></span><span class="headermiddle"><img src="imgs/tipjar-header.png" height=9 width=53 vspace=2></span><span class="headerright"></span></div>
+<div class="content"><p>SiSSYFiGHT 2000 is a free and open-source project. Donations pay for hosting and technical maintenance. Donate here. Thanks for your support!</p><br></div>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+<html>
+<head><title>SiSSYFiGHT 2000</title>
+<link rel="stylesheet" type="text/css" href="shadowbox/shadowbox.gamepage.css">
+<script src="jquery-2.0.3.js"></script>
+<script type="text/javascript" src="shadowbox/shadowbox.gameversion.js"></script>
+<script type="text/javascript">
+Shadowbox.init({
+    handleOversize: "none",
+    modal: "true",
+});
+</script>
+<script type="text/javascript">
+$(window).bind('beforeunload', function(){
+  return 'You\'re about to disconnect your current game session!';
+});
+</script>
+<style>
+body {
+  font-family: Helvetica, Arial, sans-serif; background-color: #999999; color: #003366;
+}
+#sf2kmain {
+  display: block;
+  position: relative;
+  width: 650px;
+  margin: 20px auto 0;
+  padding: 1 0 0 0;
+  background: #99CCFF;
+  color: #FFFFFF;
+  outline: 1px dotted #003366;
+  min-height: 500px;
+}
+#sf2kmain a {
+  color: #333366;
+  text-decoration: none;
+}
+#sf2kmainheader {
+  display: block;
+  position: relative;
+  margin: 20 0 0 20;
+  width: 630px;
+  height: 68px;
+}
+#sf2klogo {
+  display: block;
+  position: relative;
+  width: 132px;
+  height: 68px;
+  float: left;
+  margin: 0 0 0 0;
+}
+#sf2kmenu {
+  display: block;
+  position: relative;
+  float: left;
+  width: 396px;
+  height: 86px;
+  margin: 0 0 0 10;
+  padding: 0 0 0 0;
+  font-size: 60%;
+  line-height: 100%;
+  font-weight: bold;
+}
+#sf2kmenuitem {
+  display: inline-block;
+  position: relative;
+  margin: 0 5 0 5;
+  float: left;
+  text-align: center;
+}
+#sf2kloginbox {
+  display: block;
+  position: relative;
+  top: -10px;
+  left: -10px;
+  float: right;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  text-align: right;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+  float: right;
+}
+#sf2kloginformbox {
+  display: none;
+  position: relative;
+  background: url("imgs/sf2k-login-background.png") no-repeat;
+  height: 276px;
+  width: 528px;
+  margin: 20 0 20 61;
+  padding: 0 0 0 0;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+}
+#sf2kforgotpwbox {
+  display: none;
+  visibility: hidden;
+  position: relative;
+  background: url("imgs/sf2k-login-background.png") no-repeat;
+  height: 276px;
+  width: 528px;
+  margin: 20 0 20 61;
+  padding: 0 0 0 0;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+}
+#sf2kgamebox {
+  display: block;
+  position: relative;
+  height: 276px;
+  width: 528px;
+  margin: 20 0 20 61;
+  padding: 0 0 0 0;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+}
+#contentarea {
+  display: block;
+  position: relative;
+  width: 600px;
+  margin: 0 0 0 20;
+  padding: 10 0 0 0;
+  clear: both;
+  vertical-align: middle;
+  }
+.content {
+  text-align: left;
+  font-size: 85%;
+  color: #003366;
+  margin: -10 0 0 0;
+  padding: 0 0 0 10;
+  }
+.header {
+  display: block;
+  position: relative;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+}
+.headermiddle {
+  display: inline-block;
+  position: relative;
+  height: 13;
+  padding: 0 0 0 3;
+  background: #6699CC;
+  text-align: left;
+  vertical-align: middle;
+  width: 591px;
+}
+.headerleft {
+  display: inline-block;
+  position: relative;
+  float: left;
+  height: 13;
+  width: 3;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  text-align: left;
+  vertical-align: middle;
+  background: url("imgs/roundcap-left.png") no-repeat;
+}
+.headerright {
+  display: inline-block;
+  position: relative;
+  float: right;
+  height: 13;
+  width: 3;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  text-align: right;
+  vertical-align: middle;
+  background: url("imgs/roundcap-right.png") no-repeat;
+}
+#sf2knewfighter {
+  display: inline-block;
+  position: relative;
+  width: 257;
+  height: 25;
+  clear: both;
+  top: 78;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+}
+#sf2kreturnlogin {
+  display: inline-block;
+  position: relative;
+  width: 257;
+  height: 91;
+  clear: both;
+  top: 100;
+  left: 10; 
+  text-align: center;
+  vertical-align: middle;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+}
+#sf2kforgotpwbody {
+  display: inline-block;
+  position: relative;
+  width: 257;
+  height: 91;
+  clear: both;
+  top: 100;
+  left: 10; 
+  text-align: center;
+  vertical-align: middle;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+}
+#sf2kforgotpwbutton {
+  display: inline-block;
+  position: relative;
+  width: 19;
+  height: 19;
+  top: 158;
+  left: -42;
+}
+#sf2ksizebuttons {
+  display: block;
+  position: relative;
+  width: 60;
+  height: 18;
+  top: 0;
+  left: 471;
+}
+</style>
+</head>
+<body>
+    <script src="jquery-2.0.3.js"></script>
+    <!-- <script type="text/javascript">
+    $( document ).ready(function() {
+        $( "#sf2kreturnlogin" ).show();
+        $( "#sf2kforgotpw" ).hide();
+        $( "#sf2kforgotpwbutton" ).click(function ( event ) {
+            $( "#sf2kreturnlogin" ).hide();
+            $( "#sf2kforgotpw" ).show();
+        })
+    }); 
+    </script> -->
+    <script type="text/javascript">
+        function confirm_alert(node) {
+            return confirm("Resizing will reload your connection, kicking you out of any game you're in. Is that OK?");
+        }
+        function open2xGame() {
+            $('#sf2kgameiframe').attr('src','imgs/sf2k-double-background.png');
+            Shadowbox.open({
+                content: '/game/?double=1',
+                player: 'iframe',
+                height: 552,
+                width: 1056
+            })
+                return false;
+        }
+        function close2xGame() {
+            Shadowbox.close();
+            $('#sf2kgameiframe').attr('src','/game/');
+        }
+    </script>
+<div id="sf2kmain">
+<div id="sf2kmainheader">
+<div id="sf2klogo"><img src="imgs/titlesm.gif" width=132 height=68 border=0></div>
+<div id="sf2kmenu"><div id="sf2kmenuitem"><BR><img src="imgs/play-header.png" width=36 height=9 border=0><br><img src="imgs/icon_play.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="help.html"><img src="imgs/help-header.png" width=34 height=9 border=0><BR><img src="imgs/icon_help.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><img src="imgs/rankings-header.png" width=70 height=9 border=0><BR><img src="imgs/icon_rankings.png" border=0 vspace=3></div><div id="sf2kmenuitem"><a href="honorcode.html"><img src="imgs/honorcode-header.png" width=46 height=18 border=0><BR><img src="imgs/icon_honor.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><img src="imgs/sf2ksource-header.png" width=57 height=18 border=0><BR><img src="imgs/icon_source.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="credits.html"><img src="imgs/credits-header.png" width=57 height=9 border=0><BR><img src="imgs/icon_credits.png" border=0 vspace=3></a></div></div>
+<div id="sf2kloginbox"><!-- FifteenLetterJo<BR><a href="<img src="imgs/portrait_sample.gif" border=0><BR>--><a href="/user/logout/" target="gameiframe">LOGOUT</a></div> 
+</div>
+<div id="sf2kgamebox">
+<iframe src="/game" width="528" height="276" seamless scrolling="no" id="sf2kgameiframe" name="gameiframe" frameborder="0" ></iframe>
+    <div id="sf2ksizebuttons">
+        <img src="imgs/1x-button-depressed.png" height="18" width="28"><a href="javascript:open2xGame();" onClick="return confirm_alert(this);"><img src="imgs/2x-button.png" height="18" width="28"></a>
+    </div>
+</div>
+<div id="sf2kloginformbox">
+    <div id="sf2knewfighter">
+        <span style="vertical-align: 5">Click </span><IMG SRC="imgs/here-button.png" width="45" height="19"><span style="vertical-align: 5"> to create your SiSSYFiGHTER.</span>
+    </div>
+    <br>
+    <div id="sf2kreturnlogin">
+        <form>SiSSYFiGHTER name: <input type="text" size="13" max="13"><br>Password: <input type="text" size="10"><br><br><span style="vertical-align: 5">then click </span><IMG SRC="imgs/ok-button.png" width="30" height="19"></form>
+    </div>
+    <div id="sf2kforgotpwbody"><form>SiSSYFiGHTER name: <input type="text" size="13" max="13"><br><br>Now click <span style="vertical-align: -5"><IMG SRC="imgs/reset-button.png" width="55" height="19"></span><br><span style="line-height: 150%">and we'll e-mail you a link to reset your password.</span></form></div>
+    <div id="sf2kforgotpwbutton"><IMG SRC="imgs/question-button.png" width="19" height="19"></div>
+</div>
+<div id="sf2kforgotpwbox">
+    <div id="sf2knewfighter">
+        <span style="vertical-align: 5">Click </span><IMG SRC="imgs/here-button.png" width="45" height="19"><span style="vertical-align: 5"> to create your SiSSYFiGHTER.</span>
+    </div>
+    <br>
+    <div id="sf2kforgotpwbody"><form>SiSSYFiGHTER name: <input type="text" size="13" max="13"><br><br>Now click <span style="vertical-align: -5"><IMG SRC="imgs/reset-button.png" width="55" height="19"></span><br><span style="line-height: 150%">and we'll e-mail you a link to reset your password.</span></form></div>
+    <div id="sf2kforgotpwbutton"><IMG SRC="imgs/question-button.png" width="19" height="19"></div>
+</div>
+<div id="contentarea">
+<div class="header"><span class="headerleft"></span><span class="headermiddle"><img src="imgs/news-header.png" height=9 width=39 vspace=2></span><span class="headerright"></span></div>
+<div class="content"><p><strong>3/2014</strong> - SiSSYFiGHT beta testing continues! Thanks for showing up to help us work out some of the remaining kinks in the system. <strong>To get started,</strong> register with any name and password you like. If someone isn't already using it for this beta test, you're good to go! These accounts won't be around past the beta period, but if you need to leave and come back during the beta, you should be able to use the name and password you registered with.</p>
+
+<p><strong>Remember: this is a beta!</strong> You'll probably discover that some things aren't working yet, or at least not how you'd expect them to. There are many features from classic SiSSYFiGHT, as well as new additions, that we haven't developed yet. These include the ability to create your own game rooms -- so for now, please play in one of the pre-made game rooms.</p>
+
+<p><strong>Send us your bug reports.</strong> If you do notice something strange or broken about how the game's working, <A HREF="https://docs.google.com/forms/d/1lLWMiJlPY2hu5SJhrNUeacD--9F_wtsIEHiddGl18UQ/viewform" target='_blank'>please click here to fill out a bug report,</A> and be sure to include details about your browser and system. That information will help us track the problems down and bring SiSSYFiGHT closer to completion! <strong>SPECIAL NOTE:</strong> We're definitely on the lookout for anything that seems off or misaligned about the end-of-turn polaroids, where you see your SiSSYFiGHTers scratching, teasing, tattling, etc. If you spot something that looks like it's in the wrong place or visually messed-up, file a bug report to tell us!</p>
+
+<p><strong>If you haven't played before,</strong> take a look at <A HREF="http://halfrobot.com/sissyfight/testhelp.html" target='_blank'>our help page.</A> There's a guide at the top to help you get started!</p>
+
+<p>Here are some things that are <strong>planned but not done yet</strong> - you don't have to file bug reports about them:<ul><li>Game: Boot menu to kick out troublemakers
+<li>Scoring and leaderboards
+<li>Special outfit options for Kickstarter backers
+<li>Source code download page (gotta finish the code first!)
+<li>Custom game rules
+<li>Complete registration & login experience</p></div>
+<div class="header"><span class="headerleft"></span><span class="headermiddle"><img src="imgs/sf2kcommunity-header.png" height=9 width=121 vspace=2></span><span class="headerright"></span></div>
+<div class="content"><p>The SiSSYFiGHT 2000 community lives! Here are some links to places where SiSSYFiGHTers gather. Disclaimer: these sights aren't managed or by the SiSSYFiGHT Returns team; they're independent creations of SiSSYFiGHT community members.</p><ul><li><A HREF="http://sissyfightboards.com">The SiSSYFiGHT 2000 Message Boards</A>
+<li><A HREF="https://www.facebook.com/groups/2213567417/">The SiSSYFiGHT Facebook group</A>
+<li><A HREF="http://sissyfightschoolboard.yuku.com/">Ramona Q’s SiSSYFiGHT School Board Forums</A></ul><br></div>
+<!-- <div class="header"><span class="headerleft"></span><span class="headermiddle"><img src="imgs/tipjar-header.png" height=9 width=53 vspace=2></span><span class="headerright"></span></div>
+<div class="content"><p>SiSSYFiGHT 2000 is a free and open-source project. Donations pay for hosting and technical maintenance. Donate here. Thanks for your support!</p><br></div> -->
+</div>
+</div>
+
+</body>
+</html>

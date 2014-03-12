@@ -10,12 +10,16 @@ module.exports = function(app) {
 	
 	// homepage
 	app.get('/', function(req, res) {
+		res.redirect('/site/'); // temporary: redirect to static site
+	});
+	
+	app.get('/user/start', function(req, res) {
 		var flash = req.session.flash;
 		delete req.session['flash'];
 		if (req.session.user) {
 			res.redirect('/game/');
 		}
-		res.render('index', {user: req.session.user, loginAttempt:req.session.loginAttempt, flash:flash});
+		res.render('login', {user: req.session.user, loginAttempt:req.session.loginAttempt, flash:flash});
 	});
 	
 	// user -----------
@@ -25,7 +29,7 @@ module.exports = function(app) {
 			if (err) {
 				console.log("/user/login checklogin trouble: " + err);
 				req.session.flash = {login: "Database trouble!"};
-				res.redirect('/');
+				res.redirect('/user/start');
 			}
 			else {
 				if (user) {
@@ -37,7 +41,7 @@ module.exports = function(app) {
 					delete req.session['user'];
 					req.session.flash = {login: "Wrong username or password"};
 					req.session.loginAttempt = {nickname:req.body.nickname};
-					res.redirect('/');
+					res.redirect('/user/start');
 				}
 			}
 		});
@@ -45,11 +49,11 @@ module.exports = function(app) {
 	
 	app.get('/user/logout', function(req, res) {
 		req.session.destroy();
-		res.redirect('/');
+		res.redirect('/user/start');
 	});
 	app.post('/user/logout', function(req, res) {
 		req.session.destroy();
-		res.redirect('/');
+		res.redirect('/user/start');
 	});
 	
 	app.post('/user/new', function(req, res) {
@@ -59,7 +63,7 @@ module.exports = function(app) {
 			if (user) {
 				delete req.session['user'];
 				req.session.flash = {'newUser': 'Sorry, the name '+req.body.nickname+' is already taken.'};
-				res.redirect('/');
+				res.redirect('/user/start');
 			}
 			else {
 				User.createUser({nickname:req.body.nickname, password:req.body.password}, function(err, user) {
@@ -67,11 +71,11 @@ module.exports = function(app) {
 						delete req.session['user'];
 						console.log('/user/new: createUser error: ' + err);
 						req.session.flash = {'newUser':'Database trouble!'};
-						res.redirect('/');						
+						res.redirect('/user/start');						
 					}
 					else {
 						req.session.user = user; //{nickname:user.nickname, id:user.id};
-						res.redirect('/');
+						res.redirect('/user/start');
 					}
 				})
 			}
@@ -101,7 +105,7 @@ module.exports = function(app) {
 		}
 		else {
 			req.session.flash = {login: "Please log in"};
-			res.redirect('/');
+			res.redirect('/user/start');
 		}
 		
 	});
