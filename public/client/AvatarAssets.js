@@ -320,7 +320,7 @@ sf.Avatar.getAddonSprites = function (id, look) { // pose, direction, skincolor)
 			sprite.x = 0;
 		}
 		sprite['addon'] = true;
-		sprite['info'] = "#"+item.id + " layer " + item.layers[layerIndex] + " sheet frame " + frameNum;
+		sprite['info'] = item.name + " #"+item.id + " layer " + item.layers[layerIndex] + " sheet frame " + frameNum;
 		sprites.push({layer:item.layers[layerIndex], sprite:sprite});
 	}
 	
