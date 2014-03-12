@@ -85,7 +85,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		// set up caption html text
 		this.items.caption.setFakeScale(g.gameScale);
 		this.items.caption.setSize(245, 25);
-		this.items.caption.setPosition(134, 222);
+		this.items.caption.setPosition(134, 218);
 		this.items.caption.htmlElement.textAlign = 'center';
 		this.items.caption.htmlElement.lineWidth = 237;
 		this.items.caption.setVisible(true);
@@ -123,7 +123,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.btn_done.x = 288 + step;
 		
 		this.items.caption.htmlElement.textContent = this.results[n].text;
-		this.items.caption.setPosition(134+step, 222); // HTMLElement is positioned relative to canvas rather than parent
+		this.items.caption.setPosition(134+step, 218); // HTMLElement is positioned relative to canvas rather than parent
 		this.items.caption.setVisible(true);
 		
 		this.makeScene(this.items.scene, this.results[n]);
