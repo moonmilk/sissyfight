@@ -12,6 +12,9 @@ module.exports = function(app) {
 	app.get('/', function(req, res) {
 		var flash = req.session.flash;
 		delete req.session['flash'];
+		if (req.session.user) {
+			res.redirect('/game/');
+		}
 		res.render('index', {user: req.session.user, loginAttempt:req.session.loginAttempt, flash:flash});
 	});
 	
