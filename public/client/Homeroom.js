@@ -215,7 +215,7 @@ var p = Homeroom.prototype = new createjs.Container();
 	
 	// someone said something
 	p.handlesay = function(event) {
-		this.chatLog("<b>" + event.data.nickname + "</b>: " + event.data.text);
+		this.chatLog("<span class='homeroomChatNickname'>" + event.data.nickname + ":</span> " + event.data.text);
 	}
 	
 	
