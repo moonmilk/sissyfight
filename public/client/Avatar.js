@@ -343,6 +343,20 @@ var p = Avatar.prototype = new createjs.Container();
 	}
 
 	
+	// move the costume bg layer (layer 1) to a new parent - used to improve layering in GameRoomResults
+	// (layer 0 is the overall bg layer, for things like bodyguard and phone booth; layer 1 is for body-worn background stuff like wings and tail)
+	p.moveCostumeBgToLayer = function(newLayer) {
+		var offset = this.localToLocal(0, 0, newLayer);
+		var n = this.layers[1].children.length;
+		for (var i=0; i<n; i++) {
+			var sprite = this.layers[1].getChildAt(0);
+			this.layers[1].removeChildAt(0);
+			newLayer.addChild(sprite);
+			sprite.x += offset.x;
+			sprite.y += offset.y;
+		}
+	}
+	
 	
 
 	p.prepareAssets = function() {

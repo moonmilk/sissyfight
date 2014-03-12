@@ -50,6 +50,11 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		this.items.scene.mask.graphics.beginFill('#fff').rect(0, 0, 319, 95).endFill();
 		this.items.scene.mask.x = 6;
 		this.items.scene.mask.y = 6;
+		
+		// separate scene into bg layer (for avatar wings and the like) and fg layer
+		this.items.scene.avatar_bg = this.items.scene.addChild(new createjs.Container());
+		this.items.scene.avatar_fg = this.items.scene.addChild(new createjs.Container());
+
 
 		this.items.caption = new createjs.DOMElement(document.getElementById('gameroomCaption'));
 		
@@ -147,7 +152,8 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	
 	p.makeScene = function(scene, results) {
 		// clear out previous scene, if any
-		scene.removeAllChildren();
+		scene.avatar_bg.removeAllChildren();
+		scene.avatar_fg.removeAllChildren();
 		
 		switch (results.scene) {
 			case 'cower':
@@ -221,6 +227,12 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		return avatar
 	}
 	
+	// shortcut: place avatar in fg layer, move its layer 1 to bg layer
+	p.placeAvatar = function(scene, avatar) {
+		scene.avatar_fg.addChild(avatar);
+		avatar.moveCostumeBgToLayer(scene.avatar_bg);
+	}
+	
 
 	// One player cowering, successfully or not, alone or with grabber or scratcher
 	// code: {victim: playerID, cower: 'good' | 'useless' | 'penalty', from: 'grab' | 'scratch' | null, attacker: attackerID | null}
@@ -245,7 +257,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		}
 
 		var victimAvatar = this.makeAvatar(results.code.victim, results.damage, {expression: victimExpression, pose: sf.Avatar.poses.COWERING, headdir:1, bodydir:1}, this.MIDPOINT-60);
-		scene.addChild(victimAvatar);
+		this.placeAvatar(scene, victimAvatar);
 		
 		if (results.code.attacker) {
 			var attackerPose = sf.Avatar.poses.SCRATCHING;
@@ -254,7 +266,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			var attackerOffset = 55;
 		
 			var attackerAvatar = this.makeAvatar(results.code.attacker, results.damage, {expression: sf.Avatar.expressions.NEUTRAL, pose:attackerPose, headdir:0, bodydir:0}, this.MIDPOINT-60+attackerOffset);
-			scene.addChild(attackerAvatar);
+			this.placeAvatar(scene, attackerAvatar);
 		}
 		
 	}
@@ -296,20 +308,20 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		// draw the grabbed victim
 		var grabbedAvatar = this.makeAvatar(results.code.victim, results.damage, 
 			{expression: victimExpression, pose: victimPose, overlays: victimOverlays, headdir:0, bodydir:0}, midpoint-30);
-		scene.addChild(grabbedAvatar);
+		this.placeAvatar(scene, grabbedAvatar);
 		
 		// draw the grabbers
 		for (var i=results.code.grabbers.length-1; i>=0; i--) {
 			var grabberAvatar = this.makeAvatar(results.code.grabbers[i], results.damage, 
 				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.GRABBING, headdir:1, bodydir:1}, midpoint-66-20*i);
-			scene.addChild(grabberAvatar);
+			this.placeAvatar(scene, grabberAvatar);
 		}
 
 		// draw the scratchers
 		for (var i=0; i<results.code.scratchers.length; i++) {
 			var grabberAvatar = this.makeAvatar(results.code.scratchers[i], results.damage, 
 				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.SCRATCHING, headdir:0, bodydir:0}, midpoint-30+37+25*i);
-			scene.addChild(grabberAvatar);
+			this.placeAvatar(scene, grabberAvatar);
 		}
 		
 	}
@@ -320,11 +332,11 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		
 		var leftScratcher = this.makeAvatar(results.code.scratchers[0], results.damage,
 			{expression: sf.Avatar.expressions.PAINED, pose:sf.Avatar.poses.SCRATCHING, overlays:[sf.Avatar.overlays.SCRATCH], headdir:0, bodydir:1}, this.MIDPOINT-80);
-		scene.addChild(leftScratcher);
+		this.placeAvatar(scene, leftScratcher);
 		
 		var rightScratcher = this.makeAvatar(results.code.scratchers[1], results.damage,
 			{expression: sf.Avatar.expressions.PAINED, pose:sf.Avatar.poses.SCRATCHING, overlays:[sf.Avatar.overlays.SCRATCH], headdir:1, bodydir:0}, this.MIDPOINT-10);
-		scene.addChild(rightScratcher);
+		this.placeAvatar(scene, rightScratcher);
 	}	
 	
 	// two players tease each other, tease fails
@@ -333,11 +345,11 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		
 		var leftTeaser = this.makeAvatar(results.code.teasers[0], results.damage,
 			{expression: sf.Avatar.expressions.NEUTRAL, pose:sf.Avatar.poses.TEASING, headdir:1, bodydir:1}, this.MIDPOINT-90);
-		scene.addChild(leftTeaser);
+		this.placeAvatar(scene, leftTeaser);
 		
 		var rightTeaser = this.makeAvatar(results.code.teasers[1], results.damage,
 			{expression: sf.Avatar.expressions.NEUTRAL, pose:sf.Avatar.poses.TEASING, headdir:0, bodydir:0}, this.MIDPOINT+10);
-		scene.addChild(rightTeaser);
+		this.placeAvatar(scene, rightTeaser);
 	}
 	
 	// victim is teased by one or more players
@@ -357,12 +369,12 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		
 		var victimAvatar = this.makeAvatar(results.code.victim, results.damage,
 			{expression: victimExpression, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT + 30);
-		scene.addChild(victimAvatar);
+		this.placeAvatar(scene, victimAvatar);
 		
 		for (var i=0; i<results.code.teasers.length; i++) {
 			var teaserAvatar = this.makeAvatar(results.code.teasers[i], results.damage,
 				{expression: teasersExpression, pose: sf.Avatar.poses.TEASING, headdir:1, bodydir:1}, this.MIDPOINT-35 - 45*i);
-			scene.addChild(teaserAvatar);	
+			this.placeAvatar(scene, teaserAvatar);	
 		}	
 		
 	}
@@ -374,13 +386,13 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		var avX = -120;
 		var tattlerAvatar = this.makeAvatar(results.code.tattler, results.damage,
 			{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.TATTLING, headdir:0, bodydir:0}, this.MIDPOINT+avX);
-		scene.addChild(tattlerAvatar);
+		this.placeAvatar(scene, tattlerAvatar);
 		avX += 80;
 		
 		for (var i=0; i<results.code.victims.length; i++) {
 			var victimAvatar = this.makeAvatar(results.code.victims[i], results.damage,
 				{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT+avX);
-			scene.addChild(victimAvatar);
+			this.placeAvatar(scene, victimAvatar);
 			avX += 60;
 		}
 		avX += 20;
@@ -388,7 +400,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		for (var i=0; i<results.code.innocents.length; i++) {
 			var victimAvatar = this.makeAvatar(results.code.innocents[i], results.damage,
 				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT+avX);
-			scene.addChild(victimAvatar);
+			this.placeAvatar(scene, victimAvatar);
 			avX += 60;
 		}		
 		
@@ -402,7 +414,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		for (var i=0; i<results.code.tattlers.length; i++) {
 			var tattlerAvatar = this.makeAvatar(results.code.tattlers[i], results.damage,
 				{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL, headdir:0, bodydir:0}, this.MIDPOINT+avX);
-			scene.addChild(tattlerAvatar);
+			this.placeAvatar(scene, tattlerAvatar);
 			avX += 60;
 		}
 	}
@@ -416,7 +428,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		for (var i=0; i<results.code.lickers.length; i++) {
 			var tattlerAvatar = this.makeAvatar(results.code.lickers[i], results.damage,
 				{expression: sf.Avatar.expressions.CONTENT, pose: sf.Avatar.poses.LICKING, overlays:[sf.Avatar.overlays.LICK], headdir:0, bodydir:0}, this.MIDPOINT+avX);
-			scene.addChild(tattlerAvatar);
+			this.placeAvatar(scene, tattlerAvatar);
 			avX += 60;
 		}
 	}
@@ -428,7 +440,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
 			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.HUMILIATED, overlays:[sf.Avatar.overlays.TEARS], headdir:1, bodydir:1}, this.MIDPOINT-30);
 		loserAvatar.y -= 12;
-		scene.addChild(loserAvatar);
+		this.placeAvatar(scene, loserAvatar);
 		
 	}
 
@@ -438,7 +450,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	p.makeSceneTimeout = function(scene, results) {
 		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
 			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL,  headdir:1, bodydir:1}, this.MIDPOINT-30);
-		scene.addChild(loserAvatar);		
+		this.placeAvatar(scene, loserAvatar);		
 	}
 
 
@@ -447,7 +459,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 	p.makeSceneLeave = function(scene, results) {
 		var loserAvatar = this.makeAvatar(results.code.loser, results.damage,
 			{expression: sf.Avatar.expressions.SAD, pose: sf.Avatar.poses.NEUTRAL,  headdir:0, bodydir:0}, 0); // halfway out the door
-		scene.addChild(loserAvatar);		
+		this.placeAvatar(scene, loserAvatar);		
 	}
 
 
@@ -458,7 +470,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 		apology.textAlign = 'left';
 		apology.x = 10;
 		apology.y = 1
-		scene.addChild(apology);
+		this.placeAvatar(scene, apology);
 		
 		var tx = 50, step = 60;
 		
@@ -466,7 +478,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			var nobody = new createjs.Text("Nobody gained or lost points in this round.", '14 px Arial Bold', '#000000');
 			nobody.x = 10;
 			nobody.y = 40;
-			scene.addChild(nobody);
+			this.placeAvatar(scene, nobody);
 		}
 		
 		_.each(results.damage, function(points, id) {
@@ -478,7 +490,7 @@ var p = GameRoomResultsDisplay.prototype = new createjs.Container();
 			avatar.setLook(look);
 			avatar.x = tx;
 			avatar.y = 10;
-			scene.addChild(avatar);
+			this.placeAvatar(scene, avatar);
 			
 			
 			tx += step;
