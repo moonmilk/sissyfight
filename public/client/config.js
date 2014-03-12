@@ -8,22 +8,22 @@ var SCHOOL_ASSETS_TAG = 'angel'; // TODO: change this based on school
 
 
 // specify single font to use same font in both, or [single size font, double size font]
-var defaultFont = 'Anaheim';
+var defaultFont = 'pixeladeregular'; // optimum 13px
 var computerFont = 'VT323'
 config['fonts'] = {
 	dressingRoomAddons:		'10px ' + computerFont,
-	dressingRoomNickname:	'12px ' + defaultFont,
+	dressingRoomNickname:	'13px ' + defaultFont,
 	
 	homeroomAttendance:		'12px ' + computerFont,
 	homeroomAttendanceCount:'10px ' + computerFont,
-	homeroomRoomName:		'11px ' + defaultFont,
-	homeroomPlayerName:		'11px ' + defaultFont,
+	homeroomRoomName:		'13px ' + defaultFont,
+	homeroomPlayerName:		'13px ' + defaultFont,
 	
-	cueText:				'10px ' + defaultFont,
+	cueText:				'13px ' + defaultFont,
 	
-	gameResultsChalkboard:	'12px '	+ defaultFont,
-	gameRoomGameName:		'10px ' + defaultFont,
-	gamePlayerName:			'11px ' + defaultFont,
+	gameResultsChalkboard:	'13px '	+ defaultFont,
+	gameRoomGameName:		'13px ' + defaultFont,
+	gamePlayerName:			'13px ' + defaultFont,
 	gamePlayerNameSmall:	'9px ' + defaultFont,
 	
 	polaroidDamage:			'18px ' + defaultFont
