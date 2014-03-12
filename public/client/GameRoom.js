@@ -133,7 +133,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// set up chat entry field
 		this.chatEntry.setFakeScale(g.gameScale);
-		this.chatEntry.setPosition(6, 226);
+		this.chatEntry.setPosition(8, 228);
 		//this.chatEntry.setSize(76, 41);
 		this.chatEntry.setVisible(true);
 			
