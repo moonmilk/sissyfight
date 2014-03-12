@@ -126,7 +126,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatEntry.htmlElement.style.height = "43px";
 		*/
 		this.chatEntry.setFakeScale(g.gameScale);
-		this.chatEntry.setPosition(6, 227);
+		this.chatEntry.setPosition(7, 228);
 		//this.chatEntry.setSize(76, 42);
 		this.chatEntry.setVisible(true);
 		
