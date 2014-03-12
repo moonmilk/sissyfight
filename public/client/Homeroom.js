@@ -297,7 +297,10 @@ var p = Homeroom.prototype = new createjs.Container();
 	
 	// I said something
 	p.say = function(text) {
-		g.comm.writeEvent("say", {text: text});
+		// don't send blank space
+		if (text.trim().length > 0) {
+			g.comm.writeEvent("say", {text: text});
+		}
 	}
 	
 	
