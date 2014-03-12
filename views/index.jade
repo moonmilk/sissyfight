@@ -5,47 +5,52 @@ block javascript
 	script(src="javascripts/jquery.alphanum.js")
 
 block content
-	if (user)
-		p= 'hello ' + user.nickname + '!'
-		p: form(method='post',action='/user/logout')
-			input(type='submit', value='log out')
-			
-		h2 
-			a(href='/game/') go to the game (regular size)
-		h2
-			a(href='/game/?double=1') go to the game (double size)
-			
-	else
-		h3 LOGIN
-		if (flash && flash.login)
-			div.errorFlash= flash.login
-		form(method='post',action='/user/login')
-			label(for='nickname') nickname
-			input(class='nickname', name='nickname', maxlength=13, value=(loginAttempt ? loginAttempt.nickname : ""))
-			br
-			label(for='password') password
-			input(type='password', name='password')
-			br
-			input(type='submit', value='log in')
-			
-			
-		h3 REGISTER
-		if (flash && flash.newUser)
-			div.errorFlash= flash.newUser
-		form(method='post',action='/user/new')
-			label(for='nickname') nickname
-			input(class='nickname', name='nickname', maxlength=13)
-			br
-			label(for='password') password
-			input(type='password', name='password')		
-			//
+	div#loginbox
+		if (user)
+			p= 'hello ' + user.nickname + '!'
+			p: form(method='post',action='/user/logout')
+				input(type='submit', value='log out')
+				
+			h2 
+				a(href='/game/') go to the game (regular size)
+			h2
+				a(href='/game/?double=1') go to the game (double size)
+				
+		else
+			h3 LOGIN
+			if (flash && flash.login)
+				div.errorFlash= flash.login
+			form(method='post',action='/user/login')
+				label(for='nickname') nickname
+				input(class='nickname', name='nickname', maxlength=13, value=(loginAttempt ? loginAttempt.nickname : ""))
 				br
-				label(for='password2') password again, just in case
-				input(type='password', name='password2')
-			br
-			input(type='submit', value="I'm new!")
-			
+				label(for='password') password
+				input(type='password', name='password')
+				br
+				input(type='submit', value='log in')
+				
+				
+			h3 REGISTER
+			if (flash && flash.newUser)
+				div.errorFlash= flash.newUser
+			form(method='post',action='/user/new')
+				label(for='nickname') nickname
+				input(class='nickname', name='nickname', maxlength=13)
+				br
+				label(for='password') password
+				input(type='password', name='password')		
+				//
+					br
+					label(for='password2') password again, just in case
+					input(type='password', name='password2')
+				br
+				input(type='submit', value="I'm new!")
+				
 
+	style.
+		#loginbox {
+			margin: 15px;
+		}
 	
 
 	script.

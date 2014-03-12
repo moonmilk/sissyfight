@@ -28,17 +28,22 @@ module.exports = function(app) {
 				if (user) {
 					req.session.user = {nickname:user.nickname, id:user.id};
 					delete req.session['loginAttempt'];
+					res.redirect('/game/');
 				}
 				else {
 					delete req.session['user'];
 					req.session.flash = {login: "Wrong username or password"};
 					req.session.loginAttempt = {nickname:req.body.nickname};
+					res.redirect('/');
 				}
-				res.redirect('/');
 			}
 		});
 	});
 	
+	app.get('/user/logout', function(req, res) {
+		req.session.destroy();
+		res.redirect('/');
+	});
 	app.post('/user/logout', function(req, res) {
 		req.session.destroy();
 		res.redirect('/');
