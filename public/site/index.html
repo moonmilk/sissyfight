@@ -279,7 +279,7 @@ body {
 <div id="sf2kgamebox">
 <iframe src="/game" width="528" height="276" seamless scrolling="no" id="sf2kgameiframe" name="gameiframe" frameborder="0" ></iframe>
     <div id="sf2ksizebuttons">
-        <img src="imgs/1x-button-depressed.png" height="18" width="28"><a href="javascript:open2xGame();" onClick="return confirm_alert(this);"><img src="imgs/2x-button.png" height="18" width="28"></a>
+        <img src="imgs/1x-button-depressed.png" height="18" width="28"><a href="/game/?double=1" onClick="confirm_alert() && open2xGame(); return false"><img src="imgs/2x-button.png" height="18" width="28"></a>
     </div>
 </div>
 <div id="sf2kloginformbox">

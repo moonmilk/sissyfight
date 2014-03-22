@@ -20,7 +20,7 @@ block content
 			h3 LOGIN
 			if (flash && flash.login)
 				div.errorFlash= flash.login
-			form(method='post',action='/user/login')
+			form(method='post',action='/user/login' + double)
 				label(for='nickname') nickname
 				input(class='nickname', name='nickname', maxlength=13, value=(loginAttempt ? loginAttempt.nickname : ""))
 				br
@@ -33,7 +33,7 @@ block content
 			h3 REGISTER
 			if (flash && flash.newUser)
 				div.errorFlash= flash.newUser
-			form(method='post',action='/user/new')
+			form(method='post',action='/user/new' + double)
 				label(for='nickname') nickname
 				input(class='nickname', name='nickname', maxlength=13)
 				br
