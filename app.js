@@ -136,9 +136,18 @@ sockjs.installHandlers(server, {prefix:'/sox'});
 
 // schools
 var School = require('./gameObjects/school');
-var schools = {'666': new School({id:'666', name:'PS 666'})};
+// if in future we have more than one instance of each school, they should have ids like 666-1, 666-2, etc.
+// Client uses the part before the - to decide which assets to load.
+var schools = {
+	'666': new School({id:'666', name:'PS 666'}),
+	'angel': new School({id:'angel', name:'Sweet Sunny Angel Valley Middle School'}),
+	'franklin': new School({id: 'franklin', name:'Benjamin Franklin Washington Jefferson Lincoln Junior High'})
+};
 app.set('schools', schools);
-app.set('schoolDefault', '666');
+app.set('schoolDefault', 'angel');
+app.set('getSchoolInfo', function(id) {
+	return schools[id];
+});
 
 /*
 // make a lobby room

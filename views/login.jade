@@ -2,7 +2,7 @@ extends layout
 
 block javascript
 	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
-	script(src="javascripts/jquery.alphanum.js")
+	script(src="/javascripts/jquery.alphanum.js")
 
 block content
 	div#loginbox
@@ -20,7 +20,7 @@ block content
 			h3 LOGIN
 			if (flash && flash.login)
 				div.errorFlash= flash.login
-			form(method='post',action='/user/login' + double)
+			form(method='post',action='/user/login?' + query)
 				label(for='nickname') nickname
 				input(class='nickname', name='nickname', maxlength=13, value=(loginAttempt ? loginAttempt.nickname : ""))
 				br
@@ -33,7 +33,7 @@ block content
 			h3 REGISTER
 			if (flash && flash.newUser)
 				div.errorFlash= flash.newUser
-			form(method='post',action='/user/new' + double)
+			form(method='post',action='/user/new?' + query)
 				label(for='nickname') nickname
 				input(class='nickname', name='nickname', maxlength=13)
 				br

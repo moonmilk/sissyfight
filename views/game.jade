@@ -6,6 +6,23 @@ block meta
 block javascript
 	// script(src="https://getfirebug.com/firebug-lite.js#enableTrace")
 	
+	// set up useful variables
+	script(type='text/javascript').
+		var token = '#{token}';
+		var session = '#{session}';
+		var school = '#{school}';
+		
+		// big global variable for remembering stuff 
+		var g = {load:{}, dressing:{}, homeroom:{}, game:{}, schoolID: school};
+		
+		g.gameScale = '#{gameScale}';
+		
+		// sissyfight namespace
+		this.sf = this.sf||{};
+				
+
+		
+			
 	link(href='http://fonts.googleapis.com/css?family=VT323', rel='stylesheet', type='text/css')
 	link(href='http://fonts.googleapis.com/css?family=Anaheim', rel='stylesheet', type='text/css')
 	style.
@@ -53,18 +70,6 @@ block javascript
 	script(src="../client/Main.js")
 	
 	script(type='text/javascript').
-		var token = '#{token}';
-		var session = '#{session}';
-		var school = '#{school}';
-		
-		// big global variable for remembering stuff 
-		var g = {load:{}, dressing:{}, homeroom:{}, game:{}};
-		
-		g.gameScale = '#{gameScale}';
-		
-		// sissyfight namespace
-		this.sf = this.sf||{};
-				
 
 		sf.start = function(SockJS, auth, school) {
 			

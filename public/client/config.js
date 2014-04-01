@@ -4,8 +4,9 @@ config['avatar'] = {};
 var xoffset = 40;
 
 // which school-specific art to load?
-var SCHOOL_ASSETS_TAG = 'angel'; // TODO: change this based on school
-
+// get school tag from the school ID set by enclosing page
+//   eg. 666 -> 666, but angel-2 -> angel
+var SCHOOL_ASSETS_TAG = g.schoolID.split('-')[0]; 
 
 // specify single font to use same font in both, or [single size font, double size font]
 var defaultFont = 'pixeladeregular'; // optimum 13px
@@ -32,7 +33,7 @@ config.getFont = function(tag) {
 	var f = config.fonts[tag];
 	var r = "";
 	if (typeof f == 'object') {
-		if (g.gameScale==2) r = f[1];
+		if (g.gameScale==2) r = f[1]; // todo: MAKE THIS WORK (g is not accessible here)
 		else r = f[0];
 	}
 	r = f;
