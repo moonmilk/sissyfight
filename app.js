@@ -83,7 +83,8 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 
-app.use(express.static(path.join(__dirname, 'public')));
+var assetCacheTime = 60 * 60 * 1000; // one hour timeout during dev, change to a week or so when things are stable: 7 * 24 * 60 * 60 * 1000; // one week
+app.use(express.static(path.join(__dirname, 'public'), {maxAge: assetCacheTime}));
 
 // add authentication if set up
 if (basic_auth) app.use(basic_auth);
