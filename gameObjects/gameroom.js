@@ -13,7 +13,8 @@ function GameRoom(params) {
 	
 	// room access
 	this.password = undefined; 	// not used yet
-	this.blockedUsers = []; 	// also not yet
+	this.blockedUsers = []; 	// list of ids of users who've been booted from the room
+	this.bootVotes = {};		// map: boot voter connection : boot target id
 	
 	// voting to start a game (everyone in room must have clicked Start; need at least 3 players to start)
 	this.startVotes = {};
@@ -54,10 +55,12 @@ GameRoom.prototype.getInfo = function(avatars) {
 	else info.status = 'open';
 	
 	if (avatars) {
-		// add startVotes to info so latecomers to game can see who has already pressed start
+		// add startVotes and bootVotes to info so latecomers to game can see who has already pressed start and who's getting booted
+		var bootVotes = this.countBootVotes();
 		info.occupants = _.map(this.occupants, function(conn){
 			return {
 				started:	this.startVotes[conn],
+				bootVotes:	bootVotes[conn.user.id] || 0,
 				id:			conn.user.id,
 				nickname:	conn.user.nickname,
 				avatar:		conn.user.avatar
@@ -79,6 +82,9 @@ GameRoom.prototype.join = function(conn, done) {
 	}
 	else if (this.occupants.length >= this.maxUsers) {
 		if (done) done({where:'gameroom', room:this.id, roomName:this.name, error:"full", message: "Game is full"});
+	}
+	else if (this.blockedUsers.indexOf(conn.user.id) != -1) {
+		if (done) done({where:'gameroom', room:this.id, roomName:this.name, error:"booted", message: "You've been booted from this room"});
 	}
 	// future: check for password?
 
@@ -127,8 +133,15 @@ GameRoom.prototype.leave = function(conn, done) {
 			// clear start vote
 			delete this.startVotes[conn];
 			
+			// clear boot vote
+			delete this.bootVotes[conn];
+			// delete any boot votes against me
+			this.bootVotes = _.omit(this.bootVotes, function(id) {return id==conn.user.id});
+			
 			// let the game know, if any
 			if (this.game) this.game.leave(conn);
+			// ...if not in game, update boot vote status in case votes have changed
+			else this.bootUpdate();
 			
 			// if nobody's left, delete the game
 			if (this.occupants.length==0) this.game = undefined;
@@ -184,14 +197,15 @@ GameRoom.prototype.ping = function(conn, data) {
 GameRoom.prototype.act = function(conn, data) {
 	//console.log("GameRoom: got action", data, "from", conn.user.nickname,'in gameroom', this.name, this.id);
 	
-	// let everyone know the user chose an action, except timeout which doesn't count!
-	if (data.action != 'timeout') this.broadcast("gameEvent", {event:'acted', id:conn.user.id});
+	// let everyone know the user chose an action, except timeout and boot / don't boot
+	if (data.action != 'timeout' && data.action != 'boot' && data.action != 'dont') this.broadcast("gameEvent", {event:'acted', id:conn.user.id});
 
 	// if there's a game running, let it handle the action
 	if (this.game) this.game.act(conn, data);
 	
 	else {
 		if (data.action=='start') {
+			this.bootVotes = {};
 			this.startVotes[conn] = true;
 			var votes = _.size(this.startVotes);
 			if (votes >= GameRoom.MIN_PLAYERS && votes==this.occupants.length) {
@@ -201,9 +215,68 @@ GameRoom.prototype.act = function(conn, data) {
 				this.startGame();
 			}
 		}
+		else if (data.action=='boot' || data.action=='dont') {
+			// boot has a target, dont has no target
+			if (data.target) this.bootVotes[conn] = data.target;
+			else delete this.bootVotes[conn];
+			this.bootUpdate();
+		}
 	}
 }
 
+
+// check if anyone is booted; update boot votes for client
+GameRoom.prototype.bootUpdate = function() {
+	// count the votes
+	var counter = this.countBootVotes();
+	
+	// did someone get booted? (everyone else voted to boot them, minimum 2)
+	var threshold = this.occupants.length - 1; 
+	if (threshold >= 2) {
+		var booted = _.findKey(counter, function(votes) { 
+			return (votes >= threshold);
+		});
+		if (booted) {
+			this.bootByID(booted);
+			return; // don't send boot counter update
+		}
+	}
+	
+	// send boot counter update
+	this.broadcast("gameEvent", {event:'bootVotes', votes:counter});
+}
+
+GameRoom.prototype.countBootVotes = function() {
+	var counter = {};
+	_.each(this.bootVotes, function(target) {
+		if (counter[target]) counter[target]++;
+		else counter[target] = 1;
+	}, this);
+	return counter;
+}
+
+// boot someone!
+GameRoom.prototype.bootByID = function(bootedID) {
+	// clear the votes
+	this.bootVotes = {};
+	
+	// kick out the target
+	var bootedConn = _.find(this.occupants, function(conn) {
+		return conn.user.id == bootedID;
+	}, this);
+	if (bootedConn) {
+		this.blockedUsers.push(bootedConn.user.id);
+		bootedConn.bootMe();
+	}
+	else {
+		// couldn't find that connection? probably can't happen, but just in case:
+		console.log("GameRoom", this.id, this.name, "could't find booted user with id", bootedID);
+	}
+	
+	// tell the clients
+	this.broadcast("gameEvent", {event:'booted', target:bootedID});
+
+}
 
 
 

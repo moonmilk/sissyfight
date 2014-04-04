@@ -301,7 +301,12 @@ var p = GameRoom.prototype = new createjs.Container();
 				this.showCue("The game begins when everyone presses START.  You need 3 girls, but try playing with 5 or 6!");
 				break;
 			
-			
+			case 'bootVotes': // votes to boot each player: event.data.votes = {id:votes, ...}
+				_.each(this.playersByID, function(player, id) {
+					player.setBootVotes(event.data.votes[id] || 0);
+				}, this);
+				break;
+				
 			default:
 				console.log('GameRoom: got unknown gameEvent ', event.data);
 				break;
@@ -618,10 +623,9 @@ var p = GameRoom.prototype = new createjs.Container();
 			var whichMenu;  // nothing, boot, self, or action?
 			var clickedMe = (player.playerInfo.id == this.me)  // clicked on self avatar or other's avatar?
 			if (this.state=='pregame') {
-				return; // for now, hide the boot menu since the function's not implemented
-				
 				if (!clickedMe) whichMenu = 'boot';
 				else return;
+				
 			}
 			else if (this.state=='game') {
 				// disable all menus if current player has lost
@@ -657,7 +661,7 @@ var p = GameRoom.prototype = new createjs.Container();
 					sf.Sound.play('snd_action_select');
 				
 					var action = {action:selectedAction};
-					if (selectedAction=='grab' || selectedAction=='scratch' || selectedAction=='tease') {
+					if (selectedAction=='grab' || selectedAction=='scratch' || selectedAction=='tease' || selectedAction=='boot') {
 						action.target = player.playerInfo.id;
 					}
 					g.comm.writeEvent('act', action);
@@ -692,25 +696,31 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.items.actionStatusTag.player = undefined;
 		}
 		else {
-			// lick, tattle, and cower are always marked on self, regardless of who the user clicked on to choose them.	
-			if (action=='lick' || action=='cower' || action=='tattle') targetPlayer = this.playersByID[this.me];
-			
-			this.items.actionStatusTag.gotoAndStop('act_status_' + action);
-			this.items.actionStatusTag.visible = true;
-			this.items.actionStatusTag.player = targetPlayer;
-			
-			if (action != 'tattle') {
-				this.items.actionStatusTag.x = targetPlayer.x;				
+			// don't boot action hides the tag
+			if (action=='dont') {
+				this.items.actionStatusTag.visible = false;
 			}
 			else {
-				// tattle tag should be centered across all opponents, so find leftmost and rightmost and split the difference
-				// TODO: don't count opponents who have already lost the game
-				var leftmost = 9999, rightmost = 0;
-				_.each(this.playersByID, function(player) {
-					if (player.x < leftmost) leftmost = player.x;
-					if (player.x > rightmost) rightmost = player.x;
-				}, this);
-				this.items.actionStatusTag.x = Math.floor((leftmost + rightmost) / 2);
+				// lick, tattle, and cower are always marked on self, regardless of who the user clicked on to choose them.	
+				if (action=='lick' || action=='cower' || action=='tattle') targetPlayer = this.playersByID[this.me];
+				
+				this.items.actionStatusTag.gotoAndStop('act_status_' + action);
+				this.items.actionStatusTag.visible = true;
+				this.items.actionStatusTag.player = targetPlayer;
+				
+				if (action != 'tattle') {
+					this.items.actionStatusTag.x = targetPlayer.x;				
+				}
+				else {
+					// tattle tag should be centered across all opponents, so find leftmost and rightmost and split the difference
+					// TODO: don't count opponents who have already lost the game
+					var leftmost = 9999, rightmost = 0;
+					_.each(this.playersByID, function(player) {
+						if (player.x < leftmost) leftmost = player.x;
+						if (player.x > rightmost) rightmost = player.x;
+					}, this);
+					this.items.actionStatusTag.x = Math.floor((leftmost + rightmost) / 2);
+				}
 			}
 
 		}

@@ -244,8 +244,9 @@ config['manifest'] = [
 				boot_count_3:		[122, 531,   19, 39,  0, 0, 0],
 				boot_count_4:		[142, 531,   19, 39,  0, 0, 0],
 				boot_count_5:		[162, 531,   19, 39,  0, 0, 0],
-				boot_count_6:		[73, 617,   117, 57,  0, -30, -6],  // big BOOTED
+				boot_you_got_booted:[73, 617,   117, 57,  0, -30, -6],  // big BOOTED
 				boot_status_booted:	[102,573,    53, 11,  0, 26, 0],
+				act_status_boot:	[102,586,    36, 11,  0, -26, 0],
 				
 				self_menu_bg:		[88, 314,    82, 76,  0, 0, -31],	// offset relative to larger act_menu
 				act_menu_bg:		[3, 314, 	 82,107,  0, 0, 0],

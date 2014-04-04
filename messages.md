@@ -5,7 +5,7 @@ Stuff that gets sent over the socket between client and server.
 Server-to-client messages usually have, in additional to their other data (if any), error and message arguments.  
 Error will be false or undefined if there's no error, but if there was an error, error will be a short string 
 unique to that error (in case we need some sort of lookup table on the client), and message will be a description
-of the error (for debugging, probably not for end user).
+of the error (for debugging, probably not for end user).  If error has reload:true, client should reload when user clicks ok on error message popup.
 
 Server messages **go** and **error** have lots of variations, see below.
 
@@ -129,10 +129,10 @@ Server messages **go** and **error** have lots of variations, see below.
 
 *	**act** (up) - game action
 
-	args: **action** -- boot, start, cower, lolly, tattle, timeout, scratch, grab, tease
+	args: **action** -- boot, dont (don't boot), start, cower, lolly, tattle, timeout, scratch, grab, tease
 	**target** -- id of target player for boot, scratch, grab, tease actions
 	
 *	**gameEvent** (down: broadcast)
 	
-	args: **event** = booted(target=user id), startGame, status([player health]}, startTurn(time=seconds, lollies=#, tattles=#), countdown(time=seconds), acted(id=user id), endTurn(results=[...]), endGame(?)
+	args: **event** = bootVotes(votes={id:# of votes}), booted(target=user id), startGame, status([player health]}, startTurn(time=seconds, lollies=#, tattles=#), countdown(time=seconds), acted(id=user id), endTurn(results=[...]), endGame(?)
 	

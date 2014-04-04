@@ -51,6 +51,8 @@ module.exports = function(app, sockjs) {
 		
 		conn.on("login", loginListener);
 		
+		conn.bootMe = returnToHomeroomListener.bind(conn); // there's probably a less horrible way to do this!
+		
 
 	});
 	
@@ -274,6 +276,8 @@ module.exports = function(app, sockjs) {
 	function joinGameListener(data) {
 		var conn = this;
 		if (conn.room) {
+			var homeroom;
+			if (conn.room instanceof Homeroom) homeroom = conn.room;
 			conn.room.leave(conn, function(err) {
 				if (err) {
 					conn.writeEvent("error", err);
@@ -284,7 +288,19 @@ module.exports = function(app, sockjs) {
 							conn.writeEvent("error", err);
 						}
 						else {
-							joinGameRoom(conn, gameRoom);
+							joinGameRoom(conn, gameRoom, function(err) {
+								if (err) {
+									conn.writeEvent("error", err);
+									// failed to enter gameroom so try to get back into homeroom
+									if (homeroom) homeroom.join(conn, function(err) {
+										if (err) {
+											// things are really messed up if can't get back into the homeroom
+											conn.writeEvent("error", {error:"gamehomelimbo", message:"I got lost - please reload :(", reload:true});
+										}
+									});
+									else conn.writeEvent("error", {error:"gamehomelimbo2", message:"I got lost - please reload :(", reload:true});
+								}
+							});
 						}
 					});
 					
@@ -294,10 +310,10 @@ module.exports = function(app, sockjs) {
 		}
 	}
 	
-	function joinGameRoom(conn, gameRoom) {
+	function joinGameRoom(conn, gameRoom, done) {
 		gameRoom.join(conn, function(err, gameRoomInfo) {
 			if (err) {
-				conn.writeEvent("error", err);
+				if (done) done(err);
 			}
 			else {
 				// sort game occupants so that current player always appears first

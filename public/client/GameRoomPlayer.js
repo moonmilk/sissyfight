@@ -68,6 +68,11 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.health.x = 0;
 		this.items.health.y = 81;
 		this.items.health.visible = false;
+		
+		this.items.bootStatus = this.addChild(this.assets.boot_count_1.clone());
+		this.items.bootStatus.x = 0;
+		this.items.bootStatus.y = 81;
+		this.items.bootStatus.visible = false;
 
 		// text color is the same as the 2nd color in uniform palette - convert it to css rgb form:
 		//var textColor = 'rgb(' + config.colors.uniforms.vars[playerInfo.avatar.uniformcolor][1].join(',') + ')';
@@ -149,7 +154,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	
 	p.prepareAssets = function() {
 		this.assets = {};
-		_.each(['gameroom_bgitems', 'player_items'], function(s) {
+		_.each(['gameroom_items', 'gameroom_bgitems', 'player_items'], function(s) {
 			g.load.unpack(s, this.assets);
 		}, this);
 
@@ -294,6 +299,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	p.setHealth = function(h) {
 		this.items.health.gotoAndStop('heart_'+h);
 		this.items.health.visible = true;
+		this.items.bootStatus.visible = false;
 	}
 	p.setStatus = function(s) {
 		// for now, health is the only member of status
@@ -305,6 +311,16 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	}
 	p.hasLost = function() {
 		return (this.status.health==0);
+	}
+	
+	p.setBootVotes = function(v) {
+		if (v > 0 && v < 6) {
+			this.items.bootStatus.gotoAndStop("boot_count_" + v);
+			this.items.bootStatus.visible = true;
+		}
+		else {
+			this.items.bootStatus.visible = false;
+		}
 	}
 	
 	p.setFacing = function(facing) {
