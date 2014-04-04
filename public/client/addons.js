@@ -1692,7 +1692,7 @@ config.addons = [
             5
         ],
         "name": "Custom 4 - Crab Hat",
-        "poses": 1,
+        "poses": 2,
         "tier": 4
     },
     {
