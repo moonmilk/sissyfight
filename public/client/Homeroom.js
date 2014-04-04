@@ -5,8 +5,8 @@ this.sf = this.sf||{};
 
 (function() {
 
-var Homeroom = function(look, nickname, occupants, games) {
-  this.initialize(look, nickname, occupants, games);
+var Homeroom = function(look, nickname, occupants, games, booted) {
+  this.initialize(look, nickname, occupants, games, booted);
 }
 
 var p = Homeroom.prototype = new createjs.Container();
@@ -15,7 +15,7 @@ var p = Homeroom.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(look, nickname, occupants, games) {
+	p.initialize = function(look, nickname, occupants, games, booted) {
 		this.Container_initialize();	
 		
 		this.prepareAssets();
@@ -93,6 +93,21 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.avatar.y = 162;
 		
 		
+		// display when you get booted from a game room
+		if (booted) {
+			this.bootedOverlay = this.addChild(this.assets.booted_overlay);
+			this.bootedOverlay.x = 263;
+			this.bootedOverlay.y = 168;
+			this.bootedOverlay.visible = true;
+			this.bootedOverlay.alpha = 1.0;
+			this.bootedOverlay.startTime = createjs.Ticker.getTime();
+				// get ticks for updating booted display
+			this.handleTickBound = this.handleTick.bind(this);
+			createjs.Ticker.addEventListener('tick', this.handleTickBound);
+		}
+		
+		
+		
 		_.each(games, function(game) {
 			this.addGameListing(game);
 		}, this);
@@ -143,6 +158,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.createGameDialog.gameName.setVisible(false);
 		this.createGameDialog.gameName.htmlElement.value = "";
 		
+		
 		// set up message handlers
 		_.forOwn(this.MESSAGES, function(type) {
 			var handler = "handle" + type;
@@ -181,6 +197,26 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.createGameDialog.gameName.setVisible(false);
 		this.createGameDialog.gameName.htmlElement.onkeypress = null;
 		this.getStage().canvas.onmousewheel = null;
+		
+		if (this.handleTickBound) createjs.Ticker.removeEventListener('tick', this.handleTickBound);
+	}
+	
+	
+	// tick handler
+	//  -- only used to update the booted overlay
+	p.handleTick = function() {
+		if (!this.bootedOverlay) return;
+		
+		var t = createjs.Ticker.getTime() - this.bootedOverlay.startTime;
+		if (t > 1500 && t < 3000) {
+			this.bootedOverlay.alpha = 1.0 - (t-1500)/1500.0;
+		}
+		else if (t >= 3000) {
+			this.bootedOverlay.visible = false;
+			this.removeChild(this.bootedOverlay);
+			this.bootedOverlay = false;
+			createjs.Ticker.removeEventListener('tick', this.handleTickBound); // don't need ticks any more
+		}
 	}
 	
 	

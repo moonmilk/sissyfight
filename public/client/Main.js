@@ -131,7 +131,7 @@ var p = Main.prototype = new createjs.Container();
 	
 	p.openHomeroom = function(data) {
 		console.log("Opening homeroom");
-		this.homeroom = new sf.Homeroom(data.avatar, data.nickname, data.occupants, data.games);
+		this.homeroom = new sf.Homeroom(data.avatar, data.nickname, data.occupants, data.games, data.booted);
 		this.addChild(this.homeroom);
 		this.homeroom.start();
 	}

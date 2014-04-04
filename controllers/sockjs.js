@@ -51,8 +51,7 @@ module.exports = function(app, sockjs) {
 		
 		conn.on("login", loginListener);
 		
-		conn.bootMe = returnToHomeroomListener.bind(conn); // there's probably a less horrible way to do this!
-		
+		conn.bootMe = bootToHomeroomListener.bind(conn); // there's probably a less horrible way to do this!
 
 	});
 	
@@ -352,10 +351,11 @@ module.exports = function(app, sockjs) {
 	}
 	
 	
-	function returnToHomeroomListener(data) {
+	function bootToHomeroomListener(data) {
 		var conn = this;
 		if (!conn.room) {
 			// should not happen!
+			console.log("bootToHomeroomListener: connection has no room", conn.user.name);
 		}
 		else {
 			conn.room.leave(conn, function(err) {
@@ -368,7 +368,7 @@ module.exports = function(app, sockjs) {
 							conn.writeEvent("error", err);
 						}
 						else {
-							sendGoHomeroom(conn, homeroom, games);
+							sendGoHomeroom(conn, homeroom, games, true);
 						}
 					});				
 				}
@@ -376,8 +376,35 @@ module.exports = function(app, sockjs) {
 		}
 	}
 	
-	function sendGoHomeroom(conn, homeroom, games) {
-		conn.writeEvent("go", {to:'homeroom', games:games, avatar:conn.user.avatar, nickname:conn.user.nickname, occupants:homeroom.getOccupantProperties()});
+	// set booted = true if user was booted from gameroom
+	function returnToHomeroomListener(data, booted) {
+		var conn = this;
+		if (!conn.room) {
+			// should not happen!
+			console.log("returnToHomeroomListener: connection has no room", conn.user.name);
+		}
+		else {
+			conn.room.leave(conn, function(err) {
+				if (err) {
+					conn.writeEvent("error", err);
+				}
+				else {
+					joinHomeroom(conn, data, function(err, homeroom, games) {
+						if (err) {
+							conn.writeEvent("error", err);
+						}
+						else {
+							sendGoHomeroom(conn, homeroom, games, booted);
+						}
+					});				
+				}
+			})
+		}
+	}
+	
+	// set booted = true if user was booted from gameroom
+	function sendGoHomeroom(conn, homeroom, games, booted) {
+		conn.writeEvent("go", {to:'homeroom', games:games, avatar:conn.user.avatar, nickname:conn.user.nickname, occupants:homeroom.getOccupantProperties(), booted: (booted==true)});
 	}
 	
 	

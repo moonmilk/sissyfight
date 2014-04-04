@@ -180,7 +180,9 @@ config['manifest'] = [
 				btn_attendance_up:			[186, 2,	21,18,		0,	0,0],
 				btn_attendance_up_pressed:	[186, 2,	21,18,		0,	-1,-1],
 				btn_attendance_down:		[209, 2,	21,18,		0,	0,0],
-				btn_attendance_down_pressed:[209, 2,	21,18,		0,	-1,-1]
+				btn_attendance_down_pressed:[209, 2,	21,18,		0,	-1,-1],
+				
+				booted_overlay:				[3, 124,	128,64,		0, 0,0]
 			}
 		}
 	},
