@@ -4,11 +4,9 @@
 
 ## other included work
 
-pixelade font by Astramat - donationware
-http://www.dafont.com/astramat.d739
-http://www.astramat.com/c/index.html
-"In case of using this typeface in a web, you just have to send the URL
-by e-mail to typeface@astramat.com"
+Pixel Arial 11 font by Max
+http://www.dafont.com/font-comment.php?file=pixel_arial_11
+Listed as free, no license visible
 
 jquery alphanum plugin by Kevin Sheedy - GPLv2
 http://plugins.jquery.com/alphanum/

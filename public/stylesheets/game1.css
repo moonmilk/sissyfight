@@ -8,7 +8,7 @@
 }
 
 .homeroomText  {
-	font-size: 	13px;
+	font-size: 	8px;
 	line-height: 12px;
 }
 
@@ -40,13 +40,13 @@
 
 .gameroomChatNormal {
 	line-height: 	12px;
-	font-size: 		13px;
+	font-size: 		8px;
 	font-weight: 	normal;
 }
 
 .gameroomChatBig {
 	line-height: 	20px;
-	font-size: 		26px;
+	font-size: 		16px;
 	font-weight: 	550;		
 }
 
@@ -56,7 +56,7 @@
 }
 
 .captionText {
-	font-size: 		13px;
+	font-size: 		8px;
 	line-height: 	12px;
 	text-align: 	center;
 	

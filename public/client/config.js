@@ -9,25 +9,25 @@ var xoffset = 40;
 var SCHOOL_ASSETS_TAG = g.schoolID.split('-')[0]; 
 
 // specify single font to use same font in both, or [single size font, double size font]
-var defaultFont = 'pixeladeregular'; // optimum 13px
+var defaultFont = 'pixelarial'; // optimum 13px
 var computerFont = 'VT323'
 config['fonts'] = {
 	dressingRoomAddons:		'10px ' + computerFont,
-	dressingRoomNickname:	'13px ' + defaultFont,
+	dressingRoomNickname:	'8px ' + defaultFont,
 	
 	homeroomAttendance:		'12px ' + computerFont,
 	homeroomAttendanceCount:'10px ' + computerFont,
-	homeroomRoomName:		'13px ' + defaultFont,
-	homeroomPlayerName:		'13px ' + defaultFont,
+	homeroomRoomName:		'8px ' + defaultFont,
+	homeroomPlayerName:		'8px ' + defaultFont,
 	
-	cueText:				'13px ' + defaultFont,
+	cueText:				'8px ' + defaultFont,
 	
-	gameResultsChalkboard:	'13px '	+ defaultFont,
-	gameRoomGameName:		'13px ' + defaultFont,
-	gamePlayerName:			'13px ' + defaultFont,
-	gamePlayerNameSmall:	'9px ' + defaultFont,
+	gameResultsChalkboard:	'8px '	+ defaultFont,
+	gameRoomGameName:		'8px ' + defaultFont,
+	gamePlayerName:			'8px ' + defaultFont,
+	gamePlayerNameSmall:	'8px ' + defaultFont,
 	
-	polaroidDamage:			'18px ' + defaultFont
+	polaroidDamage:			'16px ' + defaultFont
 }
 config.getFont = function(tag) {
 	var f = config.fonts[tag];
