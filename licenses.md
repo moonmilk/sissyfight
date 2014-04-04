@@ -4,8 +4,8 @@
 
 ## other included work
 
-Pixel Arial 11 font by Max
-http://www.dafont.com/font-comment.php?file=pixel_arial_11
+Resource font by Danny Phantom
+http://www.dafont.com/resource.font
 Listed as free, no license visible
 
 jquery alphanum plugin by Kevin Sheedy - GPLv2
