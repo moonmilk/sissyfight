@@ -239,11 +239,11 @@ config['manifest'] = [
 				boot_menu_bg:		[88, 392,   82, 76,  0, 0, -31],	// offset relative to larger act_menu
 				boot_menu_boot:		[98, 469,   62, 15,  0, -10, -38],
 				boot_menu_dont:		[99, 490,   62, 23,  0, -11, -59],
-				boot_count_1:		[82, 531,   19, 39,  0, 0, 0],
-				boot_count_2:		[102, 531,   19, 39,  0, 0, 0],
-				boot_count_3:		[122, 531,   19, 39,  0, 0, 0],
-				boot_count_4:		[142, 531,   19, 39,  0, 0, 0],
-				boot_count_5:		[162, 531,   19, 39,  0, 0, 0],
+				boot_count_1:		[81, 530,   21, 41,  0, 0, 0],
+				boot_count_2:		[101, 530,   21, 41,  0, 0, 0],
+				boot_count_3:		[121, 530,   21, 41,  0, 0, 0],
+				boot_count_4:		[141, 530,   21, 41,  0, 0, 0],
+				boot_count_5:		[161, 530,   21, 41,  0, 0, 0],
 				boot_you_got_booted:[73, 617,   117, 57,  0, -30, -6],  // big BOOTED
 				boot_status_booted:	[102,573,    53, 11,  0, 26, 0],
 				act_status_boot:	[102,586,    36, 11,  0, -26, 0],

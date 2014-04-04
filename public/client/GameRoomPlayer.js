@@ -70,8 +70,8 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		this.items.health.visible = false;
 		
 		this.items.bootStatus = this.addChild(this.assets.boot_count_1.clone());
-		this.items.bootStatus.x = 0;
-		this.items.bootStatus.y = 81;
+		this.items.bootStatus.x = 35; // boot in the middle of the chest!
+		this.items.bootStatus.y = 134;
 		this.items.bootStatus.visible = false;
 
 		// text color is the same as the 2nd color in uniform palette - convert it to css rgb form:
