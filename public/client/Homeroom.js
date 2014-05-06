@@ -167,6 +167,9 @@ var p = Homeroom.prototype = new createjs.Container();
 			g.comm.addEventListener(type, bound);
 		}, this);
 		
+		this.createGameDialog.addEventListener('ok', this.handlebtn_newgame_ok.bind(this));
+		this.createGameDialog.addEventListener('cancel', this.handlebtn_newgame_cancel.bind(this));
+		
 		// make mute button state reflect mute prefs
 		this.setMuteButton();
 	
@@ -194,8 +197,8 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatEntry.setVisible(false);
 		this.chatRecord.setVisible(false);
 		this.chatEntry.htmlElement.onkeypress = null;
-		this.createGameDialog.destroy();
 		this.getStage().canvas.onmousewheel = null;
+		this.createGameDialog.destroy();
 		
 		if (this.handleTickBound) createjs.Ticker.removeEventListener('tick', this.handleTickBound);
 	}
@@ -446,30 +449,29 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.gameList.visible = false;
 		this.showAttendanceList(false);
 		this.createGameDialog.visible = true;
+		this.createGameDialog.open();
 	}
 	
 	p.handlebtn_newgame_cancel = function(event) {
-		sf.Sound.buttonClick();
 		this.gameList.visible = true;
 		this.createGameDialog.visible = false;
-		this.createGameDialog.gameName.setVisible(false);
+		this.createGameDialog.close();
 	}
 	
 	p.handlebtn_newgame_ok = function(event) {
-		sf.Sound.buttonClick();
 		this.gameList.visible = true;
 		this.createGameDialog.visible = false;	
-		this.createGameDialog.gameName.setVisible(false);
+		this.createGameDialog.close();
 		
-		var gameName = this.createGameDialog.gameName.htmlElement.value.trim();
-		if (gameName.length > 0) {
-			this.createGame(gameName);
+		if (event.gameName.length > 0) {
+			// todo: sanitize gameName
+			this.createGame(event.gameName, event.custom);
 			// todo: overlay to block ui events until server response
 		}	
 	}
 	
-	p.createGame = function(gameName) {
-		g.comm.writeEvent("newgame", {name: gameName});
+	p.createGame = function(gameName, custom) {
+		g.comm.writeEvent("newgame", {name: gameName, custom:custom});
 		// expected response: go to=gameroom
 		// todo: display error responses - name taken, too many rooms
 	}

@@ -27,23 +27,22 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 		this.items.gameName = new createjs.DOMElement(document.getElementById('homeroomCreateGameEntry'));
 		
 		this.items.gameName.setFakeScale(g.gameScale);
-		this.items.gameName.setPosition(293, 81);
+		this.items.gameName.setPosition(270, 49);
 		this.items.gameName.setSize(83, 12);
 		this.items.gameName.setVisible(false);
 		this.items.gameName.htmlElement.value = "";
 		
+		this.customGame = false;
 		this.moves = _.cloneDeep(config.homeroom.custom_games.regular.moves);
 		this.turnTime = 90;
 	}
 	
 	p.destroy = function() {
-		this.items.gameName.setVisible(false);
-		this.items.gameName.htmlElement.onkeypress = null;
+		this.close();
 	}
 	
-	
-	
 	p.open = function() {
+		this.enableCustom(false);
 		this.setGameType('regular');
 		this.setTurnTime(90);
 		this.items.gameName.setVisible(true);
@@ -51,8 +50,72 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 		this.items.gameName.htmlElement.focus();
 	}
 	
+	p.close = function() {
+		this.items.gameName.setVisible(false);
+		this.items.gameName.htmlElement.onkeypress = null;
+	}
+	
+		
+	// show or hide the custom game dialog
+	p.enableCustom = function(flag) {
+		this.items.regularLayout.visible = !flag;
+		this.items.customLayout.visible = flag;
+		this.customGame = flag;
+	}
+	
+	
+	// check for stupid custom games
+	p.checkReasonableRules = function() {
+		// get list of only enabled moves
+		var moves = _.filter(this.moves, function(a){return a});
+
+		// if no moves are enabled, that's stupid!
+		if (moves.length==0) return false;
+		
+		else if (moves.length==1) {
+			// cower only or lick only is stupid
+			if (this.moves.cower || this.moves.lick) return false;
+		}
+		
+		else if (moves.length==2) {
+			// just cower and lick is stupid
+			if (this.moves.cower && this.moves.lick) return false;
+		}
+		
+		// ok good enough
+		return true;
+	}
+	
 	
 	// click handlers
+	
+	// the non-special buttons
+	p.boringButtonClick = function(e, which) {
+		switch (which) {
+			case 'btn_specialrules_sel':
+				this.enableCustom(false);
+				break;
+			case 'btn_specialrules':
+				this.enableCustom(true);
+				break;
+			case 'btn_newgame_cancel':
+				this.dispatchEvent('cancel');
+				break;
+			case 'btn_newgame_ok':
+				var gameName = this.items.gameName.htmlElement.value.trim();
+				if (gameName.length == 0) break;
+				var custom = false;
+				if (this.customGame) {
+					if (!this.checkReasonableRules()) break;
+					custom = {turnTime:this.turnTime, moves:this.moves};
+				}
+				this.dispatchEvent({type:'ok', gameName:this.items.gameName.htmlElement.value.trim(), custom:custom});
+				break;
+			
+		}
+		sf.Sound.buttonClick();
+	}
+	
 	p.namedGameClick = function(e, gamename) {
 		this.setGameType(gamename); 
 		sf.Sound.buttonClick();
@@ -130,7 +193,7 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 		_.each(['btn_newgame_cancel', 'btn_newgame_ok', 'btn_specialrules', 'btn_specialrules_sel'], function(buttonName) {
 			var button = this.items[buttonName];
 			button.helper = new createjs.ButtonHelper(button, buttonName, buttonName, buttonName, false);
-			button.addEventListener('click', function() {console.log("clicked " + buttonName); sf.Sound.buttonClick();});
+			button.addEventListener('click', function(e) { this.boringButtonClick(e, buttonName) }.bind(this));
 		}, this);
 		
 		
@@ -171,7 +234,7 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 	p.layOutItems = function() {
 		this.items.regularLayout = this.addChild(new createjs.Container());
 		this.items.customLayout = this.addChild(new createjs.Container());
-		this.items.regularLayout.visible = false;
+		this.items.customLayout.visible = false;
 		this.layOutItemsIn(this, ['bg_newgame', 'btn_newgame_cancel', 'btn_newgame_ok']);
 		this.layOutItemsIn(this.items.regularLayout, ['btn_specialrules', 'btn_specialrules_tag_no']);
 		this.layOutItemsIn(this.items.customLayout, ['btn_specialrules_sel', 'btn_specialrules_tag_yes','label_timer', 'label_choose', 
