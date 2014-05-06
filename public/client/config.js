@@ -160,11 +160,38 @@ config['manifest'] = [
 				btn_creategame:				[2,34,	143,17,	0,	0,0],
 				btn_creategame_pressed:		[147,34,143,17,	0,	0,0],
 				
-				bg_newgame:					[1,57,	198,19,	0,	0,0],
-				btn_newgame_cancel:			[200,57,64,21,	0,	0,0],
-				btn_newgame_cancel_pressed:	[200,57,64,21,	0,	-1,-1],
-				btn_newgame_ok:				[265,52,34,29,	0,	0,5],
-				btn_newgame_ok_pressed:		[265,52,34,29,	0,	-1,4],
+				// new idea i should've thought of long ago: add layout info here
+				//    ... last two numbers are placement of item in parent container
+				bg_newgame:					[1,57,	198,19,	0,	0,0,	14, 11],
+				btn_newgame_cancel:			[200,57,64,21,	0,	0,0,	217, 9],
+				btn_newgame_cancel_pressed:	[200,57,64,21,	0,	-1,-1,	217, 9],
+				btn_newgame_ok:				[265,52,34,29,	0,	0,5,	287, 9],
+				btn_newgame_ok_pressed:		[265,52,34,29,	0,	-1,4,	287, 9],
+				
+				btn_specialrules:			[136,140,163,16, 0, 0, 0,	10, 35],
+				btn_specialrules_sel:		[136,123,163,16, 0, 0, 0,	10, 35],
+				btn_specialrules_tag_no:	[125,91,17,7,   0,  0, 0,	180, 39],
+				btn_specialrules_tag_yes:	[125,79,29,7,   0,  0,0,	180, 39],
+				label_timer:				[160,79,47,41,  0,  0,0, 	241, 39],
+				label_choose:				[2,257,324,34,  0,  0,0,	9, 96],
+				
+				btn_opiumden:				[23,187, 71,7,  0, 0,0,		33, 57],
+				btn_tigersden:				[15,198, 79,7,  0, 0,0,		25, 68],
+				btn_taintedlove:			[1,209, 93,7,   0, 0,0,		11, 79],
+				btn_teasetag:				[107,187, 71,7, 0, 0,0,		116, 57],
+				btn_catbutt:				[107,198, 57,7, 0, 0,0,		116, 68],
+				btn_regular:				[107,209, 58,7, 0, 0,0,		116, 79],
+				btn_opiumden_sel:			[23,227, 71,7,  0, 0,0,		33, 57],
+				btn_tigersden_sel:			[15,238, 79,7,  0, 0,0,		25, 68],
+				btn_taintedlove_sel:		[1,249, 93,7,   0, 0,0,		11, 79],
+				btn_teasetag_sel:			[107,227, 71,7, 0, 0,0,		116, 57],
+				btn_catbutt_sel:			[107,238, 57,7, 0, 0,0,		116, 68],
+				btn_regular_sel:			[107,249, 58,7, 0, 0,0,		116, 79],
+				
+				btn_checkbox_no:			[113,104,7,7,  0, 0,0],
+				btn_checkbox_yes:			[113,115,10,8, 0,  0,-1],
+				btn_radio_no:				[113,79,7,7,   0, 0,0],
+				btn_radio_yes:				[113,90,9,8,   0, 0,-1],
 				
 				btn_chalkboard_up:			[138, 2,	21,18,		0,	0,0],
 				btn_chalkboard_up_pressed:	[138, 2,	21,18,		0,	-1,-1],
@@ -415,6 +442,18 @@ config.homeroom = {};
 config.homeroom.chalkboard = {
 	TALL_PX: 144 // height in pixels of scroll window
 };
+config.homeroom.custom_games = {
+	regular:	{moves:{scratch:1, grab:1, tease:1, tattle:1, lick:1, cower:1}, name: "Regular Game"},
+	opiumden:	{moves:{scratch:1, grab:1, tease:1, tattle:1, lick:1, cower:0}, name: "Opium Den"},
+	tigersden:	{moves:{scratch:1, grab:1, tease:1, tattle:1, lick:0, cower:0}, name: "Tiger's Den"},
+	taintedlove:{moves:{scratch:0, grab:0, tease:1, tattle:1, lick:1, cower:0}, name: "Tainted Love"},
+	teasetag:	{moves:{scratch:0, grab:0, tease:1, tattle:0, lick:0, cower:0}, name: "Tease Tag"},
+	catbutt:	{moves:{scratch:1, grab:0, tease:0, tattle:0, lick:0, cower:0}, name: "Catbutt"},
+	// some named variations that didn't make it into the presets list:
+	// saltmine:{moves:{scratch:1, grab:0, tease:0, tattle:1, lick:1, cower:0}, name: "SaLT Mine"},
+	// yawn:	{moves:{scratch:1, grab:0, tease:1, tattle:1, lick:1, cower:1}, name: "*yawn*"},	
+}
+
 
 
 config.game = {};
