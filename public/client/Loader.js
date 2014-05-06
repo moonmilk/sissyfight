@@ -41,6 +41,10 @@ var p = Loader.prototype = new createjs.Container();
 				_.forOwn(item.data.pieces,function(frameInfo, frameId) {
 					destination[frameId] = new createjs.Sprite(spritesheet);
 					destination[frameId].gotoAndStop(frameId);
+					// if config has layout position appended to spritesheet info, store that in unpacked asset
+					if (frameInfo.length > 8) {
+						destination[frameId].layout = {x:frameInfo[7], y:frameInfo[8]}
+					}
 				})
 			}
 			else {
