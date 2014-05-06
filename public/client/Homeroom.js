@@ -38,6 +38,11 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.gameList.mask.y = 39;
 		
 		// create new game dialog box
+		this.createGameDialog = this.addChild(new sf.HomeroomCreateGameDialog());
+		this.createGameDialog.x = 148;
+		this.createGameDialog.y = 39;		
+		this.createGameDialog.visible = false;
+		/*
 		this.createGameDialog = this.addChild(new createjs.Container());
 		this.createGameDialog.x = 148;
 		this.createGameDialog.y = 39;
@@ -47,7 +52,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.assets.bg_newgame.y = 40;
 		this.createGameDialog.buttons = {};
 		this.createGameDialog.gameName = new createjs.DOMElement(document.getElementById('homeroomCreateGameEntry'));
-		
+		*/
 		
 		// attendance list button and popup
 		this.attendanceLayer = this.addChild(new createjs.Container());
@@ -152,11 +157,6 @@ var p = Homeroom.prototype = new createjs.Container();
 		
 		this.chatRecord.htmlElement.innerHTML = "";
 		
-		this.createGameDialog.gameName.setFakeScale(g.gameScale);
-		this.createGameDialog.gameName.setPosition(293, 81);
-		this.createGameDialog.gameName.setSize(83, 12);
-		this.createGameDialog.gameName.setVisible(false);
-		this.createGameDialog.gameName.htmlElement.value = "";
 		
 		
 		// set up message handlers
@@ -194,8 +194,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.chatEntry.setVisible(false);
 		this.chatRecord.setVisible(false);
 		this.chatEntry.htmlElement.onkeypress = null;
-		this.createGameDialog.gameName.setVisible(false);
-		this.createGameDialog.gameName.htmlElement.onkeypress = null;
+		this.createGameDialog.destroy();
 		this.getStage().canvas.onmousewheel = null;
 		
 		if (this.handleTickBound) createjs.Ticker.removeEventListener('tick', this.handleTickBound);
@@ -447,9 +446,6 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.gameList.visible = false;
 		this.showAttendanceList(false);
 		this.createGameDialog.visible = true;
-		this.createGameDialog.gameName.setVisible(true);
-		this.createGameDialog.gameName.htmlElement.value = "";
-		this.createGameDialog.gameName.htmlElement.focus();
 	}
 	
 	p.handlebtn_newgame_cancel = function(event) {
@@ -502,9 +498,6 @@ var p = Homeroom.prototype = new createjs.Container();
 			btn_help:			[480, 229, this],
 			
 			btn_creategame:		[147, 188, this],
-			
-			btn_newgame_cancel:	[143, 70, this.createGameDialog],
-			btn_newgame_ok:		[210, 70, this.createGameDialog],
 			
 			btn_attendance_open:[55, 2, this.attendanceLayer.list_closed],
 			btn_attendance_close:[57, 2, this.attendanceLayer.list_open],
