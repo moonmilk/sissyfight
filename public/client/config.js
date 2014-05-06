@@ -453,6 +453,7 @@ config.homeroom.custom_games = {
 	// saltmine:{moves:{scratch:1, grab:0, tease:0, tattle:1, lick:1, cower:0}, name: "SaLT Mine"},
 	// yawn:	{moves:{scratch:1, grab:0, tease:1, tattle:1, lick:1, cower:1}, name: "*yawn*"},	
 }
+config.homeroom.custom_turn_times = [90, 30, 15];
 
 
 

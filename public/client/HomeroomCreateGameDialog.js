@@ -33,7 +33,7 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 		this.items.gameName.htmlElement.value = "";
 		
 		this.moves = _.cloneDeep(config.homeroom.custom_games.regular.moves);
-		this.timer = 90;
+		this.turnTime = 90;
 	}
 	
 	p.destroy = function() {
@@ -45,10 +45,39 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 	
 	p.open = function() {
 		this.setGameType('regular');
-		this.setTimer(90);
+		this.setTurnTime(90);
 		this.items.gameName.setVisible(true);
 		this.items.gameName.htmlElement.value = "";
 		this.items.gameName.htmlElement.focus();
+	}
+	
+	
+	// click handlers
+	p.namedGameClick = function(e, gamename) {
+		this.setGameType(gamename); 
+		sf.Sound.buttonClick();
+	}
+	
+	p.allowedMoveClick = function(e, move) {
+		this.moves[move]=(e.state=='yes'?1:0);
+		this.findGameType(this.moves); 
+		sf.Sound.buttonClick();
+	}
+	
+	p.turnTimeClick = function(e, time) {
+		this.setTurnTime(time);
+		sf.Sound.buttonClick();
+	}
+	
+	
+	
+	// highlight named turn time button and deselect the others
+	p.setTurnTime = function(turnTime) {
+		this.turnTime = turnTime;
+		_.each(this.items.turnTimeButtons, function(button, buttonTime) {
+			if (buttonTime==turnTime) button.helper.setState('yes');
+			else button.helper.setState('no');
+		}, this);
 	}
 	
 	
@@ -113,18 +142,29 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 			var hitArea = new createjs.Shape();
 			hitArea.graphics.beginFill('#fff').rect(bounds.x,bounds.y,bounds.width,bounds.height+3).endFill();
 			button.helper = new sf.MultiButtonHelper(button, {selected:{out:buttonName+'_sel'}, unselected:{out:buttonName}}, 'unselected', false, hitArea);
-			button.addEventListener('multiclick', function(e) {console.log("clicked " + gamename + " " + e.state);this.setGameType(gamename); sf.Sound.buttonClick();}.bind(this));
+			button.addEventListener('multiclick', function(e) { this.namedGameClick(e, gamename) }.bind(this));
 		}, this);		
 		
 		// allowed move checkboxes
-		_.each(['scratch', 'grab', 'tease', 'tattle', 'lick', 'cower'], function(move) {
-			var button = this.items.allowedMoveButtons[move];
+		_.each(this.items.allowedMoveButtons, function(button,move) {
 			var bounds = button.specialBounds;
 			var hitArea = new createjs.Shape();
 			hitArea.graphics.beginFill('#fff').rect(bounds.x-button.x,bounds.y-button.y,bounds.w,bounds.h).endFill();
 			button.helper = new sf.MultiButtonHelper(button, {yes:{out:'btn_checkbox_yes',next:'no'}, no:{out:'btn_checkbox_no',next:'yes'}}, 'yes', false, hitArea);
-			button.addEventListener('state', function(e) {console.log("clicked " + move + " " + e.state); this.moves[move]=(e.state=='yes'?1:0);this.findGameType(this.moves); sf.Sound.buttonClick();}.bind(this));
+			button.addEventListener('state', function(e) { this.allowedMoveClick(e, move) }.bind(this));
 		}, this);
+		
+		
+		// move time buttons:
+		_.each(this.items.turnTimeButtons, function(button,timeLabel) {
+			var bounds = button.specialBounds;
+			var hitArea = new createjs.Shape();
+			hitArea.graphics.beginFill('#fff').rect(bounds.x-button.x,bounds.y-button.y,bounds.w,bounds.h).endFill();
+			button.helper = new sf.MultiButtonHelper(button, {yes:{out:'btn_radio_yes',next:'yes'}, no:{out:'btn_radio_no',next:'yes'}},'no', false, hitArea);
+			button.addEventListener('state', function(e) { this.turnTimeClick(e,timeLabel) }.bind(this));
+
+		}, this);
+		
 	}
 	
 	
@@ -151,6 +191,14 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 			checkbox.y = info.checkbox.y;
 			checkbox.specialBounds = info.bounds;
 		}, this);
+		
+		this.items.turnTimeButtons = {};
+		for (var i=0; i<config.homeroom.custom_turn_times.length; i++) {
+			var button = this.items.turnTimeButtons[config.homeroom.custom_turn_times[i]] = this.items.customLayout.addChild(this.assets['btn_radio_no'].clone()); 
+			button.x = 243;
+			button.y = 50 + i*11;
+			button.specialBounds = {x:241, y:49+i*11, w:44, h:11 };
+		}
 	}
 	
 	p.layOutItemsIn = function(container, which) {
