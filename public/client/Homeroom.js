@@ -447,6 +447,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		// show the create game dialog
 		sf.Sound.buttonClick();
 		this.gameList.visible = false;
+		this.buttons.btn_creategame.visible = false;
 		this.showAttendanceList(false);
 		this.createGameDialog.visible = true;
 		this.createGameDialog.open();
@@ -454,12 +455,14 @@ var p = Homeroom.prototype = new createjs.Container();
 	
 	p.handlebtn_newgame_cancel = function(event) {
 		this.gameList.visible = true;
+		this.buttons.btn_creategame.visible = true;
 		this.createGameDialog.visible = false;
 		this.createGameDialog.close();
 	}
 	
 	p.handlebtn_newgame_ok = function(event) {
 		this.gameList.visible = true;
+		this.buttons.btn_creategame.visible = true;
 		this.createGameDialog.visible = false;	
 		this.createGameDialog.close();
 		
