@@ -7,8 +7,9 @@ var events = require("events");
 
 
 
-function SFGame(gameroom) {
+function SFGame(gameroom, custom) {
 	this.gameroom = gameroom;
+	this.custom = custom; // undefined or custom rules {turnTime:30, {scratch:1, grab:0, etc}
 	
 	this.players = {};	// map from player user ids to game status info
 	this.zombies = [];	// players that leave before end of game get moved to this list on the next turn
@@ -283,7 +284,7 @@ SFGame.prototype.startTurn = function() {
 	
 	
 	this.gameEvent('startTurn', {
-		time:SFGame.TURN_TIME, 
+		time: this.custom ? this.custom.turnTime : SFGame.TURN_TIME, 
 		lollies:function(conn){return game.players[conn.user.id].lollies}, 
 		tattles:function(conn){return game.players[conn.user.id].tattles}
 	});
