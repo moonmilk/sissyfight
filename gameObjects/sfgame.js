@@ -212,6 +212,11 @@ SFGame.prototype.act = function(conn, data) {
 				actorInfo.action = 'timeout';
 			}
 		}
+		
+		// check that someone didn't cheat the client to submit a disabled move - if so, change it to timeout
+		if (this.custom && this.custom.moves[data.action]==0) {
+			actorInfo.action = 'timeout';
+		}
 	}
 	// if everyone has reached timeout (can't find any surviving player with timeout=false), turn is over!
 	if (!_.find(this.players, function(p){ if(p.loser || p.zombie) return false; else return !p.timeout })) {
