@@ -66,7 +66,6 @@ var User = db.sequelize.define('User', {
 					bcrypt.compare(password, user.password, function(err, passwordMatch) {
 						if (err) callback(err);
 						else {
-							console.log("User.checklogin: comparing " + password + " to " + user.password + " gives " + passwordMatch);
 							if (passwordMatch) callback(null, user);
 							else callback(null, null);
 						}
