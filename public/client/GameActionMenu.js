@@ -18,7 +18,7 @@ var p = GameActionMenu.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(assets, which, lick, tattle) {
+	p.initialize = function(assets, which, lick, tattle, custom) {
 		this.Container_initialize();
 		
 		this.assets = assets;
@@ -42,13 +42,21 @@ var p = GameActionMenu.prototype = new createjs.Container();
 			var btns = ['grab', 'scratch', 'tease', 'cower', 'lick', 'tattle'];
 		}
 		
-		this.buttons = [];
+		this.buttons = {};
+		this.disabledButtons = {};
 		_.each(btns, function(b){
-			if ((b=='lick' && !lick) || (b=='tattle' && !tattle)) {
-				// leave out the disabled buttons
+			var assetName = prefix+b;
+			var graphics;
+			if (custom && custom.moves && custom.moves[b]==0) {
+				// black out moves that are disabled in custom game
+				var button = this.disabledButtons[b] = this.addChild(this.assets[assetName].clone());
+				button.compositeOperation = 'difference';
+				button.alpha = 0.4;
+			}
+			else if ((b=='lick' && !lick) || (b=='tattle' && !tattle)) {
+				// leave out moves with exhausted resources
 			}
 			else {
-				var assetName = prefix+b;
 				var button = this.buttons[b] = this.addChild(this.assets[assetName].clone());
 				button.visible = false;  // visible only on rollover
 				button.actionLabel = b;

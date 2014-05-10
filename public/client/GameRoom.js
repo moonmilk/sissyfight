@@ -30,7 +30,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.prepareAssets();
 		
 		this.me = me; // id of this player, so I don't need any memory to know which one is me
-		this.gameInfo = gameInfo; // game(id), roomName, occupants:[{id,nickname,avatar}]
+		this.gameInfo = gameInfo; // game(id), roomName, occupants:[{id,nickname,avatar}], optional custom:{turnTime:30, moves:{scratch:1,grab:0, etc}}
 		
 		this.state = 'pregame'; // can be pregame or game
 		
@@ -641,7 +641,7 @@ var p = GameRoom.prototype = new createjs.Container();
 			}
 			else return;
 		
-			this.items.actionMenu = this.layers.actionMenuLayer.addChild(new sf.GameActionMenu(this.assets, whichMenu, this.lollyCounter, this.tattleCounter));
+			this.items.actionMenu = this.layers.actionMenuLayer.addChild(new sf.GameActionMenu(this.assets, whichMenu, this.lollyCounter, this.tattleCounter, this.gameInfo.custom));
 			this.items.actionMenu.x = player.x;
 			this.items.actionMenu.y = player.y+108;
 			
