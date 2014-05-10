@@ -4,6 +4,7 @@
 
 var Homeroom = require('./homeroom');
 var GameRoom = require('./gameroom');
+var SFGame = require('./sfgame');
 
 var _ = require('lodash');
 
@@ -92,10 +93,7 @@ School.prototype.destroyGame = function(game, done) {
 // args: {name: 'room name'} -- custom game properties to come later
 // callback: done(err, room object)
 School.prototype.userCreateGameRoom = function(args, done) {
-	// todo: sanity checking on name
-	params = {};
-	params.name = args.name || "no name";
-	
+	var params = SFGame.sanitizeNewGameParams(args);
 	this.createGame(params, done);
 }
 

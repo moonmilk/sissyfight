@@ -11,6 +11,9 @@ function GameRoom(params) {
 	
 	this.maxUsers = (params && typeof params.maxUsers === 'number') ? params.maxUsers : GameRoom.MAX_PLAYERS;
 	
+	// custom rules
+	this.custom = params && params.custom;
+	
 	// room access
 	this.password = undefined; 	// not used yet
 	this.blockedUsers = []; 	// list of ids of users who've been booted from the room
@@ -53,6 +56,9 @@ GameRoom.prototype.getInfo = function(avatars) {
 	if (this.game) info.status = 'fighting';
 	else if (this.occupants.length >= this.maxUsers) info.status = 'full';
 	else info.status = 'open';
+	
+	// add custom game rules to info
+	if (this.custom) info.custom = this.custom;
 	
 	if (avatars) {
 		// add startVotes and bootVotes to info so latecomers to game can see who has already pressed start and who's getting booted
@@ -282,8 +288,8 @@ GameRoom.prototype.bootByID = function(bootedID) {
 
 // start a new game
 GameRoom.prototype.startGame = function() {
-	console.log("GameRoom", this.id, this.name, "starting game with occupants " + this.getOccupantNicknames().join(", "));
-	this.game = new SFGame(this);
+	console.log("GameRoom", this.id, this.name, "starting game with occupants " + this.getOccupantNicknames().join(", ") + " and custom rules ", this.custom);
+	this.game = new SFGame(this, this.custom);
 	this.game.on('gameOver', this.gameOver.bind(this));
 
 	this.emit('update', {update:'status', roomInfo:this.getInfo()});

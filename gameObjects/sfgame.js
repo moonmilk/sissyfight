@@ -48,6 +48,13 @@ SFGame.TURN_TIME = 90;		// max time per turn, in seconds
 SFGame.COUNTDOWN_TIME = 10;	// when all players have chosen an action, timer jumps to final countdown
 SFGame.OVERRIDE_TIME = 100;	// end turn even if not all clients have checked in (may be hung or hacked client)
 
+// restrictions for custom rules
+SFGame.MOVES = ['cower','lick','tattle','grab','scratch','tease'];
+SFGame.CUSTOM_RULE_RESTRICTIONS = {
+	turnTimes: [15, 30, 90],
+	disallowedMoveCombos: [[], ['cower'], ['lick'], ['cower','lick']]
+}
+
 // sort order for resolving actions - lower numbers first
 SFGame.ACTION_ORDER = {
 	"cower": 	1,
@@ -84,6 +91,60 @@ SFGame.HUMILIATION_TEXTS = [
 ];
 
 
+
+// utility: check user submitted new game params for bad data
+SFGame.sanitizeNewGameParams = function(args) {
+	params = {};
+	
+	// todo: more sanity checking on name
+	var name = "no name";
+	if (typeof args.name == 'string') {
+		name = args.name;
+		if (name.length < 1) args.name = "no name";
+		name = name.substring(0,14);
+	}
+	
+	params.name = name;
+	
+	// custom game?
+	if (args.custom && typeof args.custom == 'object') {
+		var custom = {};
+		
+		// confirm turn time, just default to 90 if user submitted bad value
+		if (_.contains(SFGame.CUSTOM_RULE_RESTRICTIONS.turnTimes, parseInt(args.custom.turnTime))) custom.turnTime = args.custom.turnTime;
+		else custom.turnTime = SFGame.TURN_TIME;
+		
+		// assume moves legal unless listed in args.custom.moves as 0
+		custom.moves = {};
+		var yesMoves = [];
+		_.each(SFGame.MOVES, function(move) {
+			if (args.custom.moves && args.custom.moves[move]==0) custom.moves[move]=0;
+			else {
+				custom.moves[move]=1;
+				yesMoves.push(move);
+			}
+		},this);
+		
+		// check it's not a stupid rule combo
+		var bad = false;
+		_.each(SFGame.CUSTOM_RULE_RESTRICTIONS.disallowedMoveCombos, function(badCombo) {
+			if (_.isEqual(yesMoves.sort(), badCombo.sort())) {
+				bad = true;
+				return false; // lodash equivalent of break
+			}
+		}, this);
+		
+		// if bad rule combo, just make a non-custom game.
+		if (!bad) params.custom = custom;
+	}
+	
+	return params;
+}
+
+
+// ---- INSTANCE METHODS ----------
+
+
 // user leaves game in progress
 SFGame.prototype.leave = function(conn) {
 	var leaver = this.players[conn.user.id];
@@ -98,6 +159,7 @@ SFGame.prototype.leave = function(conn) {
 SFGame.prototype.gameEvent = function(type, args) {
 	this.gameroom.broadcast('gameEvent', _.assign({event:type}, args));
 }
+
 
 
 // user plays a game action
