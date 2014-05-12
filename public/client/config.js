@@ -10,7 +10,7 @@ var SCHOOL_ASSETS_TAG = g.schoolID.split('-')[0];
 
 // specify single font to use same font in both, or [single size font, double size font]
 var defaultFont = 'resourcepix'; // optimum 13px
-var computerFont = 'VT323'
+var computerFont = 'VT323';
 config['fonts'] = {
 	dressingRoomAddons:		'10px ' + computerFont,
 	dressingRoomNickname:	'16px ' + defaultFont,
@@ -19,6 +19,7 @@ config['fonts'] = {
 	homeroomAttendanceCount:'10px ' + computerFont,
 	homeroomRoomName:		'16px ' + defaultFont,
 	homeroomPlayerName:		'16px ' + defaultFont,
+	homeroomOccupantNames:	'16px '	+ defaultFont,
 	
 	cueText:				'16px ' + defaultFont,
 	

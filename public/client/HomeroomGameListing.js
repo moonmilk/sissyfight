@@ -40,16 +40,55 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 
 		this.updateStatus(gameInfo);
 		
-		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName, config.getFont('homeroomRoomName'), '#eeeeee'));
-		this.items.name.x = 73;
+		var gameName, turnTime;
+		if (gameInfo.custom) {
+			if (gameInfo.custom.moves) {
+				// look up custom game name if any
+
+				_.each(config.homeroom.custom_games, function(info) {
+					var match = true;
+					_.each(info.moves, function(enabled, move) {
+						if (gameInfo.custom.moves[move] != enabled) {
+							match = false;
+							return false; // lodash break
+						}
+					});
+					if (match) {
+						gameName = info.name;
+						return false; // lodash break
+					}
+				});
+			}
+			
+			if (!gameName) gameName = 'Custom';
+			
+			if (gameName == 'Regular Game') gameName = '';
+			
+			if (gameInfo.custom.turnTime && gameInfo.custom.turnTime != 90) {
+				turnTime = gameInfo.custom.turnTime;
+			}
+		}
+		
+		var customText = '';
+		if (gameName || turnTime) {
+			customText += " (";
+			if (gameName) customText += gameName + " rules";
+			if (gameName && turnTime) customText += ", ";
+			if (turnTime) customText += turnTime + " sec timer";
+			customText += ")";
+		}
+		
+		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName + customText, config.getFont('homeroomRoomName'), '#eeeeee'));
+		this.items.name.x = 71;
 		this.items.name.y = 0;
-		this.items.name.lineWidth = 63;
+		this.items.name.lineWidth = 259;
 		
 		var nicknames = _.pluck(gameInfo.occupants, 'nickname').join(", ");
-		this.items.occupants = this.addChild(new createjs.Text(nicknames, config.getFont('homeroomPlayerName'), '#ffffff'));
-		this.items.occupants.lineWidth = 192;
+		this.items.occupants = this.addChild(new createjs.Text(nicknames, config.getFont('homeroomOccupantNames'), '#00ffff'));
+		//this.items.occupants.lineWidth = 259;
 		this.items.occupants.lineHeight = 12;
-		this.items.occupants.x = 147;
+		this.items.occupants.x = 71;
+		this.items.occupants.y = 11;
 		
 	}	
 	
