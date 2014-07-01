@@ -11,20 +11,21 @@ this.sf = this.sf||{};
 
 (function() {
 
-var HomeroomGameListing = function(gameInfo) {
-  this.initialize(gameInfo);
+var HomeroomGameListing = function(gameInfo, tooltip) {
+  this.initialize(gameInfo, tooltip);
 }
 
 var p = HomeroomGameListing.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(gameInfo) {
+	p.initialize = function(gameInfo, tooltip) {
 		this.Container_initialize();	
 		
 		this.prepareAssets();
 		
 		this.gameID = gameInfo.room;
+		this.customRulesToolTip = tooltip;
 		
 
 		this.items = {};
@@ -40,7 +41,7 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 
 		this.updateStatus(gameInfo);
 		
-		var gameName, turnTime;
+		var gameName, gameNameLong = 'Regular Game', turnTime;
 		if (gameInfo.custom) {
 			if (gameInfo.custom.moves) {
 				// look up custom game name if any
@@ -62,14 +63,44 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 			
 			if (!gameName) gameName = 'Custom';
 			
+			gameNameLong = gameName + " rules";
 			if (gameName == 'Regular Game') gameName = '';
 			
 			if (gameInfo.custom.turnTime && gameInfo.custom.turnTime != 90) {
 				turnTime = gameInfo.custom.turnTime;
 			}
+			
+
 		}
 		
+		var tooltipText = gameNameLong + ":\n";
+		// how many of the 6 moves are enabled in this rule set?
+		if (gameInfo.custom && gameInfo.custom.moves) var numMoves = _(gameInfo.custom.moves).filter().size();
+		else numMoves = 6;
+		
+		if (numMoves==6) tooltipText += "ALL moves";
+		else if (numMoves >= 4) {
+			// 4 or 5 moves: list the ones that are forbidden
+			tooltipText += "NO ";
+			_.each(gameInfo.custom.moves, function(yesno, move) {
+				if (!yesno) tooltipText += move + " ";
+			});
+		}
+		else {
+			// 1, 2, 3 moves: list the ones that are allowed
+			_.each(gameInfo.custom.moves, function(yesno, move) {
+				if (yesno) tooltipText += move + " ";
+			});
+			tooltipText += "ONLY";
+		}
+		tooltipText += "\n";
+		tooltipText += (gameInfo.custom ? gameInfo.custom.turnTime : 90) + " sec timer";
+		//console.log("CUSTOM TEXT TEST: " + tooltipText);
+	
+	
+			
 		var customText = '';
+		
 		if (gameName || turnTime) {
 			customText += " (";
 			if (gameName) customText += gameName + " rules";
@@ -77,6 +108,8 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 			if (turnTime) customText += turnTime + " sec timer";
 			customText += ")";
 		}
+		
+
 		
 		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName + customText, config.getFont('homeroomRoomName'), '#eeeeee'));
 		this.items.name.x = 71;
@@ -90,6 +123,18 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		this.items.occupants.x = 71;
 		this.items.occupants.y = 11;
 		
+		if (tooltipText) {			
+			var ctHit = this.items.name.hitArea = new createjs.Shape();
+			ctHit.graphics.beginFill('#ffffff').drawRect(-2,-2,259,22).endFill();
+			
+			this.items.name.on('mouseover', function(e){ 
+				var pt = this.localToGlobal(75,14);
+				this.customRulesToolTip.show(tooltipText, pt.x, pt.y);
+			}, this);
+			this.items.name.on('mouseout', function(e){ 
+				this.customRulesToolTip.hide();
+			}, this);		
+		}
 	}	
 	
 	

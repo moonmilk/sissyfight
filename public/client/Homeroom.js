@@ -84,6 +84,24 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.attendanceLayer.list_open.buttons = [];
 		
 		
+		// set up custom rules display tooltip
+		var ct = this.customRulesToolTip = this.addChild(new createjs.Container());
+		ct.visible = false;
+		var ctBG = ct.addChild(new createjs.Shape());
+		var ctText = ct.addChild(new createjs.Text("placeholder", config.getFont('homeroomRoomName'), '#000000'));
+		ctText.x = 4;
+		ctText.y = 1;
+		ctBG.graphics.beginFill('#ffffff').setStrokeStyle(1).beginStroke('#000000').drawRect(0,0,120,36).endFill();
+		var hr = this;
+		ct.show = function(text, x, y) {
+			ctText.text = text;
+			var pt = hr.globalToLocal(x, y);
+			ct.x = pt.x;
+			ct.y = pt.y;
+			ct.visible = true;
+		}
+		ct.hide = function() { ct.visible = false; }
+		
 		
 		// set up buttons
 		this.prepareButtons();
@@ -536,7 +554,7 @@ var p = Homeroom.prototype = new createjs.Container();
 	
 	// update game listings
 	p.addGameListing = function(game) {
-		var listing = new sf.HomeroomGameListing(game);
+		var listing = new sf.HomeroomGameListing(game, this.customRulesToolTip);
 		listing.y = this.gameList.children.length*25;
 		this.gameList.addChild(listing);
 		listing.start();
