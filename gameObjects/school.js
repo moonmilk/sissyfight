@@ -108,17 +108,18 @@ School.prototype.gameUpdateListener = function(event) {
 
 
 
-// periodic maintenance: throw away old empty game rooms, but make sure there's always at least one empty room.
+// periodic maintenance: throw away old empty (normal) game rooms, but make sure there's always at least one empty room with normal rules.  
 School.prototype.update = function() {
 	// find rooms that have been empty for more than threshold time
 	_.each(this.games, function(game) {
 		if (game.getInfo().occupants.length > 0) {
 			game._lastOccupiedTime = process.uptime(); // in seconds
 			game._purgeable = false;
-			game._empty = false;
+			game._emptyNormal = false;
 		}
 		else {
-			game._empty = true;
+			if (game.getInfo().custom) game._emptyNormal = false;
+			else game._emptyNormal = true;
 			game._lastOccupiedTime = game._lastOccupiedTime || 0;
 			if ((process.uptime() - game._lastOccupiedTime) > School.EMPTY_ROOM_PURGE_TIME) {
 				game._purgeable = true;
@@ -128,20 +129,22 @@ School.prototype.update = function() {
 	
 	// console.log("school update: time=", process.uptime(), _.map(this.games, function(g) {return{name:g.name, occ:g._lastOccupiedTime, empty:g._empty, purge:g._purgeable}}));
 	
-	var empties = _.filter(this.games, '_empty');
+	var empties = _.filter(this.games, '_emptyNormal');
 	if (empties.length==0) {
-		// no empties - make a new room and move name to end of list
+		// no normal-rules empties - make a new room and move name to end of list
 		var name = School.GAME_NAMES.shift();
 		School.GAME_NAMES.push(name);
 		
 		this.createGame({name:name});
 	}
-	else if (empties.length > 1) {
-		// more empties than necessary - get rid of one if any are old enough
-		var purge = _.sample(_.filter(this.games, '_purgeable'));
-		if (purge) this.destroyGame(purge);
+	else {
+		var purgeables = _.filter(this.games, '_purgeable');	
+		if (purgeables.length > 1) {
+			// more empties than necessary - get rid of one if any are old enough
+			var purge = _.sample(purgeables);
+			if (purge) this.destroyGame(purge);
+		}
 	}
-	
 }
 
 
