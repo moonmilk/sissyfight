@@ -4,6 +4,8 @@
 var db = require('../database');
 var bcrypt = require('bcrypt');
 
+var _ = require('lodash');
+
 
 var User = db.sequelize.define('User', {
 	nickname: {
@@ -86,6 +88,29 @@ var User = db.sequelize.define('User', {
 					User.create(userdata).complete(callback);
 				}
 			});				
+		},
+		
+		// validateAvatar returns false if anything's wrong with avatar data
+		validateAvatar: function(avatar) {
+			if (!avatar) return false;
+			if ((typeof avatar) != 'object') return false;
+			
+			//["face","skincolor","hairstyle","haircolor","uniform","uniformcolor","addons"]
+			for (var p in ["face","skincolor","hairstyle","haircolor","uniform","uniformcolor"]) {
+				if ((typeof avatar[p]) != 'number') return false;
+				if (avatar[p] < 0 || avatar[p] >= config.number.of[p]) return false;
+			}
+			
+			if (avatar.addons) {
+				if (!Array.isArray(avatar.addons)) return false;
+				for (var a in avatar.addons) {
+					if ((typeof a) != 'number') return false;
+				}
+			}
+			
+			
+			// it's ok i guess
+			return true;
 		}
 		
 		

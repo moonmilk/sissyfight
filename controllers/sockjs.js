@@ -84,7 +84,7 @@ module.exports = function(app, sockjs) {
 		var conn = this; 
 		
 		// try to connect with the session
-		if (data.session && data.token) {
+		if (data.session && (typeof data.session)==='string' && data.token && (typeof data.token)==='string') {
 			app.get('sessionStore').get(data.session, function(err, session) {
 				if (err) {
 					console.log("Socket login: couldn't access session store for session id " + data.session + ": " + err);
@@ -155,7 +155,7 @@ module.exports = function(app, sockjs) {
 	
 	function sendChatListener(data) {
 		var conn = this;
-		if (conn.room && (typeof data.text)==="string") conn.room.say(conn, data.text);
+		if (conn && conn.room && (typeof data.text)==="string") conn.room.say(conn, data.text);
 	}	
 	
 	
