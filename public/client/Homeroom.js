@@ -84,6 +84,21 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.attendanceLayer.list_open.buttons = [];
 		
 		
+		// set up buttons
+		this.prepareButtons();
+		
+				
+				
+		// display avatar without background layer, if any (like phone booth or bodyguard)
+		this.avatar = this.addChild(new sf.Avatar());
+		var nobg = {remove_background:true};
+		_.defaults(nobg, look);
+		this.avatar.setLook(nobg);
+		this.avatar.x = 323;
+		this.avatar.y = 162;
+		
+		
+		
 		// set up custom rules display tooltip
 		var ct = this.customRulesToolTip = this.addChild(new createjs.Container());
 		ct.visible = false;
@@ -102,19 +117,9 @@ var p = Homeroom.prototype = new createjs.Container();
 		}
 		ct.hide = function() { ct.visible = false; }
 		
+
 		
-		// set up buttons
-		this.prepareButtons();
-		
-				
-		// display avatar without background layer, if any (like phone booth or bodyguard)
-		this.avatar = this.addChild(new sf.Avatar());
-		var nobg = {remove_background:true};
-		_.defaults(nobg, look);
-		this.avatar.setLook(nobg);
-		this.avatar.x = 323;
-		this.avatar.y = 162;
-		
+
 		
 		// display when you get booted from a game room
 		if (booted) {
