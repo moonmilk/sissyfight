@@ -9,6 +9,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , sockjs  = require('sockjs')
+  , whiskers = require('whiskers')
 ;
   
 // i like to use lodash
@@ -31,6 +32,9 @@ var sockjs = sockjs.createServer(sockjs_opts);
 
 // app setup
 var app = express();
+
+// set up whiskers templating engine
+app.engine('.html', whiskers.__express);
 
 
 // optional basic authentication for setting up closed testing sessions:
@@ -81,7 +85,7 @@ app.set('sessionStore', sessionStore);
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
+
 
 var assetCacheTime = 60 * 60 * 1000; // one hour timeout during dev, change to a week or so when things are stable: 7 * 24 * 60 * 60 * 1000; // one week
 app.use(express.static(path.join(__dirname, 'public'), {maxAge: assetCacheTime}));
@@ -105,7 +109,6 @@ app.use(app.router);
 
 
 
-app.locals.pretty = true; // make jade output more readable
 
 // development only
 if ('development' == app.get('env')) {

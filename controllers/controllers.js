@@ -8,6 +8,42 @@ var User = require('../models/user');
 var qs = require('querystring');
 
 module.exports = function(app) {
+
+	// 	/main: register - login - recover password form that fits in game window
+	app.get('/main', function(req, res) {
+		res.render('main.html');
+	});
+	
+	
+	
+	//  /u/login: ajax login endpoint
+	app.post('/u/login', function(req, res) {
+		User.checkLogin(req.body.nickname, req.body.password, function(err, user) {
+			if (err) {
+				res.json({
+					ok: false,
+					message: "Can't reach the database. Try again later?"
+				});
+				console.log("/user/login checklogin trouble: " + err);
+			}
+			else {
+				if (user) {
+					req.session.user = {nickname:user.nickname, id:user.id};
+					res.json({
+						ok: true,
+						message: ""
+					});
+				}
+				else {
+					delete req.session['user'];
+					res.json({
+						ok: false,
+						message: "That username + password didn't work! Try again?"
+					});
+				}
+			}
+		});	});
+	
 	
 	
 	app.get('/user/start', function(req, res) {
@@ -18,7 +54,7 @@ module.exports = function(app) {
 		}
 		else {
 			var query = qs.stringify(req.query);
-			res.render('login', {user: req.session.user, loginAttempt:req.session.loginAttempt, flash:flash, query:query});
+			res.render('login.jade', {user: req.session.user, loginAttempt:req.session.loginAttempt, flash:flash, query:query});
 		}
 	});
 	
@@ -109,7 +145,7 @@ module.exports = function(app) {
 				gameWidth *= 2;
 				gameHeight *= 2;
 			}
-			res.render('game', {user:req.session.user, token:req.session.token, session:req.session.id,
+			res.render('game.jade', {user:req.session.user, token:req.session.token, session:req.session.id,
 									school:req.session.school, 
 									gameScale:gameScale, gameWidth:gameWidth, gameHeight:gameHeight});
 		}
