@@ -7,11 +7,22 @@
 var User = require('../models/user');
 var qs = require('querystring');
 
+var _ = require('lodash');
+
+
 module.exports = function(app) {
 
 	// 	/main: register - login - recover password form that fits in game window
 	app.get('/main', function(req, res) {
-		res.render('main.html');
+		var context = {};
+		if (req.session.user) {
+			context.loggedIn = 1;
+			context.nickname = req.session.user.nickname;
+		}
+		else {
+			context.loggedIn = 0;
+		}
+		res.render('main.html', context);
 	});
 	
 	
@@ -85,7 +96,7 @@ module.exports = function(app) {
 	
 	app.get('/user/logout', function(req, res) {
 		req.session.destroy();
-		res.redirect('/user/start?' + qs.stringify(req.query));
+		res.redirect('/main');// + qs.stringify(req.query));
 	});
 	app.post('/user/logout', function(req, res) {
 		req.session.destroy();
@@ -127,17 +138,17 @@ module.exports = function(app) {
 	
 	// game ------------------
 	
-	app.get('/game', function(req, res) {
+	app.get('/game/:school', function(req, res) {
 		if (req.session.user) {
 			// send a token to the page that can be used to associate the socket with the user session
 			var token = req.session.user.nickname + Math.random();
 			req.session.token = token;
 			// get school id or default
-			if (req.query.school && app.get('getSchoolInfo')(req.query.school)) {
-				req.session.school = req.query.school;
+			if (req.params.school && app.get('getSchoolInfo')(req.params.school)) {
+				req.session.school = req.params.school;
 			}
 			else {
-				req.session.school = app.get('schoolDefault'); // TODO: school will be set by URL path or something...
+				req.session.school = app.get('schoolDefault'); 
 			}
 			var gameScale = 1, gameWidth=528, gameHeight=276;
 			if (req.param('double')) {
@@ -150,8 +161,8 @@ module.exports = function(app) {
 									gameScale:gameScale, gameWidth:gameWidth, gameHeight:gameHeight});
 		}
 		else {
-			req.session.flash = {login: "Please log in"};
-			res.redirect('/user/start?' + qs.stringify(req.query));
+			//req.session.flash = {login: "Please log in"};
+			res.redirect('/main'); // + qs.stringify(req.query));
 		}
 		
 	});

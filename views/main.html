@@ -454,7 +454,15 @@ body {
     $( document ).ready(function() {
         $( "#sf2kforgotpwbox" ).hide();
         $( "#sf2kgamebox" ).hide();
-        $( "#sf2kloginformbox" ).show();
+        
+        {if loggedIn}
+	        $( "#sf2kloginformbox" ).hide();
+        	$( "#sf2kserverpick" ).show();
+        {else}
+        	$( "#sf2kloginformbox" ).show();
+        	$( "#sf2kserverpick" ).hide();
+        {/if}
+        
         $( "#sf2kforgotpwbutton" ).click(function ( event ) {
             $( "#sf2kloginformbox" ).hide();
             $( "#sf2kforgotpwbox" ).show();
@@ -619,7 +627,7 @@ $().ready(function() {
 <div id="sf2kmainheader">
 <div id="sf2klogo"><img src="imgs/titlesm.gif" width=132 height=68 border=0></div>
 <div id="sf2kmenu"><div id="sf2kmenuitem"><BR><img src="imgs/play-header.png" width=36 height=9 border=0><br><img src="imgs/icon_play.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="help.html"><img src="imgs/help-header.png" width=34 height=9 border=0><BR><img src="imgs/icon_help.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><img src="imgs/rankings-header.png" width=70 height=9 border=0><BR><img src="imgs/icon_rankings.png" border=0 vspace=3></div><div id="sf2kmenuitem"><a href="honorcode.html"><img src="imgs/honorcode-header.png" width=46 height=18 border=0><BR><img src="imgs/icon_honor.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><img src="imgs/sf2ksource-header.png" width=57 height=18 border=0><BR><img src="imgs/icon_source.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="credits.html"><img src="imgs/credits-header.png" width=57 height=9 border=0><BR><img src="imgs/icon_credits.png" border=0 vspace=3></a></div></div>
-<div id="sf2kloginbox"><!-- FifteenLetterJo<BR><a href="<img src="imgs/portrait_sample.gif" border=0><BR>--><a href="/user/logout/" target="gameiframe">LOGOUT</a></div> 
+<div id="sf2kloginbox"><a href="/user/logout/" target="gameiframe">LOGOUT</a></div> 
 </div>
 <div id="sf2kgamebox">
 <!-- <iframe src="http://sissyfight.nodejitsu.com/game" width="528" height="276" seamless scrolling="no" id="sf2kgameiframe" name="gameiframe" frameborder="0" ></iframe> -->
@@ -655,10 +663,10 @@ $().ready(function() {
 </div>
 <div id="sf2kserverpick">
 <img src="imgs/schoolsigns.png" width="594" height="129">
-<span id="sf2kschool1playbutton"><img src="imgs/schoolenter.gif" id="sf2kschool1open" width="74" height="52"></span>
-<span id="sf2kschool2playbutton"><img src="imgs/schoolenter.gif" id="sf2kschool2open" width="74" height="52"></span>
-<span id="sf2kschool3playbutton"><img src="imgs/schoolenter.gif" id="sf2kschool3open" width="74" height="52"></span>
-<span id="sf2kschool4playbutton"><img src="imgs/schoolenter.gif" id="sf2kschool4open" width="74" height="52"></span>
+<span id="sf2kschool1playbutton"><a href="/game/franklin"><img src="imgs/schoolenter.gif" id="sf2kschool1open" width="74" height="52"></a></span>
+<span id="sf2kschool2playbutton"><a href="/game/angel"><img src="imgs/schoolenter.gif" id="sf2kschool2open" width="74" height="52"></a></span>
+<span id="sf2kschool3playbutton"><a href="/game/666"><img src="imgs/schoolenter.gif" id="sf2kschool3open" width="74" height="52"></a></span>
+<span id="sf2kschool4playbutton"><a href="/game/suzy"><img src="imgs/schoolenter.gif" id="sf2kschool4open" width="74" height="52"></a></span>
 </div>
 </div>
 <script type="text/javascript">

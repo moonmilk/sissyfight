@@ -143,9 +143,10 @@ var School = require('./gameObjects/school');
 // if in future we have more than one instance of each school, they should have ids like 666-1, 666-2, etc.
 // Client uses the part before the - to decide which assets to load.
 var schools = {
-	'666': new School({id:'666', name:'PS 666'}),
-	'angel': new School({id:'angel', name:'Sweet Sunny Angel Valley Middle School'}),
-	'franklin': new School({id: 'franklin', name:'Benjamin Franklin Washington Jefferson Lincoln Junior High'})
+	'666': new School({id:'666', name:'PS 666', order:3}),
+	'angel': new School({id:'angel', name:'Sweet Sunny Angel Valley Middle School', order:2}),
+	'franklin': new School({id: 'franklin', name:'Benjamin Franklin Washington Jefferson Lincoln Junior High', order:1}),
+	'suzy': new School({id: 'suzy', name:'Little Suzy Memorial High', order:4})
 };
 app.set('schools', schools);
 app.set('schoolDefault', 'angel');
