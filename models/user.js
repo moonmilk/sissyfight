@@ -45,6 +45,11 @@ var User = db.sequelize.define('User', {
 		type: db.Sequelize.INTEGER,
 		allowNull: false,
 		defaultValue: 0
+	},
+	
+	email: {
+		type: db.Sequelize.STRING,
+		allowNull: false
 	}
 },
 
