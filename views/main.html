@@ -220,6 +220,20 @@ body {
   font-weight: bold;
   line-height: 0.6em;
 }
+#sf2kunderage {
+  display: inline-block;
+  position: relative;
+  width: 257;
+  height: 25;
+  clear: both;
+  top: 82;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.6em;
+  color: #ff0000;
+  font-weight: bold;
+  line-height: 0.6em;
+}
 #sf2kreturnlogin {
   display: inline-block;
   position: relative;
@@ -463,6 +477,11 @@ body {
         $( "#sf2kforgotpwbox" ).hide();
         $( "#sf2kgamebox" ).hide();
         
+        if (document.cookie.indexOf('sfunderage') > -1) {
+	        $( "#sf2knewfighter" ).hide();
+	        $( "#sf2kunderage" ).show();
+        }
+        
         {if loggedIn}
 	        $( "#sf2kloginformbox" ).hide();
         	$( "#sf2kserverpick" ).show();
@@ -560,6 +579,12 @@ $().ready(function() {
 				}
 				else {
 					$("#sf2kreg1error").text(data.message);
+					if (data.underage) {
+				        $( "#sf2knewfighter" ).hide();
+				        $( "#sf2kunderage" ).show();
+					    $( "#sf2kreg1box" ).hide();
+					    $( "#sf2kloginformbox" ).show();
+				    }
 				}
 			});
         },
@@ -684,6 +709,9 @@ $().ready(function() {
 <div id="sf2kloginformbox">
     <div id="sf2knewfighter">
         <span style="vertical-align: 5">Click </span><IMG SRC="imgs/here-button.png" id="sf2kregbutton" width="45" height="19"><span style="vertical-align: 5"> to create your SiSSYFiGHTER.</span>
+    </div>
+    <div id="sf2kunderage" style="display:none">
+        <span style="vertical-align: 5">Sorry, you have to be 13 or older to play.</span>
     </div>
     <br>
     <div id="sf2kreturnlogin">

@@ -91,7 +91,7 @@ module.exports = function(app) {
 		else {
 			var age = moment().diff(birthdate, 'years');
 			if (age < 13) {
-				res.json({ok: false, message: "Sorry, you have to be 13 or older to play."});
+				res.json({ok: false, underage: true, message: "Sorry, you have to be 13 or older to play."});
 				res.cookie('sfunderage', '1', { maxAge: 24*60*60*1000});
 				return;
 			}
