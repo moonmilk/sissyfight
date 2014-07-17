@@ -59,6 +59,7 @@ module.exports = function(app) {
 					req.session.user = {nickname:user.nickname, id:user.id};
 					res.json({
 						ok: true,
+						nickname: user.nickname,
 						message: ""
 					});
 				}
@@ -184,7 +185,8 @@ module.exports = function(app) {
 						else {
 							req.session.user = user; 
 							res.json({
-								ok: true
+								ok: true,
+								nickname: user.nickname
 							});
 						}
 		})

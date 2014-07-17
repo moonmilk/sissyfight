@@ -72,13 +72,21 @@ body {
   left: -10px;
   float: right;
   margin: 0 0 0 0;
-  padding: 0 0 0 0;
+  padding: 4px;
   text-align: right;
   font-size: 0.6em;
   color: #003366;
   font-weight: bold;
   line-height: 0.6em;
   float: right;
+}
+#sf2kloginboxnickname {
+	display:block;
+	max-width: 80px;
+	overflow: hidden;
+	font-size: 10pt;
+	line-height: 1em;
+	padding-bottom: 8px;
 }
 #sf2kloginformbox {
   display: block;
@@ -458,9 +466,12 @@ body {
         {if loggedIn}
 	        $( "#sf2kloginformbox" ).hide();
         	$( "#sf2kserverpick" ).show();
+        	$( "#sf2kloginbox" ).show();
+        	$( "#sf2kloginboxnickname" ).text("{nickname}");
         {else}
         	$( "#sf2kloginformbox" ).show();
         	$( "#sf2kserverpick" ).hide();
+        	$( "#sf2kloginbox" ).hide();
         {/if}
         
         $( "#sf2kforgotpwbutton" ).click(function ( event ) {
@@ -486,6 +497,11 @@ body {
 				if (data.ok) {
 		            $( "#sf2kloginformbox" ).hide();
 		            $( "#sf2kserverpick" ).show();
+		            
+		            
+		        	$( "#sf2kloginboxnickname" ).text(data.nickname);
+		            $( "#sf2kloginbox" ).fadeIn();
+		        	
 				}
 				else {
 					$( "#sf2kloginerror" ).text(data.message);
@@ -615,8 +631,11 @@ $().ready(function() {
 				//console.log("new user", JSON.stringify(data));
 				
 				if (data.ok) {
-		            $( "#sf2kreg2box" ).hide();
-		            $( "#sf2kserverpick" ).show();
+					$( "#sf2kreg2box" ).hide();
+					$( "#sf2kserverpick" ).show();
+					$( "#sf2kloginboxnickname" ).text(data.nickname);
+					$( "#sf2kloginbox" ).fadeIn();
+		        	
 				}
 				else {
 					$( "#sf2kreg2error" ).text(data.message);
@@ -654,7 +673,7 @@ $().ready(function() {
 <div id="sf2kmainheader">
 <div id="sf2klogo"><img src="imgs/titlesm.gif" width=132 height=68 border=0></div>
 <div id="sf2kmenu"><div id="sf2kmenuitem"><BR><img src="imgs/play-header.png" width=36 height=9 border=0><br><img src="imgs/icon_play.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="help.html"><img src="imgs/help-header.png" width=34 height=9 border=0><BR><img src="imgs/icon_help.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><img src="imgs/rankings-header.png" width=70 height=9 border=0><BR><img src="imgs/icon_rankings.png" border=0 vspace=3></div><div id="sf2kmenuitem"><a href="honorcode.html"><img src="imgs/honorcode-header.png" width=46 height=18 border=0><BR><img src="imgs/icon_honor.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><img src="imgs/sf2ksource-header.png" width=57 height=18 border=0><BR><img src="imgs/icon_source.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="credits.html"><img src="imgs/credits-header.png" width=57 height=9 border=0><BR><img src="imgs/icon_credits.png" border=0 vspace=3></a></div></div>
-<div id="sf2kloginbox">{if loggedIn}<a href="/user/logout/">LOGOUT</a>{/if}</div> 
+<div id="sf2kloginbox"><div id="sf2kloginboxnickname"></div><div id="sf2kloginboxlogout"><a href="/user/logout/">LOGOUT</a></div></div> 
 </div>
 <div id="sf2kgamebox">
 <!-- <iframe src="http://sissyfight.nodejitsu.com/game" width="528" height="276" seamless scrolling="no" id="sf2kgameiframe" name="gameiframe" frameborder="0" ></iframe> -->
@@ -668,7 +687,7 @@ $().ready(function() {
     </div>
     <br>
     <div id="sf2kreturnlogin">
-        <form id="sf2kloginform">SiSSYFiGHTER name: <input name="nickname" type="text" size="13" max="13"><br>Password: <input name="password" type="text" size="10"><br><br><span style="vertical-align: 5">then click </span><INPUT TYPE="image" SRC="imgs/ok-button.png" id="sf2kloginsubmitbutton" width="30" height="19" onclick="return false;"></form>
+        <form id="sf2kloginform">SiSSYFiGHTER name: <input name="nickname" type="text" size="13" max="13"><br>Password: <input name="password" type="password" size="10"><br><br><span style="vertical-align: 5">then click </span><INPUT TYPE="image" SRC="imgs/ok-button.png" id="sf2kloginsubmitbutton" width="30" height="19" onclick="return false;"></form>
     <span id="sf2kloginerror"></span>
     </div>
     <div id="sf2kforgotpwbutton"><IMG SRC="imgs/question-button.png" width="19" height="19"></div>
