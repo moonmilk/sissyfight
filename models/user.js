@@ -4,8 +4,6 @@
 var db = require('../database');
 var bcrypt = require('bcrypt');
 
-var _ = require('lodash');
-
 
 var User = db.sequelize.define('User', {
 	nickname: {
@@ -13,24 +11,18 @@ var User = db.sequelize.define('User', {
 		allowNull: false,
 		defaultValue: "",
 		unique: true,
-		validate: {
-			is: ['[a-zA-Z0-9\-\#\$\%\*\?\+\/\&\!\' ]'],
-			len: {args:[3,15], msg: "Nickname should be 3–15 letters long"}
-
-			/* something seems to hang up if i use custom validator functions - return to this another time
-			,
-			trimmed: function(nickname) {
-				if (nickname.match(/(^\s+|\s+$)/)) throw new Error("Nickname can't start or end with spaces");
-			},
-			repeats: function(nickname) {
-				if (nickname.match(/(''|  )/)) throw new Error("Nickname can't have repeated spaces or apostrophes");
-			}
-			*/
+		validate: {  //"[A-Za-z0-9 !@#$_%^&*()+;:'<>\/\?\-]"
+			is: {args:[['^[a-zA-Z0-9\-\#\$\%\*\?\+\/\&\!\'\@\^\(\)\+\;\:\<\>\._ ]+$']], msg:"Illegal character in nickname"},
+			not: {args:[['  ']], msg:"Nickname can't have two spaces in a row"},
+			len: {args:[2,13], msg: "Nickname should be 2-13 letters long"}
 		}
 	},
 	password: {
 		type: db.Sequelize.STRING(60).BINARY,
-		allowNull: false
+		allowNull: false,
+		validate: {
+			len: {args:[6,60], msg: "Password should be 6-60 characters"}
+		}
 	},
 	
 	avatar:	{
@@ -77,11 +69,45 @@ var User = db.sequelize.define('User', {
 		},
 		
 		
+		// check if nickname is legal and not used
+		//   callback(err, status) - status is null for ok, 		
+		//		or {error: 'validation', msg: "Validation reason"}
+		//		or {error: 'taken', msg: "That nickname's already taken"
+		checkNickname: function(nickname, callback) {
+			if (typeof nickname !== "string") {
+				if (callback) callback(null, {submitted:nickname, error:"validation", msg:"That's not a string"});
+				return;
+			}
+			
+			var temp = User.build({nickname: nickname, password:"placeholder"});
+			var validation = temp.validate();
+			if (validation) {
+				// didn't pass validation - pick one error message to pass on to user
+				var prop = Object.keys(validation)[0];
+				if (callback) callback(null, {submitted:nickname, error:"validation", msg:validation[prop][0]});	
+			}
+			else {
+				// check if exists
+				User.find({where:{nickname: nickname}}).complete(function(err, user) {
+					if (err && callback) callback(err);
+					else {
+						if (user) {
+							if (callback) callback(null, {submitted:nickname, error: "taken", msg:"That nickname's already taken"});
+						}
+						else {
+							if (callback) callback(null, null);
+						}
+					}
+				})
+			}
+		},
+		
+		
 		createUser: function(userdata, callback) {
 			bcrypt.hash(userdata.password, 8, function(err, hash) {
 				if (err) {
 					console.log("User.createUser: trouble creating hash: " + err);
-					callback(err);
+					if (callback) callback(err);
 				}
 				else {
 					userdata.password = hash;

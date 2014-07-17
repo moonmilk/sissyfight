@@ -154,6 +154,10 @@ app.set('getSchoolInfo', function(id) {
 	return schools[id];
 });
 
+// username rules
+app.set('usernameRules', {minlength: 2, maxlength: 13, chars: "[A-Za-z0-9 !@#$_%^&*()+;:'<>\/\?\-]" });
+            
+
 /*
 // make a lobby room
 var ChatRoom = require('./gameObjects/chatroom');

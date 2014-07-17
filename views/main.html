@@ -482,7 +482,6 @@ body {
         
     	/* LOGIN BUTTON */
 		$('#sf2kloginsubmitbutton').click(function() {
-			console.log("SUBMITTING", $('#sf2kloginform').serialize());
 			$.post('/u/login', $('#sf2kloginform').serialize(), function(data) {
 				if (data.ok) {
 		            $( "#sf2kloginformbox" ).hide();
@@ -490,16 +489,11 @@ body {
 				}
 				else {
 					$( "#sf2kloginerror" ).text(data.message);
-					console.log(data.message);
+					//console.log(data.message);
 				}
 			}, 'json');
 		});
-/*
-        $( "#sf2kloginsubmitbutton" ).click(function ( event ) {
-            $( "#sf2kloginformbox" ).hide();
-            $( "#sf2kserverpick" ).show();
-        })
-*/
+		
     }); 
     </script>
     <script type="text/javascript">
@@ -535,11 +529,26 @@ $().ready(function() {
     );
     $("#regForm1").validate({
         submitHandler: function() {
-            $( "#sf2kreg1box" ).hide();
-            $( "#sf2kreg2box" ).show();
+    		/* NEW NICKNAME VALIDATION */
+    		var stuffToValidate = {
+    			newname: $('#newname').val(), 
+    			dob_year: $('#dob_year').val(),
+    			dob_month: $('#dob_month').val(),
+    			dob_day: $('#dob_day').val(),
+    		};
+            $.post('/u/checkNameDOB', stuffToValidate, function(data) {
+				//console.log("checkNameDOB", JSON.stringify(data));
+				if (data.ok) {
+		            $( "#sf2kreg1box" ).hide();
+					$( "#sf2kreg2box" ).show();
+				}
+				else {
+					$("#sf2kreg1error").text(data.message);
+				}
+			});
         },
         rules: {
-            username: {
+            newname: {
                 required: true,
                 minlength: 2,
                 maxlength: 13,
@@ -565,7 +574,7 @@ $().ready(function() {
             },
         },
         messages: {
-            username: {
+            newname: {
                 required: "You need a name!",
                 minlength: "Your name must be at least 2 characters.",
                 maxlength: "Your name must be under 13 characters.",
@@ -593,9 +602,27 @@ $().ready(function() {
         }
     });
     $("#regForm2").validate({
-        submitHandler: function() {
-            $( "#sf2kreg2box" ).hide();
-            $( "#sf2kloginformbox" ).show();
+		submitHandler: function() {
+			var newUserInfo = {
+				newname: $('#newname').val(), 
+				dob_year: $('#dob_year').val(),
+				dob_month: $('#dob_month').val(),
+				dob_day: $('#dob_day').val(),
+				password: $('#confirm_password').val(),
+				email: $('#email').val()
+			};	
+			$.post('/u/new', newUserInfo, function(data) {
+				//console.log("new user", JSON.stringify(data));
+				
+				if (data.ok) {
+		            $( "#sf2kreg2box" ).hide();
+		            $( "#sf2kserverpick" ).show();
+				}
+				else {
+					$( "#sf2kreg2error" ).text(data.message);
+					//console.log(data.message);
+				}
+			});
         },
         rules: {
             email: {
@@ -627,7 +654,7 @@ $().ready(function() {
 <div id="sf2kmainheader">
 <div id="sf2klogo"><img src="imgs/titlesm.gif" width=132 height=68 border=0></div>
 <div id="sf2kmenu"><div id="sf2kmenuitem"><BR><img src="imgs/play-header.png" width=36 height=9 border=0><br><img src="imgs/icon_play.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="help.html"><img src="imgs/help-header.png" width=34 height=9 border=0><BR><img src="imgs/icon_help.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><img src="imgs/rankings-header.png" width=70 height=9 border=0><BR><img src="imgs/icon_rankings.png" border=0 vspace=3></div><div id="sf2kmenuitem"><a href="honorcode.html"><img src="imgs/honorcode-header.png" width=46 height=18 border=0><BR><img src="imgs/icon_honor.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><img src="imgs/sf2ksource-header.png" width=57 height=18 border=0><BR><img src="imgs/icon_source.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="credits.html"><img src="imgs/credits-header.png" width=57 height=9 border=0><BR><img src="imgs/icon_credits.png" border=0 vspace=3></a></div></div>
-<div id="sf2kloginbox">{if loggedIn}<a href="/user/logout/" target="gameiframe">LOGOUT</a>{/if}</div> 
+<div id="sf2kloginbox">{if loggedIn}<a href="/user/logout/">LOGOUT</a>{/if}</div> 
 </div>
 <div id="sf2kgamebox">
 <!-- <iframe src="http://sissyfight.nodejitsu.com/game" width="528" height="276" seamless scrolling="no" id="sf2kgameiframe" name="gameiframe" frameborder="0" ></iframe> -->
@@ -652,14 +679,14 @@ $().ready(function() {
     <div id="sf2kforgotpwcancel">Or else <span style="vertical-align: -5"><IMG SRC="imgs/cancel-button.png" id="sf2kforgotpwcancelbutton" width="60" height="19"></span> to return to the login screen.</div>
 </div>
 <div id="sf2kreg1box">
-    <div id="sf2kreg1body"><form class="regform" id="regForm1" method="get" action=""><label for="username">SiSSYFiGHTER name:</label> <input type="text" id="username" name="username" minlength="2" size="13" maxlength="13"><br><label for="password">Password:</label> <input type="password" minlength="6" size="10" name="password" id="password"><br><label for="confirm_password">Re-enter Password:</label> <input type="password" name="confirm_password" id="confirm_password" minlength="6" size="10"><br><nobr><label for="dob">Birthdate:</label> <select name="dob_month" id="dob_month"><option value="">Month</option><option label="January" value="1">January</option><option label="February" value="2">February</option><option label="March" value="3">March</option><option label="April" value="4">April</option><option label="May" value="5">May</option><option label="June" value="6">June</option><option label="July" value="7">July</option><option label="August" value="8">August</option><option label="September" value="9">September</option><option label="October" value="10">October</option><option label="November" value="11">November</option><option label="December" value="12">December</option></select><select name="dob_day" id="dob_day"><option value="">Day</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select><select name="dob_year" id="dob_year"><option value="">Year</option></select></nobr><br><div id="sf2kreg1error"><span></span></div></div>
+    <div id="sf2kreg1body"><form class="regform" id="regForm1" method="get" action=""><label for="newname">SiSSYFiGHTER name:</label> <input type="text" id="newname" name="newname" minlength="2" size="13" maxlength="13"><br><label for="password">Password:</label> <input type="password" minlength="6" size="10" name="password" id="password"><br><label for="confirm_password">Re-enter Password:</label> <input type="password" name="confirm_password" id="confirm_password" minlength="6" size="10"><br><nobr><label for="dob">Birthdate:</label> <select name="dob_month" id="dob_month"><option value="">Month</option><option label="January" value="01">January</option><option label="February" value="02">February</option><option label="March" value="03">March</option><option label="April" value="04">April</option><option label="May" value="05">May</option><option label="June" value="06">June</option><option label="July" value="07">July</option><option label="August" value="08">August</option><option label="September" value="09">September</option><option label="October" value="10">October</option><option label="November" value="11">November</option><option label="December" value="12">December</option></select><select name="dob_day" id="dob_day"><option value="">Day</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select><select name="dob_year" id="dob_year"><option value="">Year</option></select></nobr><br><div id="sf2kreg1error"><span></span></div></div>
 
-    <div id="sf2kreg1submit"><span style="vertical-align: -5"><input type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.</form></div>
+    <div id="sf2kreg1submit"><span style="vertical-align: -5"><input id="sf2kreg1submitbutton" type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.</form></div>
 </div>
 <div id="sf2kreg2box">
     <div id="sf2kreg2body"><form class="regform" id="regForm2" method="get" action=""><label for="email">E-mail:</label> <input type="text" id="email" name="email" size="25"><br><div id="sf2kreg2error"><span></span></div><br><span id="sf2kemailinfo">Your e-mail address is only used in case of a lost password or to let you know about problems restricting your access to the game. See the <A HREF="honorcode.html#privacypolicy" TARGET="_new">Privacy Policy</A> for more details.</span></div>
 
-    <div id="sf2kreg2submit"><span style="vertical-align: -5"><input type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.</form></div>
+    <div id="sf2kreg2submit"><span style="vertical-align: -5"><input id="sf2kreg2submitbutton" type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.</form></div>
 </div>
 <div id="sf2kserverpick">
 <img src="imgs/schoolsigns.png" width="594" height="129">

@@ -21,7 +21,8 @@
     "jugglingdb-redis": "*",
     "lodash": "2.2.1",
     "bcrypt": "*",
-    "whiskers": "0.3.3"
+    "whiskers": "0.3.3",
+    "moment": "2.7.0"
   },
   "devDependencies": {
     "request": "*",
