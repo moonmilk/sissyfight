@@ -10,7 +10,7 @@ body {
   background: #99CCFF;
   color: #FFFFFF;
   outline: 1px dotted #003366;
-  min-height: 405px;
+  min-height: 415px;
 }
 #sf2kmain a {
   color: #333366;
@@ -123,13 +123,13 @@ body {
 }
 #sf2kgamebox {
   position: relative;
-  height: 276px;
+  height: 306px;
   width: 528px;
   margin: 20 0 20 61;
   padding: 0 0 0 0;
   clear: both;
   vertical-align: middle;
-  color: black
+  color: black;
 }
 #contentarea {
   display: block;
@@ -439,6 +439,7 @@ body {
   position: absolute;
   z-index: 5;
 }
+
 .sf2ksubmitbutton {
 	background-image: url("/imgs/submit-button.png");
 	background-position: 0px 0px;

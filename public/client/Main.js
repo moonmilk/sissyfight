@@ -147,12 +147,14 @@ var p = Main.prototype = new createjs.Container();
 	
 	p.openGameRoom = function(data) {
 		console.log("Opening gameroom");
+		g.enableZoom(false);
 		this.gameroom = new sf.GameRoom(data.me, data.room);
 		this.addChild(this.gameroom);
 		this.gameroom.start();
 	}
 	
 	p.closeGameRoom = function(data) {
+		g.enableZoom(true);
 		console.log("Closing gameroom");
 		this.gameroom.destroy();
 		this.removeChild(this.gameroom);

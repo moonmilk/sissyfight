@@ -124,6 +124,20 @@
 			background:black;
 			text-align: left;
 		}
+		#zoombuttonzone {
+			padding-top:5;
+			padding-bottom:5;
+			text-align: right;
+			vertical-align: top;
+		}
+		#zoomwarning {
+			background-color: yellow;
+			color: black;
+			padding: 0px 10px 3px 10px;
+			margin: 0px 8px 0px 0px;
+			opacity: 0;
+		}
+
 	</style>
 
 	<script src="//code.createjs.com/createjs-2013.12.12.min.js"></script>
@@ -193,6 +207,27 @@
 				e.preventDefault();
 			}
 		});
+		
+		// hook for disabling zoom buttons during game
+		function zoomWarning() {
+			$('#zoomwarning').fadeTo(300, 1.0).delay(1000).fadeTo(600, 0.0);
+		}
+		g.enableZoom = function(flag) {
+			if (flag) {
+				$('#zoombuttons').fadeTo(300, 1.0);
+				$('#1xbutton').off("click").click(function() {
+					window.location.href="?";
+				});
+				$('#2xbutton').off("click").click(function() {
+					window.location.href="?double=1";
+				});
+			}
+			else {
+				$('#zoombuttons').fadeTo(300, 0.4);
+				$('#1xbutton').off("click").click(zoomWarning);
+				$('#2xbutton').off("click").click(zoomWarning);
+			}
+		}
 	</script>
 
 </head>
@@ -201,6 +236,7 @@
 	<script type='text/javascript'>
 		window.onload = function() {
 			sf.start(SockJS, {token:token, session:session, endpoint:'/sox'}, school);
+			g.enableZoom(true);
 		}
 	</script>	
 			
@@ -210,8 +246,16 @@
 {>includes.mainheader}
 		<div id="sf2kgamebox">
 			{if singleSize}
-			<div class="gameSize" id="container" width="528" height="276">
+			<div id="container" width="528" height="306">
 				<canvas class="gameSize pixelated" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
+				<div id="zoombuttonzone" height="30">
+					<span id="zoomwarning" height="30">
+						You can't zoom when you're on the playground!
+					</span>
+					<span id="zoombuttons">
+						<img src="/imgs/1x-button-depressed.png"><input type='image' id='2xbutton' src="/imgs/2x-button.png">
+					</span>
+				</div>
 				
 				<div class="homeroomText disableSelect wordwrap fixedText hidden" id="homeroomChat" unselectable="yes"></div>
 				<textarea class="homeroomText hidden" id="homeroomTextEntry"></textarea>
@@ -228,6 +272,7 @@
 				
 				<input class="homeroomText hidden" id="homeroomCreateGameEntry" type="text" maxlength="12"/>
 			</div>
+
 			{/if}
 		</div>
 	</div>
@@ -235,9 +280,17 @@
 	<div id="sf2kdoublegamebox">
 		<div id="sf2kdoubleinnerbox">
 			<div id="doublecontainer">
-				<div class="gameSize" id="container" width="1056" height="552">
+				<div id="container" width="1056" height="612">
 					<canvas class="gameSize pixelated" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
-					
+					<div id="zoombuttonzone" height="60">
+						<span id="zoomwarning">
+							You can't zoom when you're on the playground!
+						</span>
+						<span id="zoombuttons">
+							<input type="image" id="1xbutton" src="/imgs/1x-button-double.png"></a><img src="/imgs/2x-button-depressed-double.png">
+						</span>
+					</div>
+										
 					<div class="homeroomText disableSelect wordwrap fixedText hidden" id="homeroomChat" unselectable="yes"></div>
 					<textarea class="homeroomText hidden" id="homeroomTextEntry"></textarea>
 					
