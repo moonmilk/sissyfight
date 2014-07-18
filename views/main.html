@@ -1,762 +1,571 @@
 <html>
-<head><title>SiSSYFiGHT 2000</title>
-<link rel="stylesheet" type="text/css" href="shadowbox/shadowbox.gamepage.css">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="javascripts/jquery.validate.js"></script>
-<script src="javascripts/shadowbox/shadowbox.gameversion.js"></script>
-<script src="javascripts/jquery.alphanum.js"></script>
-<script src="javascripts/dateSelectBoxes.js"></script>
-<script type="text/javascript">
+<head>
+    <title>SiSSYFiGHT 2000</title>
+    <link rel="stylesheet" type="text/css" href="shadowbox/shadowbox.gamepage.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/site.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript">
+</script>
+    <script src="javascripts/jquery.validate.js" type="text/javascript">
+</script>
+    <script src="javascripts/shadowbox/shadowbox.gameversion.js" type="text/javascript">
+</script>
+    <script src="javascripts/jquery.alphanum.js" type="text/javascript">
+</script>
+    <script src="javascripts/dateSelectBoxes.js" type="text/javascript">
+</script>
+    <script type="text/javascript">
 Shadowbox.init({
-	handleOversize: "none",
-	modal: "true",
-});
-</script>
-<style>
-body {
-  font-family: Helvetica, Arial, sans-serif; background-color: #999999; color: #003366;
-}
-#sf2kmain {
-  display: block;
-  position: relative;
-  width: 650px;
-  margin: 20px auto 0;
-  padding: 1 0 0 0;
-  background: #99CCFF;
-  color: #FFFFFF;
-  outline: 1px dotted #003366;
-  min-height: 405px;
-}
-#sf2kmain a {
-  color: #333366;
-  text-decoration: none;
-}
-#sf2kmainheader {
-  display: block;
-  position: relative;
-  margin: 20 0 0 20;
-  width: 630px;
-  height: 68px;
-}
-#sf2klogo {
-  display: block;
-  position: relative;
-  width: 132px;
-  height: 68px;
-  float: left;
-  margin: 0 0 0 0;
-}
-#sf2kmenu {
-  display: block;
-  position: relative;
-  float: left;
-  width: 396px;
-  height: 86px;
-  margin: 0 0 0 10;
-  padding: 0 0 0 0;
-  font-size: 0.6em;
-  line-height: 1em;
-  font-weight: bold;
-}
-#sf2kmenuitem {
-  display: inline-block;
-  position: relative;
-  margin: 0 5 0 5;
-  float: left;
-  text-align: center;
-}
-#sf2kloginbox {
-  display: block;
-  position: relative;
-  top: -10px;
-  left: -10px;
-  float: right;
-  margin: 0 0 0 0;
-  padding: 4px;
-  text-align: right;
-  font-size: 0.6em;
-  color: #003366;
-  font-weight: bold;
-  line-height: 0.6em;
-  float: right;
-}
-#sf2kloginboxnickname {
-	display:block;
-	max-width: 80px;
-	overflow: hidden;
-	font-size: 10pt;
-	line-height: 1em;
-	padding-bottom: 8px;
-}
-#sf2kloginformbox {
-  display: block;
-  position: relative;
-  background: url("imgs/sf2k-login-background.png") no-repeat;
-  height: 276px;
-  width: 528px;
-  margin: 20 0 20 61;
-  padding: 0 0 0 0;
-  clear: both;
-  text-align: center;
-  vertical-align: middle;
-}
-#sf2kforgotpwbox {
-  display: none;
-  position: relative;
-  background: url("imgs/sf2k-forgotpw-background.png") no-repeat;
-  height: 276px;
-  width: 528px;
-  margin: 20 0 20 61;
-  padding: 0 0 0 0;
-  clear: both;
-  text-align: center;
-  vertical-align: middle;
-}
-#sf2kreg1box {
-  display: none;
-  position: relative;
-  background: url("imgs/sf2k-reg-background.png") no-repeat;
-  height: 276px;
-  width: 528px;
-  margin: 20 0 20 61;
-  padding: 0 0 0 0;
-  clear: both;
-  text-align: center;
-  vertical-align: middle;
-}
-#sf2kreg2box {
-  display: none;
-  position: relative;
-  background: url("imgs/sf2k-reg-background.png") no-repeat;
-  height: 276px;
-  width: 528px;
-  margin: 20 0 20 61;
-  padding: 0 0 0 0;
-  clear: both;
-  text-align: center;
-  vertical-align: middle;
-}
-#sf2kgamebox {
-  display: none;
-  position: relative;
-  height: 276px;
-  width: 528px;
-  margin: 20 0 20 61;
-  padding: 0 0 0 0;
-  clear: both;
-  text-align: center;
-  vertical-align: middle;
-}
-#contentarea {
-  display: block;
-  position: relative;
-  width: 600px;
-  margin: 0 0 0 20;
-  padding: 10 0 0 0;
-  clear: both;
-  vertical-align: middle;
-  }
-.content {
-  text-align: left;
-  font-size: 0.85em;
-  color: #003366;
-  margin: -10 0 0 0;
-  padding: 0 0 0 10;
-  }
-.header {
-  display: block;
-  position: relative;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
-  clear: both;
-  text-align: center;
-  vertical-align: middle;
-}
-.headermiddle {
-  display: inline-block;
-  position: relative;
-  height: 13;
-  padding: 0 0 0 3;
-  background: #6699CC;
-  text-align: left;
-  vertical-align: middle;
-  width: 591px;
-}
-.headerleft {
-  display: inline-block;
-  position: relative;
-  float: left;
-  height: 13;
-  width: 3;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
-  text-align: left;
-  vertical-align: middle;
-  background: url("imgs/roundcap-left.png") no-repeat;
-}
-.headerright {
-  display: inline-block;
-  position: relative;
-  float: right;
-  height: 13;
-  width: 3;
-  margin: 0 0 0 0;
-  padding: 0 0 0 0;
-  text-align: right;
-  vertical-align: middle;
-  background: url("imgs/roundcap-right.png") no-repeat;
-}
-#sf2knewfighter {
-  display: inline-block;
-  position: relative;
-  width: 257;
-  height: 25;
-  clear: both;
-  top: 78;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 0.6em;
-  color: #003366;
-  font-weight: bold;
-  line-height: 0.6em;
-}
-#sf2kunderage {
-  display: inline-block;
-  position: relative;
-  width: 257;
-  height: 25;
-  clear: both;
-  top: 82;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 0.6em;
-  color: #ff0000;
-  font-weight: bold;
-  line-height: 0.6em;
-}
-#sf2kreturnlogin {
-  display: inline-block;
-  position: relative;
-  width: 257;
-  height: 91;
-  clear: both;
-  top: 100;
-  left: 10; 
-  text-align: center;
-  vertical-align: middle;
-  font-size: 60%;
-  color: #003366;
-  font-weight: bold;
-  line-height: 140%;
-}
-#sf2kloginsubmitbutton {
-	cursor: pointer;
-}
-#sf2kloginerror {
-  position: relative;
-  width: 257;
-  height: 40;
-  clear: both;
-  top: -43;
-  left: 0; 
-  text-align: center;
-  vertical-align: middle;
-  color: #FF0000;
-  font-weight: bold;
-}
-#sf2kforgotpwbody {
-  display: block;
-  position: relative;
-  width: 259;
-  height: 139;
-  clear: both;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  top: 90;
-  vertical-align: middle;
-  font-size: 0.6em;
-  color: #003366;
-  font-weight: bold;
-  line-height: 0.6em;
-}
-#sf2kforgotpwbutton {
-  display: inline-block;
-  position: relative;
-  width: 19;
-  height: 19;
-  top: 158;
-  left: -42;
-}
-#sf2kforgotpwcancel {
-  display: block;
-  position: relative;
-  font-size: 0.6em;
-  color: #FFFFFF;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  clear: both;
-  top: 76;
-  vertical-align: middle;
-}
-#sf2kforgotpwerror {
-  display: none;
-  position: relative;
-  clear: both;
-  top: -64;
-  left: 0; 
-  text-align: center;
-  vertical-align: middle;
-  color: #FF0000;
-  font-weight: bold;
-  line-height: 1em;
-  font-size: 1em;
-}
-#sf2kreg1body {
-  display: block;
-  position: relative;
-  width: 275;
-  height: 139;
-  clear: both;
-  text-align: right;
-  margin-left: auto;
-  margin-right: auto;
-  top: 90;
-  right: 0;
-  vertical-align: middle;
-  font-size: 0.7em;
-  color: #003366;
-  font-weight: bold;
-  line-height: 0.6em;
-}
-#sf2kreg1submit {
-  display: block;
-  position: relative;
-  font-size: 0.6em;
-  color: #FFFFFF;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  clear: both;
-  top: 76;
-  vertical-align: middle;
-}
-#sf2kreg1error {
-  display: block;
-  position: relative;
-  clear: both;
-  top: 5;
-  left: 0; 
-  text-align: center;
-  vertical-align: middle;
-  color: #FF0000;
-  font-weight: bold;
-  line-height: 1em;
-  font-size: 1em;
-}
-#sf2kreg2body {
-  display: block;
-  position: relative;
-  width: 259;
-  height: 139;
-  clear: both;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  top: 80;
-  vertical-align: middle;
-  font-size: 0.6em;
-  color: #003366;
-  font-weight: bold;
-  line-height: 0.6em;
-}
-#sf2kemailinfo {
-  display: inline;
-  font-size: 1.2em;
-  color: #003366;
-  font-weight: normal;
-  line-height: 1.4em;
-  width: 250;
-}
-#sf2kreg2submit {
-  display: block;
-  position: relative;
-  font-size: 0.6em;
-  color: #FFFFFF;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  clear: both;
-  top: 76;
-  vertical-align: middle;
-}
-#sf2kreg2error {
-  display: block;
-  position: relative;
-  clear: both;
-  top: 5;
-  left: 0; 
-  padding-bottom: 5px;
-  text-align: center;
-  vertical-align: middle;
-  color: #FF0000;
-  font-weight: bold;
-  line-height: 1em;
-  font-size: 1em;
-}
-#sf2ksizebuttons {
-  display: block;
-  position: relative;
-  width: 60;
-  height: 18;
-  top: 0;
-  left: 471;
-}
-#sf2kserverpick {
-  display: none;
-  position: relative;
-  width: 528px;
-  margin: 20 0 20 23;
-  padding: 0 0 0 0;
-  clear: both;
-  text-align: center;
-  vertical-align: middle;
-}
-#sf2kschool1playbutton {
-  display: block;
-  height: 52px;
-  width: 74px;
-  margin: -34 0 0 80;
-  position: absolute;
-  z-index: 5;
-}
-#sf2kschool2playbutton {
-  display: block;
-  height: 52px;
-  width: 74px;
-  margin: -34 0 0 226;
-  position: absolute;
-  z-index: 5;
-}
-#sf2kschool3playbutton {
-  display: block;
-  height: 52px;
-  width: 74px;
-  margin: -34 0 0 372;
-  position: absolute;
-  z-index: 5;
-}
-#sf2kschool4playbutton {
-  display: block;
-  height: 52px;
-  width: 74px;
-  margin: -34 0 0 518;
-  position: absolute;
-  z-index: 5;
-}
-.sf2ksubmitbutton {
-	background-image: url("imgs/submit-button.png");
-	background-position: 0px 0px;
-	background-repeat: no-repeat;
-	width: 60px;
-	height: 19px;
-	border: 0px;
-	background-color: none;
-	cursor: pointer;
-	outline: 0;
-}
-.error {
-	background-color: #F6CBC9;
-}
-</style>
+    handleOversize: "none",
+    modal: "true",
+    });
+    </script>
 </head>
+
 <body>
-	<script type="text/javascript">
-	$( document ).ready(function() {
-		$( "#sf2kforgotpwbox" ).hide();
-		$( "#sf2kgamebox" ).hide();
-		
-		if (document.cookie.indexOf('sfunderage') > -1) {
-			 $( "#sf2knewfighter" ).hide();
-			 $( "#sf2kunderage" ).show();
-		}
-		
-		{if loggedIn}
-			 $( "#sf2kloginformbox" ).hide();
-			$( "#sf2kserverpick" ).show();
-			$( "#sf2kloginbox" ).show();
-			$( "#sf2kloginboxnickname" ).text("{nickname}");
-		{else}
-			$( "#sf2kloginformbox" ).show();
-			$( "#sf2kserverpick" ).hide();
-			$( "#sf2kloginbox" ).hide();
-		{/if}
-		
-		$( "#sf2kforgotpwbutton" ).click(function ( event ) {
-			$( "#sf2kloginformbox" ).hide();
-			$( "#sf2kforgotpwbox" ).show();
-		})
-		$( "#sf2kforgotpwcancelbutton" ).click(function ( event ) {
-			$( "#sf2kforgotpwbox" ).hide();
-			$( "#sf2kloginformbox" ).show();
-		})
-		$( "#sf2kforgotpwcancelbutton" ).click(function ( event ) {
-			$( "#sf2kforgotpwbox" ).hide();
-			$( "#sf2kloginformbox" ).show();
-		})
-		$( "#sf2kregbutton" ).click(function ( event ) {
-			$( "#sf2kloginformbox" ).hide();
-			$( "#sf2kreg1box" ).show();
-		})
-		
-		/* LOGIN BUTTON */
-		$('#sf2kloginsubmitbutton').click(function() {
-			$.post('/u/login', $('#sf2kloginform').serialize(), function(data) {
-				if (data.ok) {
-					  $( "#sf2kloginformbox" ).hide();
-					  $( "#sf2kserverpick" ).show();
-					  
-					  
-				  	$( "#sf2kloginboxnickname" ).text(data.nickname);
-					  $( "#sf2kloginbox" ).fadeIn();
-				  	
-				}
-				else {
-					$( "#sf2kloginerror" ).text(data.message);
-					//console.log(data.message);
-				}
-			}, 'json');
-		});
-		
-	}); 
-	</script>
-	<script type="text/javascript">
-		function confirm_alert(node) {
-			return confirm("Resizing will reload your connection, kicking you out of any game you're in. Is that OK?");
-		}
-		function open2xGame() {
-			$('#sf2kgameiframe').attr('src','imgs/sf2k-double-background.png');
-			Shadowbox.open({
-				content: 'http://sissyfight.nodejitsu.com/game/?double=1',
-				player: 'iframe',
-				height: 552,
-				width: 1056
-			})
-				return false;
-		}
-		function close2xGame() {
-			Shadowbox.close();
-			$('#sf2kgameiframe').attr('src','http://sissyfight.nodejitsu.com/game/');
-		}
-	</script>
-<script>
+    <script type="text/javascript">
+$( document ).ready(function() {
+        $( "#sf2kforgotpwbox" ).hide();
+        $( "#sf2kgamebox" ).hide();
+        
+        if (document.cookie.indexOf('sfunderage') > -1) {
+             $( "#sf2knewfighter" ).hide();
+             $( "#sf2kunderage" ).show();
+        }
+        
+        {if loggedIn}
+             $( "#sf2kloginformbox" ).hide();
+            $( "#sf2kserverpick" ).show();
+            $( "#sf2kloginbox" ).show();
+            $( "#sf2kloginboxnickname" ).text("{nickname}");
+        {else}
+            $( "#sf2kloginformbox" ).show();
+            $( "#sf2kserverpick" ).hide();
+            $( "#sf2kloginbox" ).hide();
+        {/if}
+        
+        $( "#sf2kforgotpwbutton" ).click(function ( event ) {
+            $( "#sf2kloginformbox" ).hide();
+            $( "#sf2kforgotpwbox" ).show();
+        })
+        $( "#sf2kforgotpwcancelbutton" ).click(function ( event ) {
+            $( "#sf2kforgotpwbox" ).hide();
+            $( "#sf2kloginformbox" ).show();
+        })
+        $( "#sf2kforgotpwcancelbutton" ).click(function ( event ) {
+            $( "#sf2kforgotpwbox" ).hide();
+            $( "#sf2kloginformbox" ).show();
+        })
+        $( "#sf2kregbutton" ).click(function ( event ) {
+            $( "#sf2kloginformbox" ).hide();
+            $( "#sf2kreg1box" ).show();
+        })
+        
+        /* LOGIN BUTTON */
+        $('#sf2kloginsubmitbutton').click(function() {
+            $.post('/u/login', $('#sf2kloginform').serialize(), function(data) {
+                if (data.ok) {
+                      $( "#sf2kloginformbox" ).hide();
+                      $( "#sf2kserverpick" ).show();
+                      
+                      
+                    $( "#sf2kloginboxnickname" ).text(data.nickname);
+                      $( "#sf2kloginbox" ).fadeIn();
+                    
+                }
+                else {
+                    $( "#sf2kloginerror" ).text(data.message);
+                    //console.log(data.message);
+                }
+            }, 'json');
+        });
+        
+    }); 
+    </script><script type="text/javascript">
+    function confirm_alert(node) {
+            return confirm("Resizing will reload your connection, kicking you out of any game you're in. Is that OK?");
+        }
+        function open2xGame() {
+            $('#sf2kgameiframe').attr('src','imgs/sf2k-double-background.png');
+            Shadowbox.open({
+                content: 'http://sissyfight.nodejitsu.com/game/?double=1',
+                player: 'iframe',
+                height: 552,
+                width: 1056
+            })
+                return false;
+        }
+        function close2xGame() {
+            Shadowbox.close();
+            $('#sf2kgameiframe').attr('src','http://sissyfight.nodejitsu.com/game/');
+        }
+    </script><script type="text/javascript">
 $().ready(function() {
-	/* FORM VALIDATORS */
-	$.validator.addMethod(
-		"regex",
-		function(value, element, regexp) {
-			var check = false;
-			var re = new RegExp(regexp);
-			return this.optional(element) || re.test(value);
-		},
-		"Your username has forbidden characters in it. Try again."
-	);
-	$("#regForm1").validate({
-		submitHandler: function() {
-			/* NEW NICKNAME VALIDATION */
-			var stuffToValidate = {
-				newname: $('#newname').val(), 
-				dob_year: $('#dob_year').val(),
-				dob_month: $('#dob_month').val(),
-				dob_day: $('#dob_day').val(),
-			};
-			$.post('/u/checkNameDOB', stuffToValidate, function(data) {
-				//console.log("checkNameDOB", JSON.stringify(data));
-				if (data.ok) {
-					  $( "#sf2kreg1box" ).hide();
-					$( "#sf2kreg2box" ).show();
-				}
-				else {
-					$("#sf2kreg1error").text(data.message);
-					if (data.underage) {
-						$( "#sf2knewfighter" ).hide();
-						$( "#sf2kunderage" ).show();
-						 $( "#sf2kreg1box" ).hide();
-						 $( "#sf2kloginformbox" ).show();
-					}
-				}
-			});
-		},
-		rules: {
-			newname: {
-				required: true,
-				minlength: 2,
-				maxlength: 13,
-				regex: /^[A-Za-z0-9\s!@#$_%^&*()+;:'<>\/?-]+$/
-			},
-			password: {
-				required: true,
-				minlength: 6
-			},
-			confirm_password: {
-				required: true,
-				minlength: 6,
-				equalTo: "#password"
-			},
-			dob_year: {
-				required: true
-			},
-			dob_day: {
-				required: true
-			},
-			dob_month: {
-				required: true
-			},
-		},
-		messages: {
-			newname: {
-				required: "You need a name!",
-				minlength: "Your name must be at least 2 characters.",
-				maxlength: "Your name must be under 13 characters.",
-				regex: "Your username has invalid characters. Try again."
-			},
-			password: {
-				required: "You need a password!",
-				minlength: "Your password must be at least 6 characters.",
-			},
-			confirm_password: {
-				required: "Type your password twice!",
-				minlength: "Your password must be at least 6 characters.",
-				equalTo: "Those two passwords don't match!"
-			}
-		},
-		showErrors: function(errorMap, errorList) {
-			$("#regForm1").find("input").each(function() {
-				$(this).removeClass("error");
-			});
-			$("#sf2kreg1error").html("");
-			if(errorList.length) {
-				$("#sf2kreg1error").html(errorList[0]['message']);
-				$(errorList[0]['element']).addClass("error");
-			}
-		}
-	});
-	$("#regForm2").validate({
-		submitHandler: function() {
-			var newUserInfo = {
-				newname: $('#newname').val(), 
-				dob_year: $('#dob_year').val(),
-				dob_month: $('#dob_month').val(),
-				dob_day: $('#dob_day').val(),
-				password: $('#confirm_password').val(),
-				email: $('#email').val()
-			};	
-			$.post('/u/new', newUserInfo, function(data) {
-				//console.log("new user", JSON.stringify(data));
-				
-				if (data.ok) {
-					$( "#sf2kreg2box" ).hide();
-					$( "#sf2kserverpick" ).show();
-					$( "#sf2kloginboxnickname" ).text(data.nickname);
-					$( "#sf2kloginbox" ).fadeIn();
-				  	
-				}
-				else {
-					$( "#sf2kreg2error" ).text(data.message);
-					//console.log(data.message);
-				}
-			});
-		},
-		rules: {
-			email: {
-				required: true,
-				email: true
-			}
-		},
-		messages: {
-			email: {
-				required: "Please enter your e-mail address!",
-				email: "Hmm, that doesn't look like a proper e-mail address."
-			}
-		},
-		showErrors: function(errorMap, errorList) {
-			$("#regForm2").find("input").each(function() {
-				$(this).removeClass("error");
-			});
-			$("#sf2kreg2error").html("");
-			if(errorList.length) {
-				$("#sf2kreg2error").html(errorList[0]['message']);
-				$(errorList[0]['element']).addClass("error");
-				$(errorList[0]['element']).addClass("error");
-			}
-		}
-	});
-});
-</script>
-<div id="sf2kmain">
-<div id="sf2kmainheader">
-<div id="sf2klogo"><img src="imgs/titlesm.gif" width=132 height=68 border=0></div>
-<div id="sf2kmenu"><div id="sf2kmenuitem"><BR><img src="imgs/play-header.png" width=36 height=9 border=0><br><img src="imgs/icon_play.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="help.html"><img src="imgs/help-header.png" width=34 height=9 border=0><BR><img src="imgs/icon_help.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><img src="imgs/rankings-header.png" width=70 height=9 border=0><BR><img src="imgs/icon_rankings.png" border=0 vspace=3></div><div id="sf2kmenuitem"><a href="honorcode.html"><img src="imgs/honorcode-header.png" width=46 height=18 border=0><BR><img src="imgs/icon_honor.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><img src="imgs/sf2ksource-header.png" width=57 height=18 border=0><BR><img src="imgs/icon_source.png" border=0 vspace=3></div><div id="sf2kmenuitem"><BR><a href="credits.html"><img src="imgs/credits-header.png" width=57 height=9 border=0><BR><img src="imgs/icon_credits.png" border=0 vspace=3></a></div></div>
-<div id="sf2kloginbox"><div id="sf2kloginboxnickname"></div><div id="sf2kloginboxlogout"><a href="/user/logout/">LOGOUT</a></div></div> 
-</div>
-<div id="sf2kgamebox">
-<!-- <iframe src="http://sissyfight.nodejitsu.com/game" width="528" height="276" seamless scrolling="no" id="sf2kgameiframe" name="gameiframe" frameborder="0" ></iframe> -->
-	<div id="sf2ksizebuttons">
-		<img src="imgs/1x-button-depressed.png" height="18" width="28"><a href="javascript:open2xGame();" onClick="return confirm_alert(this);"><img src="imgs/2x-button.png" height="18" width="28"></a>
-	</div>
-</div>
-<div id="sf2kloginformbox">
-	<div id="sf2knewfighter">
-		<span style="vertical-align: 5">Click </span><IMG SRC="imgs/here-button.png" id="sf2kregbutton" width="45" height="19"><span style="vertical-align: 5"> to create your SiSSYFiGHTER.</span>
-	</div>
-	<div id="sf2kunderage" style="display:none">
-		<span style="vertical-align: 5">Sorry, you have to be 13 or older to play.</span>
-	</div>
-	<br>
-	<div id="sf2kreturnlogin">
-		<form id="sf2kloginform">SiSSYFiGHTER name: <input name="nickname" type="text" size="13" max="13"><br>Password: <input name="password" type="password" size="10"><br><br><span style="vertical-align: 5">then click </span><INPUT TYPE="image" SRC="imgs/ok-button.png" id="sf2kloginsubmitbutton" width="30" height="19" onclick="return false;"></form>
-	<span id="sf2kloginerror"></span>
-	</div>
-	<div id="sf2kforgotpwbutton"><IMG SRC="imgs/question-button.png" width="19" height="19"></div>
-</div>
-<div id="sf2kforgotpwbox">
-	<div id="sf2kforgotpwbody"><form>SiSSYFiGHTER name: <input type="text" size="13" max="13" required><br>E-mail: <input type="text" size="20" max="50" required><br><br><br><br><br>Now click <span style="vertical-align: -5"><input type="image" SRC="imgs/reset-button.png" width="55" height="19"></span><br><span style="line-height: 1.5em">and we'll e-mail you a link to reset your password.</span></form><span id="sf2kforgotpwerror">Couldn't find that combination of name and e-mail address! Try again?</span></div>
+    /* FORM VALIDATORS */
+    $.validator.addMethod(
+        "regex",
+        function(value, element, regexp) {
+            var check = false;
+            var re = new RegExp(regexp);
+            return this.optional(element) || re.test(value);
+        },
+        "Your username has forbidden characters in it. Try again."
+    );
+    $("#regForm1").validate({
+        submitHandler: function() {
+            /* NEW NICKNAME VALIDATION */
+            var stuffToValidate = {
+                newname: $('#newname').val(), 
+                dob_year: $('#dob_year').val(),
+                dob_month: $('#dob_month').val(),
+                dob_day: $('#dob_day').val(),
+            };
+            $.post('/u/checkNameDOB', stuffToValidate, function(data) {
+                //console.log("checkNameDOB", JSON.stringify(data));
+                if (data.ok) {
+                      $( "#sf2kreg1box" ).hide();
+                    $( "#sf2kreg2box" ).show();
+                }
+                else {
+                    $("#sf2kreg1error").text(data.message);
+                    if (data.underage) {
+                        $( "#sf2knewfighter" ).hide();
+                        $( "#sf2kunderage" ).show();
+                         $( "#sf2kreg1box" ).hide();
+                         $( "#sf2kloginformbox" ).show();
+                    }
+                }
+            });
+        },
+        rules: {
+            newname: {
+                required: true,
+                minlength: 2,
+                maxlength: 13,
+                regex: /^[A-Za-z0-9\s!@#$_%^&*()+;:'<>\/?-]+$/
+            },
+            password: {
+                required: true,
+                minlength: 6
+            },
+            confirm_password: {
+                required: true,
+                minlength: 6,
+                equalTo: "#password"
+            },
+            dob_year: {
+                required: true
+            },
+            dob_day: {
+                required: true
+            },
+            dob_month: {
+                required: true
+            },
+        },
+        messages: {
+            newname: {
+                required: "You need a name!",
+                minlength: "Your name must be at least 2 characters.",
+                maxlength: "Your name must be under 13 characters.",
+                regex: "Your username has invalid characters. Try again."
+            },
+            password: {
+                required: "You need a password!",
+                minlength: "Your password must be at least 6 characters.",
+            },
+            confirm_password: {
+                required: "Type your password twice!",
+                minlength: "Your password must be at least 6 characters.",
+                equalTo: "Those two passwords don't match!"
+            }
+        },
+        showErrors: function(errorMap, errorList) {
+            $("#regForm1").find("input").each(function() {
+                $(this).removeClass("error");
+            });
+            $("#sf2kreg1error").html("");
+            if(errorList.length) {
+                $("#sf2kreg1error").html(errorList[0]['message']);
+                $(errorList[0]['element']).addClass("error");
+            }
+        }
+    });
+    $("#regForm2").validate({
+        submitHandler: function() {
+            var newUserInfo = {
+                newname: $('#newname').val(), 
+                dob_year: $('#dob_year').val(),
+                dob_month: $('#dob_month').val(),
+                dob_day: $('#dob_day').val(),
+                password: $('#confirm_password').val(),
+                email: $('#email').val()
+            };  
+            $.post('/u/new', newUserInfo, function(data) {
+                //console.log("new user", JSON.stringify(data));
+                
+                if (data.ok) {
+                    $( "#sf2kreg2box" ).hide();
+                    $( "#sf2kserverpick" ).show();
+                    $( "#sf2kloginboxnickname" ).text(data.nickname);
+                    $( "#sf2kloginbox" ).fadeIn();
+                    
+                }
+                else {
+                    $( "#sf2kreg2error" ).text(data.message);
+                    //console.log(data.message);
+                }
+            });
+        },
+        rules: {
+            email: {
+                required: true,
+                email: true
+            }
+        },
+        messages: {
+            email: {
+                required: "Please enter your e-mail address!",
+                email: "Hmm, that doesn't look like a proper e-mail address."
+            }
+        },
+        showErrors: function(errorMap, errorList) {
+            $("#regForm2").find("input").each(function() {
+                $(this).removeClass("error");
+            });
+            $("#sf2kreg2error").html("");
+            if(errorList.length) {
+                $("#sf2kreg2error").html(errorList[0]['message']);
+                $(errorList[0]['element']).addClass("error");
+                $(errorList[0]['element']).addClass("error");
+            }
+        }
+    });
+    });
+    </script>
 
-	<div id="sf2kforgotpwcancel">Or else <span style="vertical-align: -5"><IMG SRC="imgs/cancel-button.png" id="sf2kforgotpwcancelbutton" width="60" height="19"></span> to return to the login screen.</div>
-</div>
-<div id="sf2kreg1box">
-	<div id="sf2kreg1body"><form class="regform" id="regForm1" method="get" action=""><label for="newname">SiSSYFiGHTER name:</label> <input type="text" id="newname" name="newname" minlength="2" size="13" maxlength="13"><br><label for="password">Password:</label> <input type="password" minlength="6" size="10" name="password" id="password"><br><label for="confirm_password">Re-enter Password:</label> <input type="password" name="confirm_password" id="confirm_password" minlength="6" size="10"><br><nobr><label for="dob">Birthdate:</label> <select name="dob_month" id="dob_month"><option value="">Month</option><option label="January" value="01">January</option><option label="February" value="02">February</option><option label="March" value="03">March</option><option label="April" value="04">April</option><option label="May" value="05">May</option><option label="June" value="06">June</option><option label="July" value="07">July</option><option label="August" value="08">August</option><option label="September" value="09">September</option><option label="October" value="10">October</option><option label="November" value="11">November</option><option label="December" value="12">December</option></select><select name="dob_day" id="dob_day"><option value="">Day</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select><select name="dob_year" id="dob_year"><option value="">Year</option></select></nobr><br><div id="sf2kreg1error"><span></span></div></div>
+    <div id="sf2kmain">
+        <div id="sf2kmainheader">
+            <div id="sf2klogo"><img src="imgs/titlesm.gif" width="132" height="68" border="0"></div>
 
-	<div id="sf2kreg1submit"><span style="vertical-align: -5"><input id="sf2kreg1submitbutton" type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.</form></div>
-</div>
-<div id="sf2kreg2box">
-	<div id="sf2kreg2body"><form class="regform" id="regForm2" method="get" action=""><label for="email">E-mail:</label> <input type="text" id="email" name="email" size="25"><br><div id="sf2kreg2error"><span></span></div><br><span id="sf2kemailinfo">Your e-mail address is only used in case of a lost password or to let you know about problems restricting your access to the game. See the <A HREF="honorcode.html#privacypolicy" TARGET="_new">Privacy Policy</A> for more details.</span></div>
+            <div id="sf2kmenu">
+                <div id="sf2kmenuitem"><br>
+                <img src="imgs/play-header.png" width="36" height="9" border="0"><br>
+                <img src="imgs/icon_play.png" border="0" vspace="3"></div>
 
-	<div id="sf2kreg2submit"><span style="vertical-align: -5"><input id="sf2kreg2submitbutton" type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.</form></div>
-</div>
-<div id="sf2kserverpick">
-<img src="imgs/schoolsigns.png" width="594" height="129">
-<span id="sf2kschool1playbutton"><a href="/game/franklin"><img src="imgs/schoolenter.gif" id="sf2kschool1open" width="74" height="52"></a></span>
-<span id="sf2kschool2playbutton"><a href="/game/angel"><img src="imgs/schoolenter.gif" id="sf2kschool2open" width="74" height="52"></a></span>
-<span id="sf2kschool3playbutton"><a href="/game/666"><img src="imgs/schoolenter.gif" id="sf2kschool3open" width="74" height="52"></a></span>
-<span id="sf2kschool4playbutton"><a href="/game/suzy"><img src="imgs/schoolenter.gif" id="sf2kschool4open" width="74" height="52"></a></span>
-</div>
-</div>
-<script type="text/javascript">
-	var dropdown = document.getElementById('dob_year');
-	var d1 = new Date();
-	var y = d1.getFullYear();
-	var start_year = y;
-	var end_year = 1900;
-	for (var i =  start_year; i >= end_year; i--) {
-		dropdown.innerHTML += '<option value="' + i + '">' + i + '</option>';
-	}
-</script>
-<script type="text/javascript">
-  $().ready(function () { 
-	$().dateSelectBoxes($('#dob_month'),$('#dob_day'),$('#dob_year'),true);
-  });
-</script>
+                <div id="sf2kmenuitem">
+                    <br>
+                    <a href="help.html"><img src="imgs/help-header.png" width="34" height="9" border="0"><br>
+                    <img src="imgs/icon_help.png" border="0" vspace="3"></a>
+                </div>
+
+                <div id="sf2kmenuitem"><br>
+                <img src="imgs/rankings-header.png" width="70" height="9" border="0"><br>
+                <img src="imgs/icon_rankings.png" border="0" vspace="3"></div>
+
+                <div id="sf2kmenuitem">
+                    <a href="honorcode.html"><img src="imgs/honorcode-header.png" width="46" height="18" border="0"><br>
+                    <img src="imgs/icon_honor.png" border="0" vspace="3"></a>
+                </div>
+
+                <div id="sf2kmenuitem"><img src="imgs/sf2ksource-header.png" width="57" height="18" border="0"><br>
+                <img src="imgs/icon_source.png" border="0" vspace="3"></div>
+
+                <div id="sf2kmenuitem">
+                    <br>
+                    <a href="credits.html"><img src="imgs/credits-header.png" width="57" height="9" border="0"><br>
+                    <img src="imgs/icon_credits.png" border="0" vspace="3"></a>
+                </div>
+            </div>
+
+            <div id="sf2kloginbox">
+                <div id="sf2kloginboxnickname"></div>
+
+                <div id="sf2kloginboxlogout">
+                    <a href="/user/logout/">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="sf2kgamebox">
+            <!-- <iframe src="http://sissyfight.nodejitsu.com/game" width="528" height="276" seamless scrolling="no" id="sf2kgameiframe" name="gameiframe" frameborder="0" ></iframe> -->
+
+            <div id="sf2ksizebuttons">
+                <img src="imgs/1x-button-depressed.png" height="18" width="28"><a href="javascript:open2xGame();" onclick="return confirm_alert(this);"><img src="imgs/2x-button.png" height="18" width="28"></a>
+            </div>
+        </div>
+
+        <div id="sf2kloginformbox">
+            <div id="sf2knewfighter">
+                <span style="vertical-align: 5">Click</span> <img src="imgs/here-button.png" id="sf2kregbutton" width="45" height="19"> <span style="vertical-align: 5">to create your SiSSYFiGHTER.</span>
+            </div>
+
+            <div id="sf2kunderage" style="display:none">
+                <span style="vertical-align: 5">Sorry, you have to be 13 or older to play.</span>
+            </div><br>
+
+            <div id="sf2kreturnlogin">
+                <form id="sf2kloginform">
+                    SiSSYFiGHTER name: <input name="nickname" type="text" size="13" max="13"><br>
+                    Password: <input name="password" type="password" size="10"><br>
+                    <br>
+                    <span style="vertical-align: 5">then click</span> <input type="image" src="imgs/ok-button.png" id="sf2kloginsubmitbutton" width="30" height="19" onclick="return false;">
+                </form><span id="sf2kloginerror"></span>
+            </div>
+
+            <div id="sf2kforgotpwbutton"><img src="imgs/question-button.png" width="19" height="19"></div>
+        </div>
+
+        <div id="sf2kforgotpwbox">
+            <div id="sf2kforgotpwbody">
+                <form>
+                    SiSSYFiGHTER name: <input type="text" size="13" max="13" required=""><br>
+                    E-mail: <input type="text" size="20" max="50" required=""><br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    Now click <span style="vertical-align: -5"><input type="image" src="imgs/reset-button.png" width="55" height="19"></span><br>
+                    <span style="line-height: 1.5em">and we'll e-mail you a link to reset your password.</span>
+                </form><span id="sf2kforgotpwerror">Couldn't find that combination of name and e-mail address! Try again?</span>
+            </div>
+
+            <div id="sf2kforgotpwcancel">
+                Or else <span style="vertical-align: -5"><img src="imgs/cancel-button.png" id="sf2kforgotpwcancelbutton" width="60" height="19"></span> to return to the login screen.
+            </div>
+        </div>
+
+        <div id="sf2kreg1box">
+            <div id="sf2kreg1body">
+                <form class="regform" id="regForm1" method="get" action="">
+                    <label for="newname">SiSSYFiGHTER name:</label> <input type="text" id="newname" name="newname" minlength="2" size="13" maxlength="13"><br>
+                    <label for="password">Password:</label> <input type="password" minlength="6" size="10" name="password" id="password"><br>
+                    <label for="confirm_password">Re-enter Password:</label> <input type="password" name="confirm_password" id="confirm_password" minlength="6" size="10"><br>
+                    <nobr><label for="dob">Birthdate:</label> <select name="dob_month" id="dob_month">
+                        <option value="">
+                            Month
+                        </option>
+
+                        <option label="January" value="01">
+                            January
+                        </option>
+
+                        <option label="February" value="02">
+                            February
+                        </option>
+
+                        <option label="March" value="03">
+                            March
+                        </option>
+
+                        <option label="April" value="04">
+                            April
+                        </option>
+
+                        <option label="May" value="05">
+                            May
+                        </option>
+
+                        <option label="June" value="06">
+                            June
+                        </option>
+
+                        <option label="July" value="07">
+                            July
+                        </option>
+
+                        <option label="August" value="08">
+                            August
+                        </option>
+
+                        <option label="September" value="09">
+                            September
+                        </option>
+
+                        <option label="October" value="10">
+                            October
+                        </option>
+
+                        <option label="November" value="11">
+                            November
+                        </option>
+
+                        <option label="December" value="12">
+                            December
+                        </option>
+                    </select><select name="dob_day" id="dob_day">
+                        <option value="">
+                            Day
+                        </option>
+
+                        <option value="01">
+                            1
+                        </option>
+
+                        <option value="02">
+                            2
+                        </option>
+
+                        <option value="03">
+                            3
+                        </option>
+
+                        <option value="04">
+                            4
+                        </option>
+
+                        <option value="05">
+                            5
+                        </option>
+
+                        <option value="06">
+                            6
+                        </option>
+
+                        <option value="07">
+                            7
+                        </option>
+
+                        <option value="08">
+                            8
+                        </option>
+
+                        <option value="09">
+                            9
+                        </option>
+
+                        <option value="10">
+                            10
+                        </option>
+
+                        <option value="11">
+                            11
+                        </option>
+
+                        <option value="12">
+                            12
+                        </option>
+
+                        <option value="13">
+                            13
+                        </option>
+
+                        <option value="14">
+                            14
+                        </option>
+
+                        <option value="15">
+                            15
+                        </option>
+
+                        <option value="16">
+                            16
+                        </option>
+
+                        <option value="17">
+                            17
+                        </option>
+
+                        <option value="18">
+                            18
+                        </option>
+
+                        <option value="19">
+                            19
+                        </option>
+
+                        <option value="20">
+                            20
+                        </option>
+
+                        <option value="21">
+                            21
+                        </option>
+
+                        <option value="22">
+                            22
+                        </option>
+
+                        <option value="23">
+                            23
+                        </option>
+
+                        <option value="24">
+                            24
+                        </option>
+
+                        <option value="25">
+                            25
+                        </option>
+
+                        <option value="26">
+                            26
+                        </option>
+
+                        <option value="27">
+                            27
+                        </option>
+
+                        <option value="28">
+                            28
+                        </option>
+
+                        <option value="29">
+                            29
+                        </option>
+
+                        <option value="30">
+                            30
+                        </option>
+
+                        <option value="31">
+                            31
+                        </option>
+                    </select><select name="dob_year" id="dob_year">
+                        <option value="">
+                            Year
+                        </option>
+                    </select></nobr><br>
+
+                    <div id="sf2kreg1error"></div>
+                </form>
+            </div>
+
+            <div id="sf2kreg1submit">
+                <span style="vertical-align: -5"><input id="sf2kreg1submitbutton" type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.
+            </div>
+        </div>
+
+        <div id="sf2kreg2box">
+            <div id="sf2kreg2body">
+                <form class="regform" id="regForm2" method="get" action="">
+                    <label for="email">E-mail:</label> <input type="text" id="email" name="email" size="25"><br>
+
+                    <div id="sf2kreg2error"></div><br>
+                    <span id="sf2kemailinfo">Your e-mail address is only used in case of a lost password or to let you know about problems restricting your access to the game. See the <a href="honorcode.html#privacypolicy" target="_new">Privacy Policy</a> for more details.</span>
+                </form>
+            </div>
+
+            <div id="sf2kreg2submit">
+                <span style="vertical-align: -5"><input id="sf2kreg2submitbutton" type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.
+            </div>
+        </div>
+
+        <div id="sf2kserverpick">
+            <img src="imgs/schoolsigns.png" width="594" height="129"> <span id="sf2kschool1playbutton"><a href="/game/franklin"><img src="imgs/schoolenter.gif" id="sf2kschool1open" width="74" height="52"></a></span> <span id="sf2kschool2playbutton"><a href="/game/angel"><img src="imgs/schoolenter.gif" id="sf2kschool2open" width="74" height="52"></a></span> <span id="sf2kschool3playbutton"><a href="/game/666"><img src="imgs/schoolenter.gif" id="sf2kschool3open" width="74" height="52"></a></span> <span id="sf2kschool4playbutton"><a href="/game/suzy"><img src="imgs/schoolenter.gif" id="sf2kschool4open" width="74" height="52"></a></span>
+        </div>
+    </div><script type="text/javascript">
+var dropdown = document.getElementById('dob_year');
+    var d1 = new Date();
+    var y = d1.getFullYear();
+    var start_year = y;
+    var end_year = 1900;
+    for (var i =  start_year; i >= end_year; i--) {
+        dropdown.innerHTML += '<option value="' + i + '">' + i + '<\/option>';
+    }
+    </script><script type="text/javascript">
+$().ready(function () { 
+    $().dateSelectBoxes($('#dob_month'),$('#dob_day'),$('#dob_year'),true);
+    });
+    </script>
 </body>
 </html>
