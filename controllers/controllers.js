@@ -77,7 +77,9 @@ module.exports = function(app) {
 				includes: this.includes,
 				user:req.session.user, token:req.session.token, session:req.session.id,
 				school:req.session.school, 
-				gameScale:gameScale, gameWidth:gameWidth, gameHeight:gameHeight	
+				gameScale:gameScale, gameWidth:gameWidth, gameHeight:gameHeight,
+				singleSize: (gameScale==1),
+				doubleSize: (gameScale==2)	
 			};
 			res.render('game.html', context)
 		}

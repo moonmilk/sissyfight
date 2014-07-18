@@ -66,6 +66,7 @@
 			position: relative;
 			/* font for html-based text (chat and polaroid captions) */ 
 			font-family: 'resourcepix';
+			color: black;
 		}
 		#container input {
 			font-family: 'resourcepix';
@@ -95,6 +96,33 @@
 		
 		.homeroomChatNickname {
 			color: #333377;
+		}
+		
+		#sf2kdoublegamebox {
+			position:absolute;
+			top:0;
+			left:0;
+			padding:0;
+			margin:0;
+			
+			width: 100%;
+			height: 100%;
+			background:rgba(0,0,0,0.7);
+			
+			display: table;
+		}
+		#sf2kdoubleinnerbox {
+			vertical-align: middle;
+			text-align: center;
+			
+			display: table-cell;
+		}
+		#doublecontainer {
+			margin:0 auto;
+			width: 1056px;
+			height: 552px;
+			background:black;
+			text-align: left;
 		}
 	</style>
 
@@ -181,7 +209,8 @@
 	<div id="sf2kmain">
 {>includes.mainheader}
 		<div id="sf2kgamebox">
-			<div class="gameSize" id="container" width="{gameWidth}" height="{gameHeight}">
+			{if singleSize}
+			<div class="gameSize" id="container" width="528" height="276">
 				<canvas class="gameSize pixelated" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
 				
 				<div class="homeroomText disableSelect wordwrap fixedText hidden" id="homeroomChat" unselectable="yes"></div>
@@ -199,8 +228,35 @@
 				
 				<input class="homeroomText hidden" id="homeroomCreateGameEntry" type="text" maxlength="12"/>
 			</div>
+			{/if}
 		</div>
 	</div>
+	{if doubleSize}
+	<div id="sf2kdoublegamebox">
+		<div id="sf2kdoubleinnerbox">
+			<div id="doublecontainer">
+				<div class="gameSize" id="container" width="1056" height="552">
+					<canvas class="gameSize pixelated" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
+					
+					<div class="homeroomText disableSelect wordwrap fixedText hidden" id="homeroomChat" unselectable="yes"></div>
+					<textarea class="homeroomText hidden" id="homeroomTextEntry"></textarea>
+					
+					<textarea class="gameroomText gameroomChatNormal hidden" id="gameroomTextEntry"></textarea>
+					<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble0"></div>
+					<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble1"></div>
+					<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble2"></div>
+					<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble3"></div>
+					<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble4"></div>
+					<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble5"></div>
+					
+					<div class="captionText disableSelect wordwrap hidden" id="gameroomCaption" unselectable="yes"></div>
+					
+					<input class="homeroomText hidden" id="homeroomCreateGameEntry" type="text" maxlength="12"/>
+				</div>
+			</div>
+		</div>
+	</div>
+	{/if}
 </body>
 </html>
 	
