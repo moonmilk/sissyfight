@@ -7,6 +7,8 @@
 var User = require('../models/user');
 var qs = require('querystring');
 var moment = require('moment');
+var whiskers = require('whiskers');
+var fs = require('fs');
 
 // helper: check that all listed arguments are strings
 function checkArgs(body, args) {
@@ -17,13 +19,22 @@ function checkArgs(body, args) {
 }
 
 
+
 module.exports = function(app) {
+	/* GLOBALS --- */
+	// load subtemplates for including in pages
+	this.includes = {
+		mainheader: fs.readFileSync('views/inc_mainheader.html')
+	};
+
 
 	/* WEB PAGES ----------------------------------------- */
 
 	// 	/main: register - login - recover password form that fits in game window
 	app.get('/main', function(req, res) {
-		var context = {};
+		var context = {
+			includes: this.includes
+		};
 		if (req.session.user) {
 			context.loggedIn = 1;
 			context.nickname = req.session.user.nickname;
