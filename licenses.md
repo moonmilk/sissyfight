@@ -30,3 +30,16 @@ JQuery date select - Sam Collett
  *   http://www.opensource.org/licenses/mit-license.php
  */
  
+## used but not incorporated
+
+SiSSYFiGHT uses the following resources and libraries loaded from public content servers:
+
+createjs - http://createjs.com
+
+sockjs - https://github.com/sockjs
+
+jquery - http://jquery.com
+
+google fonts - https://www.google.com/fonts
+
+lodash - http://lodash.com
