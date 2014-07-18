@@ -122,15 +122,14 @@ body {
   vertical-align: middle;
 }
 #sf2kgamebox {
-  display: none;
   position: relative;
   height: 276px;
   width: 528px;
   margin: 20 0 20 61;
   padding: 0 0 0 0;
   clear: both;
-  text-align: center;
   vertical-align: middle;
+  color: black
 }
 #contentarea {
   display: block;

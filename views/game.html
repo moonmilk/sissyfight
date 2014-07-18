@@ -1,0 +1,212 @@
+<html>
+<head>
+	<title>SiSSYFiGHT 2000</title>
+	<script type='text/javascript'>
+		var token = '{token}';
+		var session = '{session}';
+		var school = '{school}';
+		
+		// big global variable for remembering stuff 
+		var g = {load:{}, dressing:{}, homeroom:{}, game:{}, schoolID: school};
+		
+		g.gameScale = '{gameScale}';
+		
+		// sissyfight namespace
+		this.sf = this.sf||{};
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="/stylesheets/site.css"/>
+	<link href='/stylesheets/game{gameScale}.css' rel='stylesheet'/>		
+			
+	<link href='//fonts.googleapis.com/css?family=VT323' rel='stylesheet' type='text/css'/>
+	<link href='//fonts.googleapis.com/css?family=Anaheim' rel='stylesheet' type='text/css'/>
+	<style>
+		@font-face {
+			font-family: 'resourcepix';
+			src: url('/fonts/resource.eot');
+			src: url('/fonts/resource.woff') format('woff'), 
+				url('/fonts/resource.ttf') format('truetype'), 
+				url('/fonts/resource.svg') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+	</style>
+
+	
+			
+	<style>
+		/*	attempt to scale up canvas while preserving pixels - 
+			fails to prevent blurring on firefox and chrome, but works on safari and ios 5 and 6 browser 
+			https://developer.mozilla.org/en-US/docs/Web/CSS/image-rendering
+		*/
+		
+		.pixelated {   
+			image-rendering:-webkit-optimize-contrast; 
+			image-rendering:pixelated;  
+			image-rendering:moz-crisp-edges; 
+			image-rendering:-o-crisp-edges;    
+			-ms-interpolation-mode: nearest-neighbor;
+			
+			image-rendering:optimizeSpeed;              /* Legal fallback                 */
+			image-rendering:-moz-crisp-edges;           /* Firefox                        */
+			image-rendering:crisp-edges;                /* CSS3 Proposed                  */
+			
+			// turn off font-smoothing
+			// will need to experiment with fonts and sizes to get away with unsmoothed fonts
+			// http://stackoverflow.com/a/10538659 : 
+			// font-smooth: never;
+			// -webkit-font-smoothing : none;
+			}
+
+		.hidden {
+			visibility: hidden;
+		}
+
+		#container {
+			position: relative;
+			/* font for html-based text (chat and polaroid captions) */ 
+			font-family: 'resourcepix';
+		}
+		#container input {
+			font-family: 'resourcepix';
+			resize: none;
+		}
+		#container textarea {
+			font-family: 'resourcepix';
+			resize: none;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			overflow: hidden;
+		}
+		
+		.disableSelect {
+			-webkit-user-select: none;  
+			-moz-user-select: none;    
+			-ms-user-select: none;      
+			user-select: none;
+		}
+
+		.fixedText {
+			resize: none;
+			overflow: hidden;
+			border: none;
+		}
+		
+		.homeroomChatNickname {
+			color: #333377;
+		}
+	</style>
+
+	<script src="//code.createjs.com/createjs-2013.12.12.min.js"></script>
+	<script src="//cdn.sockjs.org/sockjs-0.3.min.js"></script>
+	
+	<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.2.1/lodash.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+	
+	<script src="../client/Loader.js"></script>
+	<script src="../client/ColorSubstitutionFilter.js"></script>
+	<script src="../client/ColorMatrix.js"></script>
+	<script src="../client/ColorMatrixFilter.js"></script>
+	<script src="../client/MultiButtonHelper.js"></script>
+	<script src="../client/tweakDOMElement.js"></script>
+	<script src="../client/config.js"></script>
+	<script src="../client/addons.js"></script>
+	<script src="../client/Avatar.js"></script>
+	<script src="../client/AvatarAssets.js"></script>
+	<script src="../client/AddonsList.js"></script>
+	<script src="../client/DressingRoom.js"></script>
+	<script src="../client/Homeroom.js"></script>
+	<script src="../client/HomeroomGameListing.js"></script>
+	<script src="../client/HomeroomCreateGameDialog.js"></script>
+	<script src="../client/GameRoom.js"></script>
+	<script src="../client/GameRoomPlayer.js"></script>
+	<script src="../client/GameRoomConsole.js"></script>
+	<script src="../client/GameActionMenu.js"></script>
+	<script src="../client/GameRoomResultsDisplay.js"></script>
+	<script src="../client/Sound.js"></script>
+	<script src="../client/Comm.js"></script>
+	<script src="../client/Main.js"></script>
+	
+	<script type='text/javascript'>
+
+		sf.start = function(SockJS, auth, school) {
+			
+			var appCanvas, appCanvasID = 'appCanvas';
+
+			appCanvas = document.getElementById(appCanvasID); 
+			
+			// more ways to prevent antialiased scaling, via http://stackoverflow.com/a/17761798
+			var context = appCanvas.getContext('2d');
+			context.webkitImageSmoothingEnabled = context.imageSmoothingEnabled = context.mozImageSmoothingEnabled = context.oImageSmoothingEnabled = false;
+		
+			// disable browser drag-and-drop on game canvas 
+			//		http://developer.nokia.com/Community/Wiki/How_to_disable_dragging_of_images_and_text_selection_in_web_pages
+			//		http://stackoverflow.com/questions/704564/disable-drag-and-drop-on-html-elements
+			appCanvas.draggable = false;
+			appCanvas.onmousedown = function(event) {
+				if (event.preventDefault) event.preventDefault();
+				return false;
+			}
+			
+
+			var stage = new createjs.Stage(appCanvasID);
+			createjs.Touch.enable(stage);
+			var main = new sf.Main();
+			main.scaleX = main.scaleY = g.gameScale;
+			stage.addChild(main);
+			main.start(SockJS, auth, school);
+		}
+		
+		// prevent accidentally leaving game by hitting backspace
+		// http://stackoverflow.com/a/19394745
+		$(document).on("keydown", function (e) {
+			if (e.which === 8 && !$(e.target).is("input[type='text']:not([readonly]), textarea")) {
+				e.preventDefault();
+			}
+		});
+	</script>
+
+</head>
+<body>
+		
+	<script type='text/javascript'>
+		window.onload = function() {
+			sf.start(SockJS, {token:token, session:session, endpoint:'/sox'}, school);
+		}
+	</script>	
+			
+
+	
+	<div id="sf2kmain">
+{>includes.mainheader}
+		<div id="sf2kgamebox">
+			<div class="gameSize" id="container" width="{gameWidth}" height="{gameHeight}">
+				<canvas class="gameSize pixelated" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
+				
+				<div class="homeroomText disableSelect wordwrap fixedText hidden" id="homeroomChat" unselectable="yes"></div>
+				<textarea class="homeroomText hidden" id="homeroomTextEntry"></textarea>
+				
+				<textarea class="gameroomText gameroomChatNormal hidden" id="gameroomTextEntry"></textarea>
+				<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble0"></div>
+				<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble1"></div>
+				<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble2"></div>
+				<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble3"></div>
+				<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble4"></div>
+				<div class="gameroomText gameroomPlayerChatBubble gameroomChatNormal disableSelect wordwrap fixedText hidden" id="gameroomChatBubble5"></div>
+				
+				<div class="captionText disableSelect wordwrap hidden" id="gameroomCaption" unselectable="yes"></div>
+				
+				<input class="homeroomText hidden" id="homeroomCreateGameEntry" type="text" maxlength="12"/>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+	
+				
+		
+		
+		
+		
+	
