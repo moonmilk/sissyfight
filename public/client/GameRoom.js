@@ -83,7 +83,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		//console.log(this.gameInfo);
 		var gameName = new createjs.Text(this.gameInfo.roomName, config.getFont('gameRoomGameName'), '#eeeeee');
 		gameName.x = 192;
-		gameName.y = 6;
+		gameName.y = 4;
 		this.addChild(gameName);
 		
 		// game cues 

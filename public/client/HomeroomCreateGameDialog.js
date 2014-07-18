@@ -27,8 +27,8 @@ var p = HomeroomCreateGameDialog.prototype = new createjs.Container();
 		this.items.gameName = new createjs.DOMElement(document.getElementById('homeroomCreateGameEntry'));
 		
 		this.items.gameName.setFakeScale(g.gameScale);
-		this.items.gameName.setPosition(270, 49);
-		this.items.gameName.setSize(83, 12);
+		this.items.gameName.setPosition(274, 50);
+		this.items.gameName.setSize(85, 16);
 		this.items.gameName.setVisible(false);
 		this.items.gameName.htmlElement.value = "";
 		
