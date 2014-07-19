@@ -11,13 +11,22 @@ Listed as free, no license visible
 jquery alphanum plugin by Kevin Sheedy - GPLv2
 http://plugins.jquery.com/alphanum/
 
-JQuery date select - Sam Collett
+JQuery select - Sam Collett
  * Copyright (c) 2006-2010 Sam Collett (http://www.texotela.co.uk)
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Version 2.2.5
  * Demo: http://www.texotela.co.uk/code/jquery/select/
+ 
+JQuery date select boxes - Nick Busey
+ * Copyright (c) 2010-2011 Nick Busey (http://nickbusey.com/)
+ * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
+ * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
+ *
+ * Version 1.1.4
+ * Demo: http://nickabusey.com/jquery-date-select-boxes-plugin/
+ * 
  
  /*!
  * jQuery Validation Plugin 1.11.1
