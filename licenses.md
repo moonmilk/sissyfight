@@ -39,6 +39,15 @@ JQuery date select boxes - Nick Busey
  *   http://www.opensource.org/licenses/mit-license.php
  */
  
+ /*
+ * jQuery throttle / debounce - v1.1 - 3/7/2010
+ * http://benalman.com/projects/jquery-throttle-debounce-plugin/
+ * 
+ * Copyright (c) 2010 "Cowboy" Ben Alman
+ * Dual licensed under the MIT and GPL licenses.
+ * http://benalman.com/about/license/
+ */
+ 
 ## used but not incorporated
 
 SiSSYFiGHT uses the following resources and libraries loaded from public content servers:
@@ -52,3 +61,5 @@ jquery - http://jquery.com
 google fonts - https://www.google.com/fonts
 
 lodash - http://lodash.com
+
+AND all the node packages referenced in package.json
