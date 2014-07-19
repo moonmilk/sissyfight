@@ -181,12 +181,15 @@ var p = Avatar.prototype = new createjs.Container();
 		
 		// add damage display if it's in the look
 		if (this.look.damage) {
+			var d = this.look.damage;
+			if (d > 10) d = 10;
+			if (d < -10) d = -10;
 			var damageDisplay, assetName;
-			if (this.look.damage > 0) {
-				assetName = "results_m" + this.look.damage;
+			if (d > 0) {
+				assetName = "results_m" + d;
 			}
 			else {
-				assetName = "results_p" + (0-this.look.damage);
+				assetName = "results_p" + (0-d);
 			}
 			damageDisplay = this.overlayAssets[assetName].clone();
 			damageDisplay.x = -7;
