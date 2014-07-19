@@ -109,7 +109,29 @@ config['manifest'] = [
 				ovl_scratch:	[44, 1,	 8, 8,	0,	 3,-45],
 				ovl_choke:		[26, 0,	14,13,	0,	20,-41],
 				ovl_lick:		[54, 0,  8, 8,	0,	17,-47],
-				ovl_holdlolly:	[64, 0,	16, 8,	0,	 2,-74]
+				ovl_holdlolly:	[64, 0,	16, 8,	0,	 2,-74],
+				
+				// damage indicators minus and plus
+				results_m10:	[0,    16,   18, 17,   0,  0, 0],
+				results_m9:		[19,   16,   18, 17,   0,  0, 0],
+				results_m8:		[2*19, 16,   18, 17,   0,  0, 0],
+				results_m7:		[3*19, 16,   18, 17,   0,  0, 0],
+				results_m6:		[4*19, 16,   18, 17,   0,  0, 0],
+				results_m5:		[5*19, 16,   18, 17,   0,  0, 0],
+				results_m4:		[6*19, 16,   18, 17,   0,  0, 0],
+				results_m3:		[7*19, 16,   18, 17,   0,  0, 0],
+				results_m2:		[8*19, 16,   18, 17,   0,  0, 0],
+				results_m1:		[9*19, 16,   18, 17,   0,  0, 0],
+				results_p10:	[0,    34,   18, 17,   0,  0, 0],
+				results_p9:		[19,   34,   18, 17,   0,  0, 0],
+				results_p8:		[2*19, 34,   18, 17,   0,  0, 0],
+				results_p7:		[3*19, 34,   18, 17,   0,  0, 0],
+				results_p6:		[4*19, 34,   18, 17,   0,  0, 0],
+				results_p5:		[5*19, 34,   18, 17,   0,  0, 0],
+				results_p4:		[6*19, 34,   18, 17,   0,  0, 0],
+				results_p3:		[7*19, 34,   18, 17,   0,  0, 0],
+				results_p2:		[8*19, 34,   18, 17,   0,  0, 0],
+				results_p1:		[9*19, 34,   18, 17,   0,  0, 0]
 			}
 		}
 	},
@@ -328,6 +350,7 @@ config['manifest'] = [
 				results_btn_next_pressed:	[564, 22,   46, 22,   0, -1, -1],
 				results_btn_done_pressed:	[612, 17,   55, 25,   0, -1, -1],
 				
+
 				// end of game chalkboard display
 				chalkboard:			[430,655,	295,143,	0,	0, 0]
 			}
@@ -350,7 +373,6 @@ config['manifest'] = [
 				
 				status_undecided:	[12,  56,  12, 18,  0,  0, 0],
 				status_decided:		[0, 56,  12, 18,  0,  0, 0],
-				
 			}
 		}
 	}
