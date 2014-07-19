@@ -66,25 +66,9 @@ $( document ).ready(function() {
 		});
 		
 	}); 
-	</script><script type="text/javascript">
-	function confirm_alert(node) {
-			return confirm("Resizing will reload your connection, kicking you out of any game you're in. Is that OK?");
-		}
-		function open2xGame() {
-			$('#sf2kgameiframe').attr('src','imgs/sf2k-double-background.png');
-			Shadowbox.open({
-				content: 'http://sissyfight.nodejitsu.com/game/?double=1',
-				player: 'iframe',
-				height: 552,
-				width: 1056
-			})
-				return false;
-		}
-		function close2xGame() {
-			Shadowbox.close();
-			$('#sf2kgameiframe').attr('src','http://sissyfight.nodejitsu.com/game/');
-		}
-	</script><script type="text/javascript">
+	</script>
+	
+	<script type="text/javascript">
 $().ready(function() {
 	/* FORM VALIDATORS */
 	$.validator.addMethod(
