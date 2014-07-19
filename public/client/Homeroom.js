@@ -68,7 +68,7 @@ var p = Homeroom.prototype = new createjs.Container();
 		this.attendanceLayer.list_open.addChild(this.assets.attendance_open);
 		this.attendanceLayer.textContainer = this.attendanceLayer.list_open.addChild(new createjs.Container());
 		this.attendanceLayer.textContainer.x = 12;
-		this.attendanceLayer.textContainer.y = 26;
+		this.attendanceLayer.textContainer.y = 24;
 		this.attendanceLayer.textContainer.mask = new createjs.Shape();
 		this.attendanceLayer.textContainer.mask.graphics.beginFill('#fff').rect(12,26, 71,193);
 		this.attendanceLayer.attendanceText = this.attendanceLayer.textContainer.addChild(new createjs.Text('', config.getFont('homeroomAttendance'), '#444444'));
