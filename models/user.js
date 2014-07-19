@@ -13,6 +13,10 @@ var Hashids = require("hashids"),
     hashids = new Hashids("playgroundgames");
 // whiskers for email templates
 var whiskers = require('whiskers');
+// nodemailer to send email
+var config = require('../config');
+var nodemailer = require('nodemailer'),
+	mailtransport = config.email ? nodemailer.createTransport(config.email.transport) : null;
 
 
 var User = db.sequelize.define('User', {
@@ -186,16 +190,29 @@ var User = db.sequelize.define('User', {
 							text.retrieve('pwreset-email-%', function(err, texts) {
 								if (err) callback(err);
 								else {
-									// email sending would go here
-									// pretend it succeeded
 									
-									// update user record with new code
-									user.pwResetSent = new Date();
-									user.pwResetCode = code;
-									user.save().complete(function(err) {
-										if (err) callback(err);
-										else callback();
-									});									
+									if (!mailtransport) callback("Oops, can't send email now");
+									else {
+										var emailContent = {
+											from: 		texts['pwreset-email-from'],
+											to: 		email,
+											subject: 	texts['pwreset-email-subject'],
+											text:		whiskers.render(texts['pwreset-email-text'], { code: code, nickname: nickname })
+										}
+										// send mail! not monitoring callback for now, crossing fingers and assuming it works
+										mailtransport.sendMail(emailContent, function(err, info) {
+											if (err) console.log("nodemailer error", err);
+											else console.log("nodemailer success", info);
+										});
+									
+										// update user record with new code
+										user.pwResetSent = new Date();
+										user.pwResetCode = code;
+										user.save().complete(function(err) {
+											if (err) callback(err);
+											else callback();
+										});	
+									}								
 								}
 							});
 						}

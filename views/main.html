@@ -214,10 +214,16 @@ $(document).ready(function() {
 		submitHandler: $.throttle(600, 
 			function() {
 				$.post('/u/requestReset', $('#sf2kforgotform').serialize(), function(data) {
-					console.log(data);
-					$("#sf2kresetflash").fadeTo(300,1).delay(3000).fadeTo(500,0);
-					$("#sf2kforgotpwbox").hide();
-					$("#sf2kloginformbox").show();
+					//console.log(data);
+					if (!data) data = {};
+					if (data.ok) {
+						$("#sf2kresetflash").fadeTo(300,1).delay(3000).fadeTo(500,0);
+						$("#sf2kforgotpwbox").hide();
+						$("#sf2kloginformbox").show();
+					}
+					else {
+						$("#sf2kforgotpwerror").text(data.message);
+					}
 				})
 			}),
 		rules: {
