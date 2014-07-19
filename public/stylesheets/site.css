@@ -285,7 +285,6 @@ body {
   vertical-align: middle;
 }
 #sf2kforgotpwerror {
-  display: none;
   position: relative;
   clear: both;
   top: -64;
@@ -296,6 +295,19 @@ body {
   font-weight: bold;
   line-height: 1em;
   font-size: 1em;
+}
+#sf2kresetflash {
+  display:none; 
+  position:absolute; 
+  background-color:yellow; 
+  opacity:0; 
+  padding:2;
+  width: 268;
+  height: 45;
+  left: 133;
+  top: 61;
+  color: black;
+  font-size: 12px;
 }
 #sf2kreg1body {
   display: block;

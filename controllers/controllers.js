@@ -251,6 +251,29 @@ module.exports = function(app) {
 	});
 	
 	
+	// reset password request
+	//	args: email, nickname
+	app.post('/u/requestReset', function(req, res) {
+		if (!checkArgs(req.body, ['resetnickname', 'resetemail'])) { 
+			res.json({ok: false});
+			return;
+		}
+		User.requestPasswordResetEmail(req.body.resetnickname.trim(), req.body.resetemail.trim(), function(err) {
+			if (err) {
+				res.json({
+					ok: false,
+					message: err.toString()
+				});
+			}
+			else {
+				res.json({
+					ok: true
+				})
+			}
+		});
+	});
+	
+	
 
 	
 	app.get('/user/logout', function(req, res) {

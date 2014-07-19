@@ -2,7 +2,17 @@
 	User model
 */
 var db = require('../database');
+
+// bcrypt for hashing passwords
 var bcrypt = require('bcrypt');
+
+// text model to get password reset email text
+var text = require('./text');
+// hashids to generate password reset codes
+var Hashids = require("hashids"),
+    hashids = new Hashids("playgroundgames");
+// whiskers for email templates
+var whiskers = require('whiskers');
 
 
 var User = db.sequelize.define('User', {
@@ -50,7 +60,12 @@ var User = db.sequelize.define('User', {
 	email: {
 		type: db.Sequelize.STRING,
 		allowNull: false
-	}
+	},
+	
+	pwResetSent: db.Sequelize.DATE,
+	
+	pwResetCode: db.Sequelize.STRING(60)
+
 },
 
 
@@ -142,6 +157,54 @@ var User = db.sequelize.define('User', {
 			
 			// it's ok i guess
 			return true;
+		},
+		
+		
+		// send email with password reset code
+		//	callback(err) - err is null for success
+		requestPasswordResetEmail: function(nickname, email, callback) {
+			// look up user by nickname and email
+			User.find({where: [{nickname:nickname}, {email:email}]}).complete(function(err, user) {
+				if (err) callback(err);
+				else {
+					if (user) {
+						var secondsSinceLastRequest = (new Date()-user.pwResetSent) / 1000;
+						
+						// if they just recently hit the button, give a success response but don't email again
+						if (secondsSinceLastRequest < 120) {
+							callback();
+						}
+						// if it's been more than a few minutes but less than 12 hours - 
+						else if (secondsSinceLastRequest < 12 * 60 * 60) {
+							//callback("You asked for a reset email not long ago - try again later.");
+							//ignore:
+							callback();
+						}
+						else {	
+							// generate recovery code
+							var code = hashids.encrypt(new Date().getMilliseconds() + Math.floor(Math.random()*10000000));
+							text.retrieve('pwreset-email-%', function(err, texts) {
+								if (err) callback(err);
+								else {
+									// email sending would go here
+									// pretend it succeeded
+									
+									// update user record with new code
+									user.pwResetSent = new Date();
+									user.pwResetCode = code;
+									user.save().complete(function(err) {
+										if (err) callback(err);
+										else callback();
+									});									
+								}
+							});
+						}
+					}
+					else {
+						callback("Couldn't find that name and email.");
+					}
+				}
+			});
 		}
 		
 		

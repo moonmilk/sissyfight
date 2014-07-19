@@ -6,6 +6,7 @@
 	<script src="javascripts/jquery.validate.js" type="text/javascript"></script>
 	<script src="javascripts/jquery.alphanum.js" type="text/javascript"></script>
 	<script src="javascripts/dateSelectBoxes.js" type="text/javascript"></script>
+	<script src="javascripts/jquery.ba-throttle-debounce.min.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -67,9 +68,9 @@ $( document ).ready(function() {
 		
 	}); 
 	</script>
-	
+
 	<script type="text/javascript">
-$().ready(function() {
+$(document).ready(function() {
 	/* FORM VALIDATORS */
 	$.validator.addMethod(
 		"regex",
@@ -206,6 +207,46 @@ $().ready(function() {
 			if(errorList.length) {
 				$("#sf2kreg2error").html(errorList[0]['message']);
 				$(errorList[0]['element']).addClass("error");
+			}
+		}
+	});
+	$("#sf2kforgotform").validate({
+		submitHandler: $.throttle(600, 
+			function() {
+				$.post('/u/requestReset', $('#sf2kforgotform').serialize(), function(data) {
+					console.log(data);
+					$("#sf2kresetflash").fadeTo(300,1).delay(3000).fadeTo(500,0);
+					$("#sf2kforgotpwbox").hide();
+					$("#sf2kloginformbox").show();
+				})
+			}),
+		rules: {
+			resetnickname: {
+				required: true,
+				minlength: 2	
+			},
+			resetemail: {
+				required: true,
+				email: true
+			}
+		},
+		messages: {
+			resetnickname: {
+				required: "Please enter your username!",
+				minlength: "That's too short to be your username."
+			},
+			resetemail: {
+				required: "Please enter your e-mail address!",
+				email: "Hmm, that doesn't look like a proper e-mail address."
+			}
+		},
+		showErrors: function(errorMap, errorList) {
+			$("#sf2kforgotform").find("input").each(function() {
+				$(this).removeClass("error");
+			});
+			$("#sf2kforgotpwerror").html("");
+			if(errorList.length) {
+				$("#sf2kforgotpwerror").html(errorList[0]['message']);
 				$(errorList[0]['element']).addClass("error");
 			}
 		}
@@ -217,8 +258,13 @@ $().ready(function() {
 {>includes.mainheader}
 
 		<div id="sf2kloginformbox">
+			
 			<div id="sf2knewfighter">
 				<span style="vertical-align: 5">Click</span> <img src="imgs/here-button.png" id="sf2kregbutton" width="45" height="19"> <span style="vertical-align: 5">to create your SiSSYFiGHTER.</span>
+			</div>
+			
+			<div id="sf2kresetflash">
+				<span style="vertical-align: 5">Your password reset email should arrive soon.</span>
 			</div>
 
 			<div id="sf2kunderage" style="display:none">
@@ -226,6 +272,7 @@ $().ready(function() {
 			</div><br>
 
 			<div id="sf2kreturnlogin">
+			
 				<form id="sf2kloginform">
 					SiSSYFiGHTER name: <input name="nickname" type="text" size="13" max="13"><br>
 					Password: <input name="password" type="password" size="10"><br>
@@ -239,16 +286,16 @@ $().ready(function() {
 
 		<div id="sf2kforgotpwbox">
 			<div id="sf2kforgotpwbody">
-				<form>
-					SiSSYFiGHTER name: <input type="text" size="13" max="13" required=""><br>
-					E-mail: <input type="text" size="20" max="50" required=""><br>
+				<form id="sf2kforgotform">
+					SiSSYFiGHTER name: <input id="resetnickname" name="resetnickname" type="text" size="13"><br>
+					E-mail: <input id="resetemail" name="resetemail" type="text" size="20"><br>
 					<br>
 					<br>
 					<br>
 					<br>
-					Now click <span style="vertical-align: -5"><input type="image" src="imgs/reset-button.png" width="55" height="19"></span><br>
+					Now click <span style="vertical-align: -5"><input id="sf2kforgotsubmitbutton" type="image" src="imgs/reset-button.png" width="55" height="19"></span><br>
 					<span style="line-height: 1.5em">and we'll e-mail you a link to reset your password.</span>
-				</form><span id="sf2kforgotpwerror">Couldn't find that combination of name and e-mail address! Try again?</span>
+				</form><span id="sf2kforgotpwerror"></span>
 			</div>
 
 			<div id="sf2kforgotpwcancel">
