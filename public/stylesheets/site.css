@@ -309,6 +309,57 @@ body {
   color: black;
   font-size: 12px;
 }
+#sf2kresetpasswordbox {
+  display: block;
+  position: relative;
+  background: url("/imgs/sf2k-resetpw-background.png") no-repeat;
+  height: 276px;
+  width: 528px;
+  margin: 20 0 20 61;
+  padding: 0 0 0 0;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+}
+#sf2kresetpassword {
+  display: block;
+  position: relative;
+  height: 100px;
+  width: 240px;
+  top: 80;
+  left: 148;
+  clear: both;
+  text-align: center;
+  vertical-align: middle;
+  color: #003366;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+#sf2kresetpasswordsubmit {
+  display: block;
+  position: relative;
+  font-size: 0.6em;
+  color: #FFFFFF;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
+  top: 114;
+  vertical-align: middle;
+}
+#sf2kresetpwerror {
+  display: block;
+  position: relative;
+  clear: both;
+  top: 21;
+  left: 0; 
+  text-align: center;
+  vertical-align: middle;
+  color: #FF0000;
+  font-weight: bold;
+  line-height: 0.6em;
+  font-size: 0.6em;
+}
 #sf2kreg1body {
   display: block;
   position: relative;

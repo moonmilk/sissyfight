@@ -222,6 +222,69 @@ var User = db.sequelize.define('User', {
 					}
 				}
 			});
+		},
+		
+		
+		// reset user's password by email and reset code
+		//	callback(err, nickname) - if success, returns affected user's nickname
+		resetPassword: function(email, code, newpassword, callback) {
+			// hash the password
+			bcrypt.hash(newpassword, 8, function(err, hash) {
+				if (err) callback(err);
+				else {
+					// sequelize doesn't return # of rows affected by raw query update
+					// so have to do two queries.
+					var now = new Date();
+					
+					db.sequelize.query(
+						'SELECT id, nickname FROM Users ' +  // , (TIME_TO_SEC(TIMEDIFF(:now, pwResetSent))) as secs
+						'WHERE email=:email AND pwResetCode=:code AND (TIME_TO_SEC(TIMEDIFF(:now, pwResetSent))) < :daysecs ',
+						
+						null,
+						
+						{ raw: true }, 
+						
+						{ email:email, code:code, now:now, daysecs: 24*60*60 }	
+					).complete(function(err, result) {
+						if (err) {
+							console.log("Password reset for " + email + " failed with db error " + err);
+							callback(err);
+						}
+						else if (result.length==0) {
+							callback("Wrong email, or reset link's too old");
+						}
+						else if (result.length > 1) {
+							console.log("Password reset trouble! More than one match for email and code! ", email, code);
+							callback("Something went wrong.");
+						}
+						else {
+							// only one result, or something's REALLY weird
+							// update user's password 
+							var id = result[0].id, nickname = result[0].nickname;
+						
+							db.sequelize.query(
+								'UPDATE Users SET password=:hashedpassword, pwResetSent=NULL ' +
+								'WHERE id=:id ' +
+								'LIMIT 1 ' ,
+								
+								null,
+								
+								{ raw: true },
+								
+								{ id: id, hashedpassword: hash }
+							
+							).complete(function(err, result) {
+								if (err) callback(err);
+								else callback(null, nickname);
+							})	
+								
+							
+						}
+					});
+									
+				}
+			});
+
 		}
 		
 		

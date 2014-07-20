@@ -1,0 +1,89 @@
+<html>
+<head>
+	<title>SiSSYFiGHT 2000</title>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/site.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.validate.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.alphanum.js" type="text/javascript"></script>
+	<script src="/javascripts/dateSelectBoxes.js" type="text/javascript"></script>
+	<script src="/javascripts/jquery.ba-throttle-debounce.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+		/* FORM VALIDATORS */
+		$("#resetpwform1").validate({
+			submitHandler: function() {
+				/* request password reset */
+				$.post('/u/resetPassword', $("#resetpwform1").serialize(), function(data) {
+					if (data) {
+						if (data.ok) window.location.href = "/main";
+						else $("#sf2kresetpwerror").text(data.message);
+					}
+				});
+			},
+			rules: {
+				email: {
+					required: true,
+					email: true
+				},
+				password: {
+					required: true,
+					minlength: 6
+				},
+				confirm_password: {
+					required: true,
+					minlength: 6,
+					equalTo: "#password"
+				},
+			},
+			messages: {
+				email: {
+					required: "Please enter your e-mail address!",
+					email: "Hmm, that doesn't look like a proper e-mail address."
+				},
+				password: {
+					required: "You need a password!",
+					minlength: "Your password must be at least 6 characters.",
+				},
+				confirm_password: {
+					required: "Type your password twice!",
+					minlength: "Your password must be at least 6 characters.",
+					equalTo: "Those two passwords don't match!"
+				}
+			},
+			showErrors: function(errorMap, errorList) {
+				$("#resetpwform1").find("input").each(function() {
+					$(this).removeClass("error");
+				});
+				$("#sf2kresetpwerror").html("");
+				if(errorList.length) {
+					$("#sf2kresetpwerror").html(errorList[0]['message']);
+					$(errorList[0]['element']).addClass("error");
+				}
+			}
+		});
+
+	});
+	</script>
+
+	<div id="sf2kmain">
+{>includes.mainheader}
+
+		
+		<div id="sf2kresetpasswordbox">
+		    <div id="sf2kresetpassword">
+			    <p align="center"><form class="resetpwform" id="resetpwform1" method="get" action="">Enter the e-mail address associated with your account: <input type="text" id="email" name="email" size="25"><br>
+			    <br>New password: <input type="password" minlength="6" size="10" name="password" id="password"><br>Re-enter password: <input type="password" name="confirm_password" id="confirm_password" minlength="6" size="10">
+			    <input type="hidden" name="code" value="{code}">
+		    </div>
+		    <div id="sf2kresetpasswordsubmit"><span style="vertical-align: -3"><input type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> or <span style="vertical-align: -6"><a href="/main"><IMG id="sf2kresetpwcancelbutton" SRC="/imgs/cancel-button.png" border="0" width="60" height="19"></a></span></form></div>
+		    <div id="sf2kresetpwerror"><span></span></div>
+		</div>
+
+	</div>
+	
+</body>
+</html>

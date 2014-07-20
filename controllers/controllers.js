@@ -53,6 +53,17 @@ module.exports = function(app) {
 	});
 	
 	
+	// reset password stage 2 page
+	app.get('/reset/:code', function(req, res) {
+		req.session.destroy();
+		var context = {
+			includes: this.includes,
+			code: req.params.code
+		};
+		res.render('resetpw.html', context);
+	});
+	
+	
 	/* --- GAME PAGE ------------------------------------- */
 
 	app.get('/game/:school', function(req, res) {
@@ -273,6 +284,27 @@ module.exports = function(app) {
 		});
 	});
 	
+	// reset password stage 3
+	app.post('/u/resetPassword', function(req, res) {
+		if (!checkArgs(req.body, ['email', 'password', 'code'])) {
+			res.json({ok: false});
+			return;
+		}
+		User.resetPassword(req.body.email.trim(), req.body.code, req.body.password, function(err, result) {
+			if (err) {
+				res.json({
+					ok: false,
+					message: err
+				})
+			}
+			else {
+				res.json({
+					ok: true,
+					nickname: result
+				})
+			}
+		});
+	})
 	
 
 	
