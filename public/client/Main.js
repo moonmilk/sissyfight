@@ -108,7 +108,7 @@ var p = Main.prototype = new createjs.Container();
 	
 	
 	p.openDressingRoom = function(data)	{
-		console.log("Opening dressing room");
+		//console.log("Opening dressing room");
 		this.dressing = new sf.DressingRoom(data.avatar, data.nickname);
 		this.addChild(this.dressing);
 		this.dressing.start();
@@ -120,7 +120,7 @@ var p = Main.prototype = new createjs.Container();
 	}
 	
 	p.closeDressingRoom = function(event) {
-		console.log("Closing dressing room");
+		//console.log("Closing dressing room");
 		this.dressing.destroy();
 		this.removeChild(this.dressing);
 		this.dressing.removeAllEventListeners();
@@ -130,14 +130,14 @@ var p = Main.prototype = new createjs.Container();
 	
 	
 	p.openHomeroom = function(data) {
-		console.log("Opening homeroom");
+		//console.log("Opening homeroom");
 		this.homeroom = new sf.Homeroom(data.avatar, data.nickname, data.occupants, data.games, data.booted);
 		this.addChild(this.homeroom);
 		this.homeroom.start();
 	}
 	
 	p.closeHomeroom = function() {
-		console.log("Closing homeroom");
+		//console.log("Closing homeroom");
 		this.homeroom.destroy();
 		this.removeChild(this.homeroom);
 		this.homeroom = null;
@@ -146,7 +146,7 @@ var p = Main.prototype = new createjs.Container();
 	
 	
 	p.openGameRoom = function(data) {
-		console.log("Opening gameroom");
+		//console.log("Opening gameroom");
 		g.enableZoom(false);
 		this.gameroom = new sf.GameRoom(data.me, data.room);
 		this.addChild(this.gameroom);
@@ -155,7 +155,7 @@ var p = Main.prototype = new createjs.Container();
 	
 	p.closeGameRoom = function(data) {
 		g.enableZoom(true);
-		console.log("Closing gameroom");
+		//console.log("Closing gameroom");
 		this.gameroom.destroy();
 		this.removeChild(this.gameroom);
 		this.gameroom = null;
