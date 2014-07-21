@@ -58,6 +58,10 @@ ChatRoom.prototype.getInfo = function() {
 	return {room:this.id, roomName:this.name, occupants:this.getOccupantProperties(['id','nickname']), type:"ChatRoom"};
 }
 
+ChatRoom.prototype.getPopulation = function() {
+	return this.occupants.length;
+}
+
 
 // callback: done(err, {room id, room name, occupants})
 ChatRoom.prototype.join = function(conn, done) {

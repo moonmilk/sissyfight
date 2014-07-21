@@ -503,6 +503,16 @@ body {
   z-index: 5;
 }
 
+.schoolpop {
+	text-align: right;
+	padding:18px 10px 0px 0px;
+}
+.schoolpopnum {
+	font-weight: bold;
+	font-size:larger;
+}
+
+
 .sf2ksubmitbutton {
 	background-image: url("/imgs/submit-button.png");
 	background-position: 0px 0px;

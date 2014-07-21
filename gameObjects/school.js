@@ -35,6 +35,16 @@ function School(params) {
 	
 }
 
+// get total population of school
+School.prototype.getPopulation = function() {
+	var pop = 0;
+	if (this.homeroom) pop += this.homeroom.getPopulation();
+	_.each(this.games, function(game) {
+		pop += game.getPopulation();
+	});
+	return pop;
+}
+
 
 // callback: done(err, homeroom)
 School.prototype.getHomeroom = function(done) {
