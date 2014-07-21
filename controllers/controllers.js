@@ -176,7 +176,7 @@ module.exports = function(app) {
 		// nick check
 		var nick = req.body.newname.trim();
 		
-		User.checkNickname(nick, function(err, result) {
+		User.checkNicknameAndEmail(nick, null, function(err, result) {
 			if (err) {
 				res.json({
 					ok: false,
@@ -229,7 +229,7 @@ module.exports = function(app) {
 		
 		var nick = req.body.newname.trim();
 		
-		User.checkNickname(nick, function(err, result) {
+		User.checkNicknameAndEmail(nick, req.body.email, function(err, result) {
 			if (err) {
 				delete req.session['user'];
 				res.json({

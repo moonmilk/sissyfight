@@ -93,13 +93,13 @@ var User = db.sequelize.define('User', {
 		},
 		
 		
-		// check if nickname is legal and not used
+		// check if nickname is legal and not used. If email is not null, checks it is unused as well.
 		//   callback(err, status) - status is null for ok, 		
 		//		or {error: 'validation', msg: "Validation reason"}
 		//		or {error: 'taken', msg: "That nickname's already taken"
-		checkNickname: function(nickname, callback) {
+		checkNicknameAndEmail: function(nickname, email, callback) {
 			if (typeof nickname !== "string") {
-				if (callback) callback(null, {submitted:nickname, error:"validation", msg:"That's not a string"});
+				callback(null, {submitted:nickname, error:"validation", msg:"That's not a string"});
 				return;
 			}
 			
@@ -108,19 +108,30 @@ var User = db.sequelize.define('User', {
 			if (validation) {
 				// didn't pass validation - pick one error message to pass on to user
 				var prop = Object.keys(validation)[0];
-				if (callback) callback(null, {submitted:nickname, error:"validation", msg:validation[prop][0]});	
+				//console.log(validation);
+				callback(null, {submitted:nickname, error:"validation", msg:validation[prop][0]});	
 			}
 			else {
 				// check if exists
 				User.find({where:{nickname: nickname}}).complete(function(err, user) {
-					if (err && callback) callback(err);
+					if (err) callback(err);
 					else {
 						if (user) {
-							if (callback) callback(null, {submitted:nickname, error: "taken", msg:"That nickname's already taken"});
+							callback(null, {submitted:nickname, error: "taken", msg:"That nickname's already taken"});
+						}
+						else if (email) {
+							User.find({where:{email: email}}).complete(function(err, user) {
+								if (err) callback(err);
+								else if (user) {
+									callback(null, {submitted:email, error:"taken", msg:"That e-mail address is already in use."});
+								}
+								else callback(null, null); // neither nickname nor email matched.
+							});
 						}
 						else {
-							if (callback) callback(null, null);
-						}
+							// not checking email, and nickname was ok, so return success
+	 						callback(null, null);
+	 					}
 					}
 				})
 			}

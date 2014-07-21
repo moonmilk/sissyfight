@@ -201,6 +201,7 @@ $(document).ready(function() {
 			}
 		},
 		showErrors: function(errorMap, errorList) {
+			//console.log("regform2 errors", errorList);
 			$("#regForm2").find("input").each(function() {
 				$(this).removeClass("error");
 			});
@@ -317,18 +318,18 @@ $(document).ready(function() {
 		</div>
 
 		<div id="sf2kreg2box">
+			<form class="regform" id="regForm2" method="get" action="">
 			<div id="sf2kreg2body">
-				<form class="regform" id="regForm2" method="get" action="">
 					<label for="email">E-mail:</label> <input type="text" id="email" name="email" size="25"><br>
 
 					<div id="sf2kreg2error"></div><br>
 					<span id="sf2kemailinfo">Your e-mail address is only used in case of a lost password or to let you know about problems restricting your access to the game. See the <a href="honorcode.html#privacypolicy" target="_new">Privacy Policy</a> for more details.</span>
-				</form>
 			</div>
 
 			<div id="sf2kreg2submit">
 				<span style="vertical-align: -5"><input id="sf2kreg2submitbutton" type="submit" value="" class="sf2ksubmitbutton" width="60" height="19"></span> to continue.
 			</div>
+			</form>
 		</div>
 
 		<div id="sf2kserverpick">
