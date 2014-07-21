@@ -22,7 +22,7 @@
     "nodemailer": "^1.0.3",
     "passport": "*",
     "redis": "0.8.4",
-    "sequelize": "*",
+    "sequelize": "1.7.9",
     "sockjs": "*",
     "whiskers": "0.3.3"
   },

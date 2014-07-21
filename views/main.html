@@ -171,6 +171,7 @@ $(document).ready(function() {
 				password: $('#confirm_password').val(),
 				email: $('#email').val()
 			};	
+			//console.log('calling new', newUserInfo);
 			$.post('/u/new', newUserInfo, function(data) {
 				//console.log("new user", JSON.stringify(data));
 				
