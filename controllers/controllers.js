@@ -38,9 +38,19 @@ module.exports = function(app) {
 	/* WEB PAGES ----------------------------------------- */
 
 	// 	/main: register - login - recover password form that fits in game window
-	app.get('/main', function(req, res) {
+	app.get('/main', function(req, res) {				
+		// for school populations
+		var schools = app.get('schools');
+		
 		var context = {
 			includes: this.includes
+
+			// reminder to change this to less awkward code someday:
+			schoolpop1: schools['franklin'].getPopulation(),
+			schoolpop2: schools['angel'].getPopulation(),
+			schoolpop3: schools['666'].getPopulation(),
+			schoolpop4: schools['suzy'].getPopulation()
+		}
 		};
 		if (req.session.user) {
 			context.loggedIn = 1;
