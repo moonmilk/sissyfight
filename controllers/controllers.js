@@ -43,15 +43,15 @@ module.exports = function(app) {
 		var schools = app.get('schools');
 		
 		var context = {
-			includes: this.includes
+			includes: this.includes,
 
 			// reminder to change this to less awkward code someday:
 			schoolpop1: schools['franklin'].getPopulation(),
 			schoolpop2: schools['angel'].getPopulation(),
 			schoolpop3: schools['666'].getPopulation(),
 			schoolpop4: schools['suzy'].getPopulation()
-		}
 		};
+		
 		if (req.session.user) {
 			context.loggedIn = 1;
 			context.nickname = req.session.user.nickname;
