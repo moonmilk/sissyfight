@@ -522,7 +522,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 	p.handlebtn_help = function() {
 		sf.Sound.buttonClick();
-		console.log("Sorry, haven't done help yet");
+		window.open('/pages/help.html', 'sf2kpages').focus();;
 	}
 	
 	
