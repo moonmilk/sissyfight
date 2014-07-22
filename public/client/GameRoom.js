@@ -310,10 +310,6 @@ var p = GameRoom.prototype = new createjs.Container();
 				break;
 				
 			case 'countdown': // every player has moved; final countdown gives everyone [10] seconds to change their minds
-				// play countdown sound unless it's already played this turn
-				if (!this.sounds.countdown) {
-					this.sounds.countdown = sf.Sound.play('snd_countdown');
-				}
 				if (this.getTimer() > event.data.time) this.setTimer(event.data.time);
 				break;	
 				
@@ -610,6 +606,13 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.timerTime = time;
 		
 		this.items.console.setTimer(this.timerTime);
+		
+		if (this.timerTime == 10) {
+			// play countdown sound unless it's already played this turn
+			if (!this.sounds.countdown) {
+				this.sounds.countdown = sf.Sound.play('snd_countdown');
+			}
+		}
 	}
 	
 	p.startTimer = function() {
@@ -633,8 +636,15 @@ var p = GameRoom.prototype = new createjs.Container();
 			this.timerTime -= 1;
 			this.items.console.setTimer(this.timerTime);
 			
+			if (this.timerTime == 10) {
+				// play countdown sound unless it's already played this turn
+				if (!this.sounds.countdown) {
+					this.sounds.countdown = sf.Sound.play('snd_countdown');
+				}
+			}
+			
 			// time's up?
-			if (this.timerTime == 0) {
+			else if (this.timerTime == 0) {
 				this.timerNextTick = undefined;
 				// let the server know i failed to move before timer ran out
 				comm.writeEvent('act', {action:'timeout'});
