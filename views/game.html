@@ -222,9 +222,12 @@
 			}
 		});
 		
-		// hook for disabling zoom buttons during game
+		// hook for disabling zoom and navigation buttons during game
 		function zoomWarning() {
 			$('#zoomwarning').fadeTo(300, 1.0).delay(1000).fadeTo(600, 0.0);
+		}
+		function navWarning() {
+			return false;
 		}
 		g.enableZoom = function(flag) {
 			if (flag) {
@@ -235,11 +238,15 @@
 				$('#2xbutton').off("click").click(function() {
 					window.location.href="?double=1";
 				});
+				
+				$('.disablewhenplaying').fadeTo(300,1.0).off("click", navWarning);
 			}
 			else {
 				$('#zoombuttons').fadeTo(300, 0.4);
 				$('#1xbutton').off("click").click(zoomWarning);
 				$('#2xbutton').off("click").click(zoomWarning);
+				
+				$('.disablewhenplaying').fadeTo(300,0.4).on("click", navWarning);
 			}
 		}
 	</script>

@@ -43,7 +43,7 @@ body {
   line-height: 1em;
   font-weight: bold;
 }
-#sf2kmenuitem {
+.sf2kmenuitem {
   display: inline-block;
   position: relative;
   margin: 0 5 0 5;
