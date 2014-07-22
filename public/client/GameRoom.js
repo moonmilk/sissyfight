@@ -197,6 +197,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// default chat mode: not loud
 		this.chatLoud = false;
+		this.setChatloud();
 		
 		// ping timer
 		this.nextPingTime = 0; // ping immediately
@@ -448,7 +449,10 @@ var p = GameRoom.prototype = new createjs.Container();
 	p.handlebtn_chatmode_loud = function() {
 		sf.Sound.buttonClick();
 		this.chatLoud = !this.chatLoud;
-		
+		this.setChatloud();
+	}
+	
+	p.setChatloud = function() {
 		if (this.chatLoud) {
 			this.buttons.btn_chat.helper.downLabel = 'btn_chat_loud_pressed';
 			this.buttons.btn_chat.helper.outLabel = 'btn_chat_loud';
