@@ -5,17 +5,18 @@ this.sf = this.sf||{};
 
 (function() {
 
-var DressingRoom = function(look, nickname) {
-  this.initialize(look, nickname);
+var DressingRoom = function(look, nickname, level) {
+  this.initialize(look, nickname, level);
 }
 
 var p = DressingRoom.prototype = new createjs.Container();
 
 	p.Container_initialize = p.initialize;
 	
-	p.initialize = function(look, nickname) {
+	p.initialize = function(look, nickname, level) {
 		this.Container_initialize();	
 		this.look = look;
+		this.level = level;
 		
 		// set up random defaults if this is a new character
 		if (this.look.skincolor === undefined) this.look.skincolor = Math.floor(Math.random()*config.number.of.skincolor);
@@ -236,9 +237,24 @@ var p = DressingRoom.prototype = new createjs.Container();
 		// throw away and make a new addons list (inefficient but easy)
 		this.addonsLayer.removeAllChildren();
 		
-		// placeholder filtering - for now, just get rid of the tier -1 items (mud mask and towel) 
-		var filteredAddons = _.filter(config.addons, function(addon){return addon.tier >= 0 
-			}); //&& addon.tier < 2}); // temporarily filter out higher tiers
+		//  filter for user level and get rid of the tier -1 items (mud mask and towel) 
+		var maxTier = 0, custom = 0;
+		if (this.level <= 1) maxTier = 0;
+		else if (this.level <= 3) maxTier = 1;
+		else if (this.level <= 4) maxTier = 2;
+		else if (this.level <= 6) maxTier = 3;
+		else if (this.level <= 400) maxTier = 3;
+		if (this.level >= 401 && this.level <= 499) {
+			maxTier = 3;
+			custom = this.level;
+		}
+		else if (this.level == 500) {
+			maxTier = 5;
+		}
+		
+		var filteredAddons = _.filter(config.addons, function(addon){
+			return ( (addon.tier >= 0 && addon.tier <= maxTier) || (custom > 0 && addon.id == custom) );
+		}); 
 		
 		this.addonsList = new sf.AddonsList(this, this.look, filteredAddons);
 		this.addonsLayer.addChild(this.addonsList);

@@ -128,7 +128,7 @@ var p = Main.prototype = new createjs.Container();
 	
 	p.openDressingRoom = function(data)	{
 		//console.log("Opening dressing room");
-		this.dressing = new sf.DressingRoom(data.avatar, data.nickname);
+		this.dressing = new sf.DressingRoom(data.avatar, data.nickname, data.level);
 		this.addChild(this.dressing);
 		this.dressing.start();
 		

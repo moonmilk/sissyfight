@@ -136,7 +136,7 @@ module.exports = function(app, sockjs) {
 							
 							if (!conn.user.avatar) conn.user.avatar={};
 							
-							conn.writeEvent("go", {to:"dressingroom", nickname:conn.user.nickname, avatar:conn.user.avatar});
+							conn.writeEvent("go", {to:"dressingroom", nickname:conn.user.nickname, avatar:conn.user.avatar, level:conn.user.level});
 							
 							registerSissyfightEvents(conn);
 						}
@@ -264,7 +264,7 @@ module.exports = function(app, sockjs) {
 					conn.writeEvent("error", err);
 				}
 				else {
-					conn.writeEvent("go", {to:'dressingroom', avatar:conn.user.avatar, nickname:conn.user.nickname});
+					conn.writeEvent("go", {to:'dressingroom', avatar:conn.user.avatar, nickname:conn.user.nickname, level:conn.user.level});
 				}
 			})
 		}
