@@ -26,7 +26,7 @@ var User = db.sequelize.define('User', {
 		defaultValue: "",
 		unique: true,
 		validate: {  //"[A-Za-z0-9 !@#$_%^&*()+;:'<>\/\?\-]"
-			is: {args:[['^[a-zA-Z0-9\-\#\$\%\*\?\+\/\&\!\'\@\^\(\)\+\;\:\<\>\._ ]+$']], msg:"Illegal character in nickname"},
+			is: {args:[['^[a-zA-Z0-9\-\#\$\%\*\?\+\/\&\!\'\@\^\(\)\+\;\:\<\>\.\~_ ]+$']], msg:"Illegal character in nickname"},
 			not: {args:[['  ']], msg:"Nickname can't have two spaces in a row"},
 			len: {args:[2,13], msg: "Nickname should be 2-13 letters long"}
 		}
