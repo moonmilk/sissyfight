@@ -33,6 +33,12 @@ module.exports = function(app) {
 	this.includes = {
 		mainheader: fs.readFileSync('views/inc_mainheader.html')
 	};
+	
+	
+	/* HOMEPAGE --------------------------- */
+	app.get('/', function(req, res) {
+		res.redirect('/main');
+	});
 
 
 	/* WEB PAGES ----------------------------------------- */
