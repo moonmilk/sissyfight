@@ -1639,7 +1639,7 @@ config.addons = [
             4,
             7
         ],
-        "name": "Custom 1 - Fox",
+        "name": "Fox",
         "poses": 9,
         "tier": 4
     },
@@ -1649,7 +1649,7 @@ config.addons = [
         "flippable": 1,
         "id": 402,
         "layers": [],
-        "name": "Custom 2 - Greyscale",
+        "name": "Greyscale",
         "poses": 0,
         "tier": 4
     },
@@ -1673,7 +1673,7 @@ config.addons = [
             5,
             7
         ],
-        "name": "Custom 3 - Hawaiian",
+        "name": "Hawaiian",
         "poses": 2,
         "tier": 4
     },
@@ -1691,7 +1691,7 @@ config.addons = [
         "layers": [
             5
         ],
-        "name": "Custom 4 - Crab Hat",
+        "name": "Crab Hat",
         "poses": 2,
         "tier": 4
     },
@@ -1714,7 +1714,7 @@ config.addons = [
             4,
             8
         ],
-        "name": "Custom 5 - Tin Helmet",
+        "name": "Tin Helmet",
         "poses": 2,
         "tier": 4
     },
@@ -1749,7 +1749,7 @@ config.addons = [
             7,
             8
         ],
-        "name": "Custom 6 - Judith",
+        "name": "Judith",
         "poses": 9,
         "tier": 4
     },
@@ -1779,7 +1779,7 @@ config.addons = [
             4,
             7
         ],
-        "name": "Custom 7 - Pink Dress",
+        "name": "Pink Dress",
         "poses": 9,
         "tier": 4
     },
@@ -1809,8 +1809,36 @@ config.addons = [
             4,
             7
         ],
-        "name": "Custom 8 - Pea Pod",
+        "name": "Pea Pod",
         "poses": 9,
+        "tier": 4
+    },
+    {
+        "conflicts": {
+            "1": [
+                "B"
+            ],
+            "5": [
+                "H"
+            ],
+            "9": [
+                "L"
+            ]
+        },
+        "files": [
+            "409-1",
+            "409-5",
+            "409-9"
+        ],
+        "flippable": 1,
+        "id": 409,
+        "layers": [
+            1,
+            5,
+            9
+        ],
+        "name": "Pile Of Cats",
+        "poses": 2,
         "tier": 4
     },
     {
