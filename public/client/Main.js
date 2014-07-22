@@ -84,6 +84,7 @@ var p = Main.prototype = new createjs.Container();
 		var disc = this.addChild(disconnectBitmap.disconnected);
 		disc.x = 140;
 		disc.y = 119;
+		g.enableZoom(true);
 	}
 	
 	
