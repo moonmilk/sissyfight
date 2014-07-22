@@ -17,6 +17,9 @@ var moment = require('moment');
 var whiskers = require('whiskers');
 var fs = require('fs');
 
+var Hashids = require("hashids"),
+    hashids = new Hashids("tokens");
+
 var text = require('../models/text');
 
 // helper: check that all listed arguments are strings
@@ -134,7 +137,7 @@ module.exports = function(app) {
 	app.get('/game/:school', function(req, res) {
 		if (req.session.user) {
 			// send a token to the page that can be used to associate the socket with the user session
-			var token = req.session.user.nickname + Math.random();
+			var token = hashids.encrypt(req.session.user.id) + Math.random();
 			req.session.token = token;
 			// get school id or default
 			if (req.params.school && app.get('getSchoolInfo')(req.params.school)) {
