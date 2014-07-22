@@ -76,7 +76,7 @@ var p = Main.prototype = new createjs.Container();
 		g.load.unpack('disconnected', disconnectBitmap);
 		var disc = this.addChild(disconnectBitmap.disconnected);
 		disc.x = 140;
-		disc.y = 117;
+		disc.y = 119;
 	}
 	
 	
