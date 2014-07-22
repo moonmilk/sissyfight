@@ -55,6 +55,9 @@ var p = Main.prototype = new createjs.Container();
 		g.comm.addEventListener('loginError', this.loginError.bind(this));
 		//successful login will send the go(dressingroom) event
 		g.comm.addEventListener('go', this.goHandler.bind(this));
+		
+		// lost connection
+		g.comm.addEventListener('disconnect', this.disconnectError.bind(this));
 	}
 	
 	p.cleanupLoader = function() {
@@ -66,6 +69,14 @@ var p = Main.prototype = new createjs.Container();
 	p.loginError = function(event) {
 		// TODO: what to do?
 		console.log('main: login problem - ' + event.data);
+	}
+	
+	p.disconnectError = function() {
+		var disconnectBitmap = {};
+		g.load.unpack('disconnected', disconnectBitmap);
+		var disc = this.addChild(disconnectBitmap.disconnected);
+		disc.x = 140;
+		disc.y = 117;
 	}
 	
 	

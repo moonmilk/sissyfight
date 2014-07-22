@@ -30,9 +30,8 @@ var p = Comm.prototype;
 		}
 		
 		this.sockjs.onclose = function() {
-			// not sure what to do about this yet!
 			if (this.logging) console.log('lost socket connection');
-			alert('DRAT! Lost server connection - either server crashed or your internet did.  Please use the reload button to start over.')
+			comm.dispatchEvent('disconnect');
 		}
 		
 		// decode incoming messages in {type, data} style for dispatch

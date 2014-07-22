@@ -64,6 +64,13 @@ config['preloadManifest'] = [
 ]
 
 config['manifest'] = [
+	// disconnect error
+	{
+		id:		'disconnected',
+		src:	'loading/disconnected.png'	
+	},
+	
+	
 	// audio
 	//	- music (different per school)
 	{	id:		'music_intro',		src: 'music/' + SCHOOL_ASSETS_TAG + '/intro.ogg'	},
