@@ -17,6 +17,8 @@ var moment = require('moment');
 var whiskers = require('whiskers');
 var fs = require('fs');
 
+var text = require('../models/text');
+
 // helper: check that all listed arguments are strings
 function checkArgs(body, args) {
 	for (var i in args) {
@@ -66,7 +68,12 @@ module.exports = function(app) {
 			context.loggedIn = 0;
 			context.nickname = '';
 		}
-		res.render('main.html', context);
+		
+		text.retrieve('homepage-news', function(err,texts) {
+			if (!err) context.news = texts['homepage-news'];
+			
+			res.render('main.html', context);
+		});
 	});
 	
 	
@@ -152,7 +159,10 @@ module.exports = function(app) {
 				singleSize: (gameScale==1),
 				doubleSize: (gameScale==2)	
 			};
-			res.render('game.html', context)
+			text.retrieve('homepage-news', function(err,texts) {
+				if (!err) context.news = texts['homepage-news'];
+				res.render('game.html', context)
+			});
 		}
 		else {
 			res.redirect('/main'); 
