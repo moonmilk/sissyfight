@@ -33,10 +33,7 @@ var User = db.sequelize.define('User', {
 	},
 	password: {
 		type: db.Sequelize.STRING(60).BINARY,
-		allowNull: false,
-		validate: {
-			len: {args:[6,60], msg: "Password should be 6-60 characters"}
-		}
+		allowNull: true // unclaimed reserved accounts would have null password
 	},
 	
 	avatar:	{
@@ -68,7 +65,9 @@ var User = db.sequelize.define('User', {
 	
 	pwResetSent: db.Sequelize.DATE,
 	
-	pwResetCode: db.Sequelize.STRING(60)
+	pwResetCode: db.Sequelize.STRING(60),
+	
+	level: db.Sequelize.INTEGER
 
 },
 
@@ -77,7 +76,7 @@ var User = db.sequelize.define('User', {
 	classMethods: {
 		
 		checkLogin: function(nickname, password, callback) {
-			User.find({where:{nickname: nickname}}).complete(function(err, user) {
+			User.find({where:[{nickname: nickname}, "password is not null"]}).complete(function(err, user) {
 				if (err) callback(err);
 				else if (!user) callback(null, null);
 				else {
