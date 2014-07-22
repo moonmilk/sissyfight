@@ -68,7 +68,14 @@ var p = Main.prototype = new createjs.Container();
 	
 	p.loginError = function(event) {
 		// TODO: what to do?
-		console.log('main: login problem - ' + event.data);
+		console.log('main: login problem - ',event.data);
+		
+		if (event.data.error == "multi") {
+			window.location.href = '/problem/multi';
+			console.log('bailing!');
+		}
+		
+		// need to figure out handlers for other errors, though they should be rare
 	}
 	
 	p.disconnectError = function() {

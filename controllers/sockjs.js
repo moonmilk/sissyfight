@@ -88,27 +88,27 @@ module.exports = function(app, sockjs) {
 			app.get('sessionStore').get(data.session, function(err, session) {
 				if (err) {
 					console.log("Socket login: couldn't access session store for session id " + data.session + ": " + err);
-					conn.writeEvent("error", {where:"login", error:"nostore", message: "Couldn't access session store: " + err.toString()});
+					conn.writeEvent("loginError", {where:"login", error:"nostore", message: "Couldn't access session store: " + err.toString()});
 				}
 				else if (!session) {
 					console.log("Socket login: no such session " + data.session);
-					conn.writeEvent("error", {where:"login", error:"nosession", message: "No such session"});
+					conn.writeEvent("loginError", {where:"login", error:"nosession", message: "No such session"});
 				}
 				else if (!session.user) {
 					console.log("Socket login: session's not logged in " + data.session);	
-					conn.writeEvent("error", {where:"login", error:"notlogged", message: "Session's not logged in"});
+					conn.writeEvent("loginError", {where:"login", error:"notlogged", message: "Session's not logged in"});
 				}
 				else if (session.token !== data.token) {
 					console.log("Socket login: bad token " + data.token + " for session " + data.session);
-					conn.writeEvent("error", {where:"login", error:"token", message: "Bad token"});
+					conn.writeEvent("loginError", {where:"login", error:"token", message: "Bad token"});
 				}
 				else if (userConnections[session.user.id]) {
 					console.log("Socket login: user "+session.user.nickname+" already has a connected socket");
-					conn.writeEvent("error", {where:"login", error:"multi", message: "Already connected"});
+					conn.writeEvent("loginError", {where:"login", error:"multi", message: "Already connected"});
 				}
 				else if (!session.school || !app.get('schools')[session.school]) {
 					console.log("Socket login: user "+session.user.nickname+" has unknown school " + session.school);
-					conn.writeEvent("error", {where:"login", error:"noschool", message: "Unknown school"});
+					conn.writeEvent("loginError", {where:"login", error:"noschool", message: "Unknown school"});
 				}
 				else {
 					// everything is good: socket corresponds to a logged-in session - connect the user
@@ -118,11 +118,11 @@ module.exports = function(app, sockjs) {
 					User.find(session.user.id).complete( function(err, user) {
 						if (err) {
 							console.log("Socket login: couldn't find user object due to database problem: " + err);
-							conn.writeEvent("error", {where:"login", error:"dbusererr", message: "Database trouble"});
+							conn.writeEvent("loginError", {where:"login", error:"dbusererr", message: "Database trouble"});
 						}
 						else if (!user) {
 							console.log("Socket login: couldn't find user for id "+session.user.id+" in database")
-							conn.writeEvent("error", {where:"login", error:"dbnouser", message: "Couldn't find user in db"});
+							conn.writeEvent("loginError", {where:"login", error:"dbnouser", message: "Couldn't find user in db"});
 						}
 						else {
 							console.log("Socket login: retrieved db record for user  " + user.nickname);
@@ -147,7 +147,7 @@ module.exports = function(app, sockjs) {
 		}
 		else {
 			console.log("Socket login: event missing session or token");
-			conn.writeEvent("login", {error:"tsnotsupp", message:"Missing session or token"});
+			conn.writeEvent("loginError", {error:"tsnotsupp", message:"Missing session or token"});
 		}
 	}
 	

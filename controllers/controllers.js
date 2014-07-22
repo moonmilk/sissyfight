@@ -58,6 +58,7 @@ module.exports = function(app) {
 		}
 		else {
 			context.loggedIn = 0;
+			context.nickname = '';
 		}
 		res.render('main.html', context);
 	});
@@ -71,6 +72,23 @@ module.exports = function(app) {
 			code: req.params.code
 		};
 		res.render('resetpw.html', context);
+	});
+	
+	
+	// login problem pages (just doubleconnect for now)
+	app.get('/problem/:which', function(req, res) {
+		var context = {
+			includes: this.includes
+		}
+		if (req.session.user) {
+			context.loggedIn = 1;
+			context.nickname = req.session.user.nickname;
+		}
+		else {
+			context.loggedIn = 0;
+			context.nickname = '';
+		}
+		res.render('doubleconnect.html', context);
 	});
 	
 	
