@@ -31,7 +31,7 @@
 			</div>
 
 			<div id="sf2kloginbox">
-				<div id="sf2kloginboxnickname">{nickname}</div>
+				<div id="sf2kloginboxnickname"></div>
 				<style>
 				.hidelogout {
 				{if loggedIn}
@@ -40,6 +40,11 @@
 				{/if}
 				}	
 				</style>
+				<script>
+				{if loggedIn}
+					$(document).ready(function() {$('#sf2kloginboxnickname').text("{nickname}")});
+				{/if}
+				</script>
 				<div id="sf2kloginboxlogout" class="hidelogout disablewhenplaying">
 					<a href="/user/logout/">LOGOUT</a>
 				</div>
