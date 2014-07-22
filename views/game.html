@@ -131,12 +131,26 @@
 			vertical-align: top;
 		}
 		#zoomwarning {
-			background-color: yellow;
-			color: black;
-			padding: 0px 10px 3px 10px;
-			margin: 0px 8px 0px 0px;
+			font-family:  Helvetica, Arial, sans-serif;
+			font-weight: bold;
 			opacity: 0;
 		}
+		
+		.zoomwarning1x {
+			color: #222222;
+			font-size: 13px;
+			vertical-align: 10px;
+			padding: 0px 10px 3px 10px;
+			margin: 0px 8px 0px 0px;
+		}
+		.zoomwarning2x {
+			color: #c5c5c5;
+			font-size: 24px;
+			vertical-align: 10px;
+			padding: 0px 10px 3px 10px;
+			margin: 0px 8px 0px 0px;
+		}
+		
 
 	</style>
 
@@ -247,9 +261,9 @@
 		<div id="sf2kgamebox">
 			{if singleSize}
 			<div id="container" width="528" height="306">
-				<canvas class="gameSize pixelated" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
+				<canvas class="gameSize pixelated gameborder" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
 				<div id="zoombuttonzone" height="30">
-					<span id="zoomwarning" height="30">
+					<span id="zoomwarning" class="zoomwarning1x" height="30">
 						You can't zoom when you're on the playground!
 					</span>
 					<span id="zoombuttons">
@@ -283,7 +297,7 @@
 				<div id="container" width="1056" height="612">
 					<canvas class="gameSize pixelated" id="appCanvas" width="{gameWidth}" height="{gameHeight}"></canvas>
 					<div id="zoombuttonzone" height="60">
-						<span id="zoomwarning">
+						<span id="zoomwarning" class="zoomwarning2x">
 							You can't zoom when you're on the playground!
 						</span>
 						<span id="zoombuttons">
