@@ -74,6 +74,30 @@ module.exports = function(app) {
 		res.render('resetpw.html', context);
 	});
 	
+	// site pages
+	app.get('/pages/:page', function(req, res) {
+		fs.exists('views/pages/'+req.params.page, function(exists) {
+		
+			if (exists) {
+				var context = {
+					includes: this.includes,
+				};
+				
+				if (req.session.user) {
+					context.loggedIn = 1;
+					context.nickname = req.session.user.nickname;
+				}
+				else {
+					context.loggedIn = 0;
+					context.nickname = '';
+				}
+				res.render('pages/'+req.params.page, context);
+			}
+			else res.status(404).send('Not found.');
+		});
+
+	});
+	
 	
 	// login problem pages (just doubleconnect for now)
 	app.get('/problem/:which', function(req, res) {
@@ -113,6 +137,7 @@ module.exports = function(app) {
 				gameHeight *= 2;
 			}
 			var context = {
+				loggedIn: 1,
 				includes: this.includes,
 				nickname:req.session.user.nickname,
 				token:req.session.token, session:req.session.id,

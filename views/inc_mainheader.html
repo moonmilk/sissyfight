@@ -3,38 +3,44 @@
 
 			<div id="sf2kmenu">
 				<div id="sf2kmenuitem"><br>
-				<img src="/imgs/play-header.png" width="36" height="9" border="0"><br>
-				<img src="/imgs/icon_play.png" border="0" vspace="3"></div>
+				<a href="/main"><img src="/imgs/play-header.png" width="36" height="9" border="0"><br><img src="/imgs/icon_play.png" border="0" vspace="3"></div>
 
 				<div id="sf2kmenuitem">
 					<br>
-					<a href="help.html"><img src="/imgs/help-header.png" width="34" height="9" border="0"><br>
+					<a href="/pages/help.html"><img src="/imgs/help-header.png" width="34" height="9" border="0"><br>
 					<img src="/imgs/icon_help.png" border="0" vspace="3"></a>
 				</div>
 
 				<div id="sf2kmenuitem"><br>
-				<img src="/imgs/rankings-header.png" width="70" height="9" border="0"><br>
-				<img src="/imgs/icon_rankings.png" border="0" vspace="3"></div>
+				<img alt="COMING SOON!" title="COMING SOON!" src="/imgs/rankings-header.png" width="70" height="9" border="0"><br>
+				<img alt="COMING SOON!" title="COMING SOON!" src="/imgs/icon_rankings.png" border="0" vspace="3"></div>
 
 				<div id="sf2kmenuitem">
-					<a href="honorcode.html"><img src="/imgs/honorcode-header.png" width="46" height="18" border="0"><br>
+					<a href="/pages/honorcode.html"><img src="/imgs/honorcode-header.png" width="46" height="18" border="0"><br>
 					<img src="/imgs/icon_honor.png" border="0" vspace="3"></a>
 				</div>
 
-				<div id="sf2kmenuitem"><img src="/imgs/sf2ksource-header.png" width="57" height="18" border="0"><br>
-				<img src="/imgs/icon_source.png" border="0" vspace="3"></div>
+				<div id="sf2kmenuitem"><img alt="COMING SOON!" title="COMING SOON!" src="/imgs/sf2ksource-header.png" width="57" height="18" border="0"><br>
+				<img alt="COMING SOON!" title="COMING SOON!" src="/imgs/icon_source.png" border="0" vspace="3"></div>
 
 				<div id="sf2kmenuitem">
 					<br>
-					<a href="credits.html"><img src="/imgs/credits-header.png" width="57" height="9" border="0"><br>
+					<a href="/pages/credits.html"><img src="/imgs/credits-header.png" width="57" height="9" border="0"><br>
 					<img src="/imgs/icon_credits.png" border="0" vspace="3"></a>
 				</div>
 			</div>
 
 			<div id="sf2kloginbox">
 				<div id="sf2kloginboxnickname">{nickname}</div>
-
-				<div id="sf2kloginboxlogout">
+				<style>
+				.hidelogout {
+				{if loggedIn}
+				{else}
+					display: none;
+				{/if}
+				}	
+				</style>
+				<div id="sf2kloginboxlogout" class="hidelogout">
 					<a href="/user/logout/">LOGOUT</a>
 				</div>
 			</div>
