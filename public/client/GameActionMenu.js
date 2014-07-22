@@ -54,7 +54,10 @@ var p = GameActionMenu.prototype = new createjs.Container();
 				button.alpha = 0.4;
 			}
 			else if ((b=='lick' && !lick) || (b=='tattle' && !tattle)) {
-				// leave out moves with exhausted resources
+				// black out moves with exhausted resources
+				var button = this.disabledButtons[b] = this.addChild(this.assets[assetName].clone());
+				button.compositeOperation = 'difference';
+				button.alpha = 0.4;
 			}
 			else {
 				var button = this.buttons[b] = this.addChild(this.assets[assetName].clone());
