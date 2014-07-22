@@ -258,6 +258,9 @@ SFGame.prototype.prepareGame = function() {
 		this.players[conn.user.id].id = conn.user.id;
 		this.players[conn.user.id].nickname= conn.user.nickname;
 		
+		if (this.custom.moves['lick']==0) this.players[conn.user.id].lollies = 0;
+		if (this.custom.moves['tattle']==0) this.players[conn.user.id].tattles = 0;
+		
 	}, this);
 }
 
