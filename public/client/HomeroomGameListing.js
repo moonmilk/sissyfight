@@ -41,77 +41,10 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 
 		this.updateStatus(gameInfo);
 		
-		var gameName, gameNameLong = 'Regular Game', turnTime;
-		if (gameInfo.custom) {
-			if (gameInfo.custom.moves) {
-				// look up custom game name if any
-
-				_.each(config.homeroom.custom_games, function(info) {
-					var match = true;
-					_.each(info.moves, function(enabled, move) {
-						if (gameInfo.custom.moves[move] != enabled) {
-							match = false;
-							return false; // lodash break
-						}
-					});
-					if (match) {
-						gameName = info.name;
-						return false; // lodash break
-					}
-				});
-			}
-			
-			if (!gameName) gameName = 'Custom';
-			
-			gameNameLong = gameName + " rules";
-			if (gameName == 'Regular Game') gameName = '';
-			
-			if (gameInfo.custom.turnTime && gameInfo.custom.turnTime != 90) {
-				turnTime = gameInfo.custom.turnTime;
-			}
-			
-
-		}
-		
-		var tooltipText = gameNameLong + ":\n";
-		// how many of the 6 moves are enabled in this rule set?
-		if (gameInfo.custom && gameInfo.custom.moves) var numMoves = _(gameInfo.custom.moves).filter().size();
-		else numMoves = 6;
-		
-		if (numMoves==6) tooltipText += "ALL moves";
-		else if (numMoves >= 4) {
-			// 4 or 5 moves: list the ones that are forbidden
-			tooltipText += "NO ";
-			_.each(gameInfo.custom.moves, function(yesno, move) {
-				if (!yesno) tooltipText += move + " ";
-			});
-		}
-		else {
-			// 1, 2, 3 moves: list the ones that are allowed
-			_.each(gameInfo.custom.moves, function(yesno, move) {
-				if (yesno) tooltipText += move + " ";
-			});
-			tooltipText += "ONLY";
-		}
-		tooltipText += "\n";
-		tooltipText += (gameInfo.custom ? gameInfo.custom.turnTime : 90) + " sec timer";
-		//console.log("CUSTOM TEXT TEST: " + tooltipText);
-	
-	
-			
-		var customText = '';
-		
-		if (gameName || turnTime) {
-			customText += " (";
-			if (gameName) customText += gameName + " rules";
-			if (gameName && turnTime) customText += ", ";
-			if (turnTime) customText += turnTime + " sec timer";
-			customText += ")";
-		}
-		
+		var gameDescription = sf.GameRoom.describeGame(gameInfo); // returns {summary:"", long:""}
 
 		
-		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName + customText, config.getFont('homeroomRoomName'), '#eeeeee'));
+		this.items.name = this.addChild(new createjs.Text(gameInfo.roomName + " " + gameDescription.summary, config.getFont('homeroomRoomName'), '#eeeeee'));
 		this.items.name.x = 71;
 		this.items.name.y = 0;
 		this.items.name.lineWidth = 259;
@@ -123,13 +56,13 @@ var p = HomeroomGameListing.prototype = new createjs.Container();
 		this.items.occupants.x = 71;
 		this.items.occupants.y = 11;
 		
-		if (tooltipText) {			
+		if (gameDescription.long) {			
 			var ctHit = this.items.name.hitArea = new createjs.Shape();
 			ctHit.graphics.beginFill('#ffffff').drawRect(-2,-2,259,22).endFill();
 			
 			this.items.name.on('mouseover', function(e){ 
 				var pt = this.localToGlobal(75,14);
-				this.customRulesToolTip.show(tooltipText, pt.x, pt.y);
+				this.customRulesToolTip.show(gameDescription.long, pt.x, pt.y);
 			}, this);
 			this.items.name.on('mouseout', function(e){ 
 				this.customRulesToolTip.hide();

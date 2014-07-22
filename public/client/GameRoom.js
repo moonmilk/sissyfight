@@ -79,9 +79,10 @@ var p = GameRoom.prototype = new createjs.Container();
 		this.prepareButtons();
 		
 				
-		// put the name of the game up
-		//console.log(this.gameInfo);
-		var gameName = new createjs.Text(this.gameInfo.roomName, config.getFont('gameRoomGameName'), '#eeeeee');
+		// put up the name and custom rule description of the game
+		var gameDescription = sf.GameRoom.describeGame(this.gameInfo); // returns {summary:"", long:""}
+
+		var gameName = this.items.gameName = new createjs.Text(this.gameInfo.roomName + " " + gameDescription.summary, config.getFont('gameRoomGameName'), '#eeeeee');
 		gameName.x = 192;
 		gameName.y = 4;
 		this.addChild(gameName);
@@ -106,6 +107,37 @@ var p = GameRoom.prototype = new createjs.Container();
 		
 		// layer for results pictures 
 		this.layers.resultsLayer = this.addChild(new createjs.Container());
+		
+
+		// set up custom rules display tooltip
+		if (gameDescription.long) {	
+			var ct = this.items.customRulesToolTip = this.addChild(new createjs.Container());
+			ct.visible = false;
+			var ctBG = ct.addChild(new createjs.Shape());
+			var ctText = ct.addChild(new createjs.Text("placeholder", config.getFont('homeroomRoomName'), '#000000'));
+			ctText.x = 4;
+			ctText.y = 1;
+			ctBG.graphics.beginFill('#ffffff').setStrokeStyle(1).beginStroke('#000000').drawRect(0,0,120,36).endFill();
+			var hr = this;
+			ct.show = function(text, x, y) {
+				ctText.text = text;
+				ct.x = x;
+				ct.y = y;
+				ct.visible = true;
+			}
+			ct.hide = function() { ct.visible = false; }
+				
+			var ctHit = this.items.gameName.hitArea = new createjs.Shape();
+			ctHit.graphics.beginFill('#ffffff').drawRect(0,-2,245,20).endFill();
+			
+			this.items.gameName.on('mouseover', function(e){ 
+				//var pt = this.localToGlobal(75,14);
+				this.items.customRulesToolTip.show(gameDescription.long, 192, 23);
+			}, this);
+			this.items.gameName.on('mouseout', function(e){ 
+				this.items.customRulesToolTip.hide();
+			}, this);		
+		}
 		
 		// layer for dust cloud
 		this.layers.dustCloudLayer = this.addChild(new createjs.Container());
@@ -795,6 +827,77 @@ var p = GameRoom.prototype = new createjs.Container();
 		}, this);
 	}
 	
+	
+	// global utility: make short and long descriptions of custom game rules
+	GameRoom.describeGame = function(gameInfo) {
+		var gameName, gameNameLong = 'Regular Game', turnTime;
+		if (gameInfo.custom) {
+			if (gameInfo.custom.moves) {
+				// look up custom game name if any
+
+				_.each(config.homeroom.custom_games, function(info) {
+					var match = true;
+					_.each(info.moves, function(enabled, move) {
+						if (gameInfo.custom.moves[move] != enabled) {
+							match = false;
+							return false; // lodash break
+						}
+					});
+					if (match) {
+						gameName = info.name;
+						return false; // lodash break
+					}
+				});
+			}
+			
+			if (!gameName) gameName = 'Custom';
+			
+			gameNameLong = gameName + " rules";
+			if (gameName == 'Regular Game') gameName = '';
+			
+			if (gameInfo.custom.turnTime && gameInfo.custom.turnTime != 90) {
+				turnTime = gameInfo.custom.turnTime;
+			}
+
+		}
+		
+		var tooltipText = gameNameLong + ":\n";
+		// how many of the 6 moves are enabled in this rule set?
+		if (gameInfo.custom && gameInfo.custom.moves) var numMoves = _(gameInfo.custom.moves).filter().size();
+		else numMoves = 6;
+		
+		if (numMoves==6) tooltipText += "ALL moves";
+		else if (numMoves >= 4) {
+			// 4 or 5 moves: list the ones that are forbidden
+			tooltipText += "NO ";
+			_.each(gameInfo.custom.moves, function(yesno, move) {
+				if (!yesno) tooltipText += move + " ";
+			});
+		}
+		else {
+			// 1, 2, 3 moves: list the ones that are allowed
+			_.each(gameInfo.custom.moves, function(yesno, move) {
+				if (yesno) tooltipText += move + " ";
+			});
+			tooltipText += "ONLY";
+		}
+		tooltipText += "\n";
+		tooltipText += (gameInfo.custom ? gameInfo.custom.turnTime : 90) + " sec timer";
+			
+			
+		var customText = '';
+		
+		if (gameName || turnTime) {
+			customText += " (";
+			if (gameName) customText += gameName + " rules";
+			if (gameName && turnTime) customText += ", ";
+			if (turnTime) customText += turnTime + " sec timer";
+			customText += ")";
+		}
+		
+		return {summary:customText, long:tooltipText};
+		
+	}
 	
 		
 	sf.GameRoom = GameRoom;
