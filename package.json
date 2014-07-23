@@ -1,6 +1,9 @@
 {
   "name": "sissyfight",
-  "version": "0.0.1-72",
+  "version": "0.0.1-80",
+  "domains": [
+    "play.sissyfight.com"
+  ],
   "private": true,
   "scripts": {
     "start": "node app.js",

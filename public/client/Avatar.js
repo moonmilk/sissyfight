@@ -331,13 +331,25 @@ var p = Avatar.prototype = new createjs.Container();
 		}		
 	}
 
+	// setTalking(true) to go to talking mode (default face, which looks better with moving lips)
+	p.setTalking = function(flag) {
+		if (flag) {
+			this.talkingMode = true;
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + sf.Avatar.expressions.NEUTRAL);
+		}
+		else {
+			this.talkingMode = false;
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + this.look.expression);
+		}	
+	}
+	
 	// setTalk(true) to open mouth
 	p.setTalk = function(flag) {
 		if (flag) {
 			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + sf.Avatar.expressions.TALK);
 		}
 		else {
-			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + this.look.expression);
+			this.sprites.face.gotoAndStop(config.avatar.numExpressions * this.look.face + sf.Avatar.expressions.NEUTRAL);
 		}
 	}
 

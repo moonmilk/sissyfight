@@ -237,6 +237,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 		// talking is started by incoming chat, not by timer
 		if (this.faceAnim.talkTime && this.faceAnim.talkTime < tick.time) {
 			if (this.faceAnim.talking) {
+				this.items.avatar.setTalking(false);
 				this.items.avatar.setTalk(false);
 				this.faceAnim.talking = false;
 				this.faceAnim.talkTime = null;
@@ -271,6 +272,7 @@ var p = GameRoomPlayer.prototype = new createjs.Container();
 	p.talk = function(t) {
 		var time = createjs.Ticker.getTime();
 		this.faceAnim.talking = true;
+		this.items.avatar.setTalking(true);
 		this.faceAnim.talkTime = time + t;
 		this.faceAnim.lipsTime = time;
 	}
