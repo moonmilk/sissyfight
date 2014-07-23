@@ -216,6 +216,10 @@ $(document).ready(function() {
 	$("#sf2kforgotform").validate({
 		submitHandler: $.throttle(600, 
 			function() {
+				// clear login form (except nickname)
+				$('#sf2kloginerror').text('');
+				$('#sf2kloginpassword').val('');
+			
 				$.post('/u/requestReset', $('#sf2kforgotform').serialize(), function(data) {
 					//console.log(data);
 					if (!data) data = {};
@@ -284,7 +288,7 @@ $(document).ready(function() {
 			
 				<form id="sf2kloginform">
 					SiSSYFiGHTER name: <input name="nickname" type="text" size="13" max="13"><br>
-					Password: <input name="password" type="password" size="10"><br>
+					Password: <input id="sf2kloginpassword" name="password" type="password" size="10"><br>
 					<br>
 					<span style="vertical-align: 5">then click</span> <input type="image" src="/imgs/ok-button.png" id="sf2kloginsubmitbutton" width="30" height="19" onclick="return false;">
 				</form><span id="sf2kloginerror"></span>
