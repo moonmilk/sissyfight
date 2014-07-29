@@ -56,6 +56,9 @@ var p = Main.prototype = new createjs.Container();
 		//successful login will send the go(dressingroom) event
 		g.comm.addEventListener('go', this.goHandler.bind(this));
 		
+		// server announcement
+		g.comm.addEventListener('announcement', this.announcementHandler.bind(this));
+		
 		// lost connection
 		g.comm.addEventListener('disconnect', this.disconnectError.bind(this));
 	}
@@ -85,6 +88,12 @@ var p = Main.prototype = new createjs.Container();
 		disc.x = 140;
 		disc.y = 119;
 		g.enableZoom(true);
+	}
+	
+	
+	// server broadcast announcement
+	p.announcementHandler = function(event) {
+		alert('ANNOUNCEMENT: ' + event.data.from + " says:\n" + event.data.text);
 	}
 	
 	

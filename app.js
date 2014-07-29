@@ -118,10 +118,14 @@ if ('development' == app.get('env')) {
 
 // set up page controllers
 require('./controllers/controllers')(app);
+require('./controllers/admin_controllers')(app);
 
 
-// set up socket controllers
-require('./controllers/sockjs')(app, sockjs);
+// load socket controllers
+var sockjs_controllers = require('./controllers/sockjs');
+console.log(sockjs_controllers,sockjs_controllers.announceToAll);
+// and initialize 'em
+sockjs_controllers.init(app, sockjs);
 
 
 // catchall
@@ -137,6 +141,9 @@ app.post('/user/logout', user.logout);
 // supposed to install sockjs handlers last
 var server = http.createServer(app);
 sockjs.installHandlers(server, {prefix:'/sox'});
+
+// link up the announceToAll broadcast function
+app.set('announceToAll', sockjs_controllers.announceToAll);
 
 // schools
 var School = require('./gameObjects/school');

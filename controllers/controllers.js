@@ -194,7 +194,7 @@ module.exports = function(app) {
 			}
 			else {
 				if (user) {
-					req.session.user = {nickname:user.nickname, id:user.id};
+					req.session.user = {nickname:user.nickname, id:user.id, level:user.level};
 					res.json({
 						ok: true,
 						nickname: user.nickname,

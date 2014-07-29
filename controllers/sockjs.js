@@ -10,12 +10,12 @@ var Homeroom = require('../gameObjects/homeroom');
 
 var _ = require('lodash');
 
+var userConnections = {}; // map users to connections ####todo: make sure there's no way for a dropped connection to lead to a user staying in this list and not being able to reconnect
 
-
-module.exports = function(app, sockjs) {
+exports.init = function(app, sockjs) {
 	// since i'm merging socket native events with chat events, don't accept any chat events with names that match the native ones
 	var EVENT_BLACKLIST = ['data', 'close']; 
-	var userConnections = {}; // map users to connections ####todo: make sure there's no way for a dropped connection to lead to a user staying in this list and not being able to reconnect
+
 	
 	// new socket connection!
 	sockjs.on("connection", function(conn) {
@@ -69,6 +69,7 @@ module.exports = function(app, sockjs) {
 		conn.on("newgame", newGameListener);
 	}
 	
+
 	
 	
 	function closeListener(data) {
@@ -421,3 +422,12 @@ module.exports = function(app, sockjs) {
 	}
 
 }
+
+// send a string 'announcement' to all connected sockets.
+//  sender is {nickname, etc}
+//  possibly future extension: add filtering by school, play status, etc?
+exports.announceToAll = function (sender, announcement) {
+	_.each(userConnections, function(entry, userid) {
+		if (entry.conn) entry.conn.writeEvent("announcement", {from:sender.nickname, text:announcement});
+	});
+};
