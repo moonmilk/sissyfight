@@ -1560,7 +1560,7 @@ config.addons = [
             0
         ],
         "name": "Ren Faire Tent",
-        "poses": 2,
+        "poses": 1,
         "tier": 3
     },
     {
