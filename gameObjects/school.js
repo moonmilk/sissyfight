@@ -6,33 +6,29 @@ var Homeroom = require('./homeroom');
 var GameRoom = require('./gameroom');
 var SFGame = require('./sfgame');
 
+var config = require('../config');
+
 var _ = require('lodash');
 
 // globals
 School.EMPTY_ROOM_PURGE_TIME = 30; // get rid of an empty room after 30 seconds
-School.GAME_NAMES = _.shuffle(['hell room!', 'algebra 2', 'thunderdome', 'PLATE OF SHRIMP', 'Lothlorien', 'Preppies only!', 'ghostbusters', 'asdfgh', 'powder room', 'GOTH', 'mac & cheez', 'HYPNOTOAD', 'catfish?', 'Ow My Spleen', 'camembert', 'say NI', 'invisigoth', 'hey!', 'Windows 3.1', 'i <3 u', 'NO :[', 'Ascorbic', 'puppies', 'shAMpoO', 'Inconceivable!', 'grab this', 'ugli']);
 
 function School(params) {
 	this.id = params.id;
+	this.base_id = params.id; // FUTURE: if there's more than one Franklin, e.g. Franklin-1, Franklin-2, etc, set base_id to Franklin to look up 666-specific stuff
 	this.name = params.name;
 	
 	this.homeroom = new Homeroom({id:0, name:'homeroom'});
 	this.games = {};
 	this.nextGameID = 1;
 	
+	// names for new rooms
+	this.game_names = config.schools.roomNames[this.base_id].slice(0); // slice(0) effectively creates a clone of original list
+	
 	// timer for periodic updates
 	this.interval = setInterval(this.update.bind(this), 5000); 
 	this.interval.unref(); // timer shouldn't prevent shutdown
-	
-	/*
-	// for testing game listings
-	var testGames = ['hell room!', 'algebra 2', 'thunderdome', 'PLATE OF SHRIMP', 'Lothlorien', 'Preppies only!', 'ghostbusters', 'asdfgh', 'powder room', 'GOTH', 'mac & cheez', 'HYPNOTOAD', 'catfish?', 'Ow My Spleen', 'camembert', 'say NI', 'invisigoth', 'hey!', 'Windows 3.1', 'i <3 u', 'NO :[', 'Ascorbic', 'puppies', 'shAMpoO', 'Inconceivable!'];
-	
-	for (var i=0; i<testGames.length; i++) {
-		this.createGame({name:testGames[i], school:this.id});
-	}
-	*/
-	
+
 }
 
 // get total population of school
@@ -142,8 +138,8 @@ School.prototype.update = function() {
 	var empties = _.filter(this.games, '_emptyNormal');
 	if (empties.length==0) {
 		// no normal-rules empties - make a new room and move name to end of list
-		var name = School.GAME_NAMES.shift();
-		School.GAME_NAMES.push(name);
+		var name = this.game_names.shift();
+		this.game_names.push(name);
 		
 		this.createGame({name:name});
 	}

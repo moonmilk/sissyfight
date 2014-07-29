@@ -24,3 +24,16 @@ else {
 	}
 	
 }
+
+
+exports.schools = {
+	
+	// names for rooms the server will create if all existing rooms are full
+	roomNames: {
+		'666': 'Sacrifice Altar, My Dark Master, Lockdown, Surveillance, No Fun For You, Tattoo Corner, Will to Survive, Sissy Fortress, Visiting Hours, Exercise Period, The Pentagram, Witchcraft 101, Curses!, Unholy Glee, HellfireClub, The Pit, Deadly Seven, Fangs R Us'.split(/,\s*/),
+		'franklin': 'Chem Lab, Janitor\'s Closet, Third Bathroom, Boiler Room, Chess Club, Broken Window, Back Door, Pizza Shop, Dead Cat, Detox, Instant A, Math is Hard!, High Achievers, Copy This!, Burnt Toast'.split(/,\s*/),
+		'angel': 'Aww Gee Whiz!, Snugglebumpkins, Fuzzy Things, Nice Dress!, Cheerleading, I Luv Ponies, Teddy Bears, Happy Flowers, Who\'s Richer?, Gossip, Boys Are Icky, Popularity 101, Pep Squad, Good Clean Fun, Pretty Rainbows, BMW Bike Club, Straight A Club, Smile Every Day'.split(/,\s*/),
+		'suzy': 'Aww Gee Whiz!, Snugglebumpkins, Fuzzy Things, Nice Dress!, Cheerleading, I Luv Ponies, Teddy Bears, Happy Flowers, Who\'s Richer?, Gossip, Boys Are Icky, Popularity 101, Pep Squad, Good Clean Fun, Pretty Rainbows, BMW Bike Club, Straight A Club, Smile Every Day'.split(/,\s*/),
+	}
+	
+}
