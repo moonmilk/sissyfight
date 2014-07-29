@@ -123,7 +123,6 @@ require('./controllers/admin_controllers')(app);
 
 // load socket controllers
 var sockjs_controllers = require('./controllers/sockjs');
-console.log(sockjs_controllers,sockjs_controllers.announceToAll);
 // and initialize 'em
 sockjs_controllers.init(app, sockjs);
 
