@@ -17,7 +17,7 @@ var whiskers = require('whiskers');
 var config = require('../config');
 var nodemailer = require('nodemailer'),
 	mailtransport = config.email ? nodemailer.createTransport(config.email.transport) : null;
-
+var _ = require('lodash');
 
 
 var User = db.sequelize.define('User', {
