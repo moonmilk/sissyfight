@@ -248,7 +248,7 @@ var p = DressingRoom.prototype = new createjs.Container();
 			maxTier = 3;
 			custom = this.level;
 		}
-		else if (this.level == 500) {
+		else if (this.level >= 500) {
 			maxTier = 5;
 		}
 		
