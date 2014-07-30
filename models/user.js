@@ -19,6 +19,7 @@ var nodemailer = require('nodemailer'),
 	mailtransport = config.email ? nodemailer.createTransport(config.email.transport) : null;
 
 
+
 var User = db.sequelize.define('User', {
 	nickname: {
 		type: db.Sequelize.STRING(13),
@@ -150,27 +151,57 @@ var User = db.sequelize.define('User', {
 			});				
 		},
 		
-		// validateAvatar returns false if anything's wrong with avatar data
-		validateAvatar: function(avatar) {
-			if (!avatar) return false;
-			if ((typeof avatar) != 'object') return false;
+		// validateAvatar returns null if avatar is ok, or error description otherwise
+		validateAvatar: function(avatar, level) {
+			if (!avatar) return "no avatar";
+			if ((typeof avatar) != 'object') return "not an object";
 			
 			//["face","skincolor","hairstyle","haircolor","uniform","uniformcolor","addons"]
-			for (var p in ["face","skincolor","hairstyle","haircolor","uniform","uniformcolor"]) {
-				if ((typeof avatar[p]) != 'number') return false;
-				if (avatar[p] < 0 || avatar[p] >= config.number.of[p]) return false;
+			var props = ["face","skincolor","hairstyle","haircolor","uniform","uniformcolor"];
+			for (var i=0; i<props.length; props++) {
+				var p = props[i];
+				//console.log('prop ' + p + " value " + avatar[p] + " max " + config.avatar.number.of[p]);
+				if ((typeof avatar[p]) != 'number') return (p + " not a number: " + avatar[p]);
+				if ((avatar[p] < 0) || (avatar[p] >= config.avatar.number.of[p])) return (p + " out of range: " + avatar[p]);
 			}
 			
 			if (avatar.addons) {
-				if (!Array.isArray(avatar.addons)) return false;
-				for (var a in avatar.addons) {
-					if ((typeof a) != 'number') return false;
+				// figure out allowed addons by level
+				var maxTier = 0, custom = 0;
+				if (level <= 1) maxTier = 0;
+				else if (level <= 3) maxTier = 1;
+				else if (level <= 4) maxTier = 2;
+				else if (level <= 6) maxTier = 3;
+				else if (level <= 400) maxTier = 3;
+				if (level >= 401 && level <= 499) {
+					maxTier = 3;
+					custom = level;
 				}
+				else if (level >= 500) {
+					maxTier = 5;
+				}
+		
+				if (!Array.isArray(avatar.addons)) return "addons not array";
+				if (avatar.addons.length > 3) return "too many addons";
+				for (var i=0; i<avatar.addons.length; i++) {
+					var a = avatar.addons[i];
+					if ((typeof a) != 'number') return ("addon id not a number: " + a);
+					else {
+						var addonInfo = _.find(config.avatar.addons, {id: a});
+						if (!addonInfo) return ("no such addon id: " + a); // no such addon
+						else if (addonInfo.tier < 0) return ("addon tier negative: " + a); // negative addons for dressing room mirror only
+						else if (addonInfo.tier > maxTier) {	// custom avatars for their owners only
+							if (custom==0 || addonInfo.id != custom) return ("addon " + a + " above tier for level " + level + ": tier " + addonInfo.tier);
+						}
+					}
+				}
+				
+				// todo: check for addon conflicts
 			}
 			
 			
 			// it's ok i guess
-			return true;
+			return null;
 		},
 		
 		

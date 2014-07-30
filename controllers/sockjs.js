@@ -184,14 +184,15 @@ exports.init = function(app, sockjs) {
 	
 	// callback: done(err, avatar)  - useful to send avatar back in case it gets altered by validation code (TODO)
 	function saveAvatar(conn, data, done) {
-		if (false) {
-			// TODO: should do sanity testing on avatar here or in model ####
-			console.log("saveAvatar: Badly formatted avatar object or item out of range");
-			done({where:'avatar', error:'badavatar', message:"Badly formatted avatar object or item out of range"});
-		}
 		if (!conn.user) {
 			console.log("saveAvatar: socket not logged in");
 			done({where:'avatar', error:"notlogged", message:"Socket's not logged in"});
+			return;
+		}
+		var validation = User.validateAvatar(data.avatar, conn.user.level);
+		if (validation) {
+			console.log("saveAvatar: validation error: " + validation + " in avatar " + JSON.stringify(data.avatar));
+			done({where:'avatar', error:'badavatar', message:"Avatar problem"});
 			return;
 		}
 		conn.user.avatar = data.avatar;

@@ -1,6 +1,7 @@
 /*
 	config: place where all the configuration stuff should go eventually.
 */
+var fs = require('fs');
 
 
 // email credentials: SISSYFIGHT_MAILER=service|user|password
@@ -23,7 +24,7 @@ else {
 		}
 	}
 	
-}
+};
 
 
 exports.schools = {
@@ -36,4 +37,27 @@ exports.schools = {
 		'suzy': 'Aww Gee Whiz!, Snugglebumpkins, Fuzzy Things, Nice Dress!, Cheerleading, I Luv Ponies, Teddy Bears, Happy Flowers, Who\'s Richer?, Gossip, Boys Are Icky, Popularity 101, Pep Squad, Good Clean Fun, Pretty Rainbows, BMW Bike Club, Straight A Club, Smile Every Day'.split(/,\s*/),
 	}
 	
+};
+
+
+exports.avatar = {
+	number: {of: {}}
+};
+// todo: this info should be unified between client and server:
+exports.avatar.number.of = {
+	face: 			8,
+	skincolor: 		6, 	// can't trust config.colors.skin.vars.length now that we have the extra grayscale
+	hairstyle: 		13,
+	haircolor: 		8, 	// ditto config.colors.hair.vars.length,
+	uniform: 		5,
+	uniformcolor: 	6,	// ditto config.colors.uniforms.vars.length
+	expression:		7,
+	pose:			9
 }
+// medium-ugly way to incorporate addons.js
+// todo: find a nicer way!
+var f = function() {
+	var config = {};
+	eval(fs.readFileSync('public/client/addons.js').toString());
+	exports.avatar.addons = config.addons;
+}();
