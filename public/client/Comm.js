@@ -47,7 +47,7 @@ var p = Comm.prototype;
 			if (message && message.type && (typeof message.type) === 'string') {
 				comm.dispatchEvent(message);
 			}
-		}
+		}.bind(this);
 		
 		
 	}
