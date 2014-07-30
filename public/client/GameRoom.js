@@ -113,7 +113,7 @@ var p = GameRoom.prototype = new createjs.Container();
 		if (gameDescription.long) {	
 			var ct = this.items.customRulesToolTip = new createjs.DOMElement(document.getElementById('gameRulesPopup')); 
 			ct.setFakeScale(g.gameScale);
-			ct.setPosition(192,23);
+			ct.setPosition(192,21);
 			
 			ct.show = function(text, x, y) {
 				ct.htmlElement.innerHTML = text;
