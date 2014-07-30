@@ -297,17 +297,17 @@ body {
   font-size: 1em;
 }
 #sf2kresetflash {
-  display:none; 
-  position:absolute; 
-  background-color:yellow; 
-  opacity:0; 
-  padding:2;
-  width: 268;
-  height: 45;
-  left: 133;
-  top: 61;
-  color: black;
-  font-size: 12px;
+	display: none;
+	position: absolute;
+	background: url("../imgs/resetflash-bg.png") no-repeat;
+	opacity: 0;
+	padding: 18 2 2 2;
+	width: 265;
+	height: 22;
+	left: 130;
+	top: 61;
+	color: #CC0000;
+	font-size: 12px;
 }
 #sf2kresetpasswordbox {
   display: block;
