@@ -94,7 +94,8 @@ var p = Main.prototype = new createjs.Container();
 	
 	// server broadcast announcement
 	p.announcementHandler = function(event) {
-		alert('ANNOUNCEMENT: ' + event.data.from + " says:\n" + event.data.text);
+		//alert('ANNOUNCEMENT: ' + event.data.from + " says:\n" + event.data.text);
+		alert(event.data.text);
 	}
 	
 	
