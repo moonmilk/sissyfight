@@ -10,6 +10,7 @@ this.sf = this.sf||{};
 
 var Main = function() {
   this.initialize();
+  g.main = this;
 }
 var p = Main.prototype = new createjs.Container();
 	p.Container_initialize = p.initialize;
