@@ -111,21 +111,16 @@ var p = GameRoom.prototype = new createjs.Container();
 
 		// set up custom rules display tooltip
 		if (gameDescription.long) {	
-			var ct = this.items.customRulesToolTip = this.addChild(new createjs.Container());
-			ct.visible = false;
-			var ctBG = ct.addChild(new createjs.Shape());
-			var ctText = ct.addChild(new createjs.Text("placeholder", config.getFont('homeroomRoomName'), '#000000'));
-			ctText.x = 4;
-			ctText.y = 1;
-			ctBG.graphics.beginFill('#ffffff').setStrokeStyle(1).beginStroke('#000000').drawRect(0,0,120,36).endFill();
-			var hr = this;
+			var ct = this.items.customRulesToolTip = new createjs.DOMElement(document.getElementById('gameRulesPopup')); 
+			ct.setFakeScale(g.gameScale);
+			ct.setPosition(192,23);
+			
 			ct.show = function(text, x, y) {
-				ctText.text = text;
-				ct.x = x;
-				ct.y = y;
-				ct.visible = true;
+				ct.htmlElement.innerHTML = text;
+				ct.setPosition(x,y);
+				ct.setVisible(true);
 			}
-			ct.hide = function() { ct.visible = false; }
+			ct.hide = function() { ct.setVisible(false); }
 				
 			var ctHit = this.items.gameName.hitArea = new createjs.Shape();
 			ctHit.graphics.beginFill('#ffffff').drawRect(0,-2,245,20).endFill();
@@ -231,6 +226,8 @@ var p = GameRoom.prototype = new createjs.Container();
 		}
 		this.chatEntry.htmlElement.onkeypress = null;
 		this.chatEntry.setVisible(false);
+		
+		this.items.customRulesToolTip.setVisible(false);
 		
 		createjs.Ticker.removeEventListener('tick', this.handleTickBound);
 		

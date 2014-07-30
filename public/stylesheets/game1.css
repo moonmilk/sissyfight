@@ -68,6 +68,24 @@
 	border: 		none;	
 }
 
+.gameRulesPopup {
+	font-size:		16px;
+	line-height:	12px;
+	width:			120px;
+	height:			36px;
+	padding: 		3px;
+	border-width: 	1px;
+
+	resize: none;
+	overflow: hidden;
+
+	white-space: 	pre;
+	
+	background:		white;
+	border-color: 	black;
+	border-style: 	solid;
+}
+
 .wordwrap { /* http://stackoverflow.com/a/1638824 */
 	white-space: pre-wrap;      /* CSS3 */   
 	white-space: -moz-pre-wrap; /* Firefox */    
