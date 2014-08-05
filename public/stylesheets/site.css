@@ -13,8 +13,9 @@ body {
   min-height: 415px;
 }
 #sf2kmain a {
-  color: #333366;
-  text-decoration: none;
+    color: #993333;
+    text-decoration: underline;
+    font-weight: bold;
 }
 #sf2kmainheader {
   display: block;
