@@ -361,7 +361,7 @@ SFGame.prototype.recordScores = function(scoring) {
 			loser_points:
 			winners: [list of player ids] - winners
 			losers: [ditto] - players who lost by running out of points - they get the 10 point consolation prize, even if they left room after losing
-			zombies: [ditto] - players who lost by leaving the game room - scored as loss, no points
+			runaways: [ditto] - players who lost by leaving the game room - scored as loss, no points
 		}
 		User.recordScore(userID, points, win, solo)
 	*/
@@ -373,8 +373,8 @@ SFGame.prototype.recordScores = function(scoring) {
 		User.recordScore(loser, scoring.loser_points, false);
 	});
 	
-	_.each(scoring.zombies, function(zombie) {
-		User.recordScore(zombie, 0, false);
+	_.each(scoring.runaways, function(runaway) {
+		User.recordScore(runaway, 0, false);
 	});
 	
 }
@@ -1024,50 +1024,63 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	// SCENES 23-25 END OF GAME?
 	var gameOver = false;
 	var survivors = _.where(actions, function(player) {return (player.health > 0 && !player.zombie)}); // winners 
-	var losers = _.where(actions, function(player) {return (player.loser && !player.zombie)}); // losers present at end of game
-	var defeated = _.where(actions, function(player) {return (player.loser || player.zombie)}); // losers, whether or not present
-	var zombies = _.where(actions, function(player) {return (!player.loser && player.zombie)}); // those who left game before losing (get no points!)
 	
-	if (survivors.length >= SFGame.MIN_PLAYERS) {
+	var peeps = {};
+	// get list of all current and zombie players
+	peeps.everyone = _.values(this.players).concat(this.zombies);
+	//get categories of players
+	peeps.survivors = _.where(peeps.everyone, function(player) {return (player.health > 0 && !player.zombie)}); // winners 
+	peeps.loserswhogetpoints = _.where(peeps.everyone, function(player) {return (player.loser)}); // those who stuck around long enough to lose 
+	peeps.everyonedefeated = _.where(peeps.everyone, function(player) {return (player.loser || player.zombie)}); // non-winners - winners get credit for defeating them
+	peeps.runaways = _.where(peeps.everyone, function(player) {return (!player.loser && player.zombie)}); // ran away before losing 
+	
+	/* 
+	_.each(['everyone','winners','loserswhogetpoints','everyonedefeated','runaways'], function(category) {
+		console.log(category + " >>", _.pluck(peeps[category], 'nickname'));
+	});
+	*/
+	
+	
+	if (peeps.survivors.length >= SFGame.MIN_PLAYERS) {
 		// game's not over yet!
 		
 	}
-	else if (survivors.length > 1) {
+	else if (peeps.survivors.length > 1) {
 		// SCENE 25: dual win!
-		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * defeated.length;
+		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * peeps.everyonedefeated.length;
 		
 		narrative.push({
 			scene: 'end',
-			text: _.pluck(survivors, 'nickname').join(' and ') + ' became best friends and won the game! They each got ' + winner_points + ' points and everyone else got ' + SFGame.POINTS_FOR_PLAYING + '.',
-			code: {winners:_.pluck(survivors, 'id')},
+			text: _.pluck(peeps.survivors, 'nickname').join(' and ') + ' became best friends and won the game! They each got ' + winner_points + ' points and everyone else got ' + SFGame.POINTS_FOR_PLAYING + '.',
+			code: {winners:_.pluck(peeps.survivors, 'id')},
 			damage: {}
 		});
 		gameOver = {
 			win: 'dual',
 			winner_points: winner_points,
-			winners: _.pluck(survivors, 'id'),
+			winners: _.pluck(peeps.survivors, 'id'),
 			loser_points: SFGame.POINTS_FOR_PLAYING,
-			losers: _.pluck(losers, 'id'),
-			zombies: _.pluck(zombies, 'id')
+			losers: _.pluck(peeps.loserswhogetpoints, 'id'),
+			runaways: _.pluck(peeps.runaways, 'id')
 		}; 
 	}
 	else if (survivors.length == 1) {
 		// SCENE 24: solo win!
-		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * defeated.length;
+		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * peeps.everyonedefeated.length;
 
 		narrative.push({
 			scene: 'end',
-			text: survivors[0].nickname + ' won the game all by herself! She got ' + winner_points + ' points and everyone else got ' + SFGame.POINTS_FOR_PLAYING + '.',
-			code: {winners:_.pluck(survivors, 'id')},
+			text: peeps.survivors[0].nickname + ' won the game all by herself! She got ' + winner_points + ' points and everyone else got ' + SFGame.POINTS_FOR_PLAYING + '.',
+			code: {winners:_.pluck(peeps.survivors, 'id')},
 			damage: {}
 		});
 		gameOver = {
 			win: 'single',
 			winner_points: winner_points,
-			winners: _.pluck(survivors, 'id'),
+			winners: _.pluck(peeps.survivors, 'id'),
 			loser_points: SFGame.POINTS_FOR_PLAYING,
-			losers: _.pluck(losers, 'id'),
-			zombies: _.pluck(zombies, 'id')
+			losers: _.pluck(peeps.loserswhogetpoints, 'id'),
+			runaways: _.pluck(peeps.runaways, 'id')
 		}; 
 	}
 	else {
@@ -1082,8 +1095,8 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			win: 'none',
 			winners:[],
 			loser_points: SFGame.POINTS_FOR_PLAYING,
-			losers: _.pluck(losers, 'id'),
-			zombies: _.pluck(zombies, 'id')
+			losers: _.pluck(peeps.loserswhogetpoints, 'id'),
+			runaways: _.pluck(peeps.runaways, 'id')
 		}; 
 	}
 	
