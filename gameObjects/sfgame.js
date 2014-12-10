@@ -3,6 +3,7 @@
 var _ = require("lodash");
 var util = require("util");
 var events = require("events");
+var User = require("../models/user")
 
 
 
@@ -343,12 +344,39 @@ SFGame.prototype.resolveTurn = function() {
 	this.broadcastStatus();
 	
 	if (gameOver) {
+		this.recordScores(gameOver);
 		this.gameEvent('endGame');
 		this.emit('gameOver');
 	}
 	else {
 		this.startTurn()
 	}
+}
+
+
+SFGame.prototype.recordScores = function(scoring) {
+	/* scoring record returned from resolveTurnStage2:
+		{ 	win: dual, single, or none
+			winner_points: points to award to each winner
+			loser_points:
+			winners: [list of player ids] - winners
+			losers: [ditto] - players who lost by running out of points - they get the 10 point consolation prize, even if they left room after losing
+			zombies: [ditto] - players who lost by leaving the game room - scored as loss, no points
+		}
+		User.recordScore(userID, points, win, solo)
+	*/
+	_.each(scoring.winners, function(winner) {
+		User.recordScore(winner, scoring.winner_points, true, (scoring.win=='single'));
+	});
+	
+	_.each(scoring.losers, function(loser) {
+		User.recordScore(loser, scoring.loser_points, false);
+	});
+	
+	_.each(scoring.zombies, function(zombie) {
+		User.recordScore(zombie, 0, false);
+	});
+	
 }
 
 
@@ -995,8 +1023,10 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	
 	// SCENES 23-25 END OF GAME?
 	var gameOver = false;
-	var survivors = _.where(actions, function(player) {return (player.health > 0 && !player.zombie)});
-	var losers = _.where(actions, function(player) {return (player.loser || player.zombie)});
+	var survivors = _.where(actions, function(player) {return (player.health > 0 && !player.zombie)}); // winners 
+	var losers = _.where(actions, function(player) {return (player.loser && !player.zombie)}); // losers present at end of game
+	var defeated = _.where(actions, function(player) {return (player.loser || player.zombie)}); // losers, whether or not present
+	var zombies = _.where(actions, function(player) {return (!player.loser && player.zombie)}); // those who left game before losing (get no points!)
 	
 	if (survivors.length >= SFGame.MIN_PLAYERS) {
 		// game's not over yet!
@@ -1004,7 +1034,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	}
 	else if (survivors.length > 1) {
 		// SCENE 25: dual win!
-		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * losers.length;
+		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * defeated.length;
 		
 		narrative.push({
 			scene: 'end',
@@ -1012,11 +1042,18 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			code: {winners:_.pluck(survivors, 'id')},
 			damage: {}
 		});
-		gameOver = true; 
+		gameOver = {
+			win: 'dual',
+			winner_points: winner_points,
+			winners: _.pluck(survivors, 'id'),
+			loser_points: SFGame.POINTS_FOR_PLAYING,
+			losers: _.pluck(losers, 'id'),
+			zombies: _.pluck(zombies, 'id')
+		}; 
 	}
 	else if (survivors.length == 1) {
 		// SCENE 24: solo win!
-		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * losers.length;
+		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * defeated.length;
 
 		narrative.push({
 			scene: 'end',
@@ -1024,7 +1061,14 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			code: {winners:_.pluck(survivors, 'id')},
 			damage: {}
 		});
-		gameOver = true;
+		gameOver = {
+			win: 'single',
+			winner_points: winner_points,
+			winners: _.pluck(survivors, 'id'),
+			loser_points: SFGame.POINTS_FOR_PLAYING,
+			losers: _.pluck(losers, 'id'),
+			zombies: _.pluck(zombies, 'id')
+		}; 
 	}
 	else {
 		// SCENE 23: no winner!
@@ -1034,7 +1078,13 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 			code: {winners:[]},
 			damage: {}
 		});
-		gameOver = true;
+		gameOver = {
+			win: 'none',
+			winners:[],
+			loser_points: SFGame.POINTS_FOR_PLAYING,
+			losers: _.pluck(losers, 'id'),
+			zombies: _.pluck(zombies, 'id')
+		}; 
 	}
 	
 	

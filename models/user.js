@@ -53,12 +53,53 @@ var User = db.sequelize.define('User', {
 	},
 	
 	lastPlayed: db.Sequelize.DATE,
-	points: {
+
+	// scoring ---------------
+	month_points: {
 		type: db.Sequelize.INTEGER,
 		allowNull: false,
 		defaultValue: 0
 	},
+	month_games: {
+		type: db.Sequelize.INTEGER,
+		allowNull: false,
+		defaultValue: 0
+	},
+	month_wins: {
+		type: db.Sequelize.INTEGER,
+		allowNull: false,
+		defaultValue: 0
+	},
+	month_wins_solo: {
+		type: db.Sequelize.INTEGER,
+		allowNull: false,
+		defaultValue: 0
+	},
+
+	alltime_points: {
+		type: db.Sequelize.INTEGER,
+		allowNull: false,
+		defaultValue: 0
+	},
+	alltime_games: {
+		type: db.Sequelize.INTEGER,
+		allowNull: false,
+		defaultValue: 0
+	},
+	alltime_wins: {
+		type: db.Sequelize.INTEGER,
+		allowNull: false,
+		defaultValue: 0
+	},
+	alltime_wins_solo: {
+		type: db.Sequelize.INTEGER,
+		allowNull: false,
+		defaultValue: 0
+	},
+
 	
+	
+	// contact and password reset --------
 	email: {
 		type: db.Sequelize.STRING,
 		allowNull: false
@@ -150,6 +191,12 @@ var User = db.sequelize.define('User', {
 				}
 			});				
 		},
+		
+		
+		recordScore: function(userID, points, win, solo) {
+			console.log('user.recordScore: ', arguments); // #### PLACEHOLDER!
+		},
+		
 		
 		// validateAvatar returns null if avatar is ok, or error description otherwise
 		validateAvatar: function(avatar, level) {
