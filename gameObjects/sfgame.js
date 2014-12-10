@@ -49,6 +49,10 @@ SFGame.TURN_TIME = 90;		// max time per turn, in seconds
 SFGame.COUNTDOWN_TIME = 10;	// when all players have chosen an action, timer jumps to final countdown
 SFGame.OVERRIDE_TIME = 100;	// end turn even if not all clients have checked in (may be hung or hacked client)
 
+// SCORING
+SFGame.POINTS_FOR_PLAYING = 10;		// 10 points just for playing
+SFGame.POINTS_FOR_DEFEATING = 20;	// 20 points per opponent defeated
+
 // restrictions for custom rules
 SFGame.MOVES = ['cower','lick','tattle','grab','scratch','tease'];
 SFGame.CUSTOM_RULE_RESTRICTIONS = {
@@ -992,15 +996,19 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	// SCENES 23-25 END OF GAME?
 	var gameOver = false;
 	var survivors = _.where(actions, function(player) {return (player.health > 0 && !player.zombie)});
+	var losers = _.where(actions, function(player) {return (player.loser || player.zombie)});
+	
 	if (survivors.length >= SFGame.MIN_PLAYERS) {
 		// game's not over yet!
 		
 	}
 	else if (survivors.length > 1) {
 		// SCENE 25: dual win!
+		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * losers.length;
+		
 		narrative.push({
 			scene: 'end',
-			text: _.pluck(survivors, 'nickname').join(' and ') + ' became best friends and won the game!',
+			text: _.pluck(survivors, 'nickname').join(' and ') + ' became best friends and won the game! They each got ' + winner_points + ' points and everyone else got ' + SFGame.POINTS_FOR_PLAYING + '.',
 			code: {winners:_.pluck(survivors, 'id')},
 			damage: {}
 		});
@@ -1008,9 +1016,11 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 	}
 	else if (survivors.length == 1) {
 		// SCENE 24: solo win!
+		var winner_points = SFGame.POINTS_FOR_PLAYING + SFGame.POINTS_FOR_DEFEATING * losers.length;
+
 		narrative.push({
 			scene: 'end',
-			text: survivors[0].nickname + " won the game all by herself!",
+			text: survivors[0].nickname + ' won the game all by herself! She got ' + winner_points + ' points and everyone else got ' + SFGame.POINTS_FOR_PLAYING + '.',
 			code: {winners:_.pluck(survivors, 'id')},
 			damage: {}
 		});
@@ -1020,7 +1030,7 @@ SFGame.prototype.resolveTurnStage2 = function(narrative, actions) {
 		// SCENE 23: no winner!
 		narrative.push({
 			scene: 'end',
-			text: "Everybody was humiliated and nobody won!",
+			text: 'Everybody was humiliated and nobody won! Still, everyone got ' + SFGame.POINTS_FOR_PLAYING + ' points just for playing.',
 			code: {winners:[]},
 			damage: {}
 		});
