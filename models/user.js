@@ -194,7 +194,21 @@ var User = db.sequelize.define('User', {
 		
 		
 		recordScore: function(userID, points, win, solo) {
-			console.log('user.recordScore: ', arguments); // #### PLACEHOLDER!
+			var query = 'UPDATE Users '
+				+ 'SET month_points = month_points + :points, alltime_points = alltime_points + :points,'
+				+ ' month_games = month_games + 1, alltime_games = alltime_games + 1'
+			
+			if (win) {
+				query = query + ', month_wins = month_wins + 1, alltime_wins = alltime_wins + 1';
+				if (solo) {
+					query = query + ', month_wins_solo = month_wins_solo + 1, alltime_wins_solo = alltime_wins_solo + 1'
+				}
+			}
+				
+			query = query + ' WHERE id = :id';
+			
+			//console.log('user.recordScore: ', arguments, query); // #### PLACEHOLDER!
+			db.sequelize.query(query, null, {raw:true}, {id: userID, points: points});
 		},
 		
 		
