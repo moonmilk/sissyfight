@@ -12,6 +12,7 @@
 	
 */
 var User = require('../models/user');
+var Rankings = require('../models/rankings');
 var qs = require('querystring');
 var moment = require('moment');
 var whiskers = require('whiskers');
@@ -97,6 +98,7 @@ module.exports = function(app) {
 			if (exists) {
 				var context = {
 					includes: this.includes,
+					rankings: {}
 				};
 				
 				if (req.session.user) {
@@ -107,7 +109,22 @@ module.exports = function(app) {
 					context.loggedIn = 0;
 					context.nickname = '';
 				}
-				res.render('pages/'+req.params.page, context);
+				
+				
+				if (req.params.page == 'rankings.html') {
+					Rankings.thisMonth(100, function(error, rankings) {
+						if (error) context.rankings.failed = true;
+						else context.rankings.currentrankings = rankings;
+						context.rankings.currentmonth = moment().format('MMMM YYYY');
+						var daystogo = 1 + moment().daysInMonth() - moment().date();
+						context.rankings.daystogo = daystogo + (" day" + ((daystogo == 1) ? "" : "s"));
+						
+						res.render('pages/rankings.html', context);
+					})
+				}
+				
+				
+				else res.render('pages/'+req.params.page, context);
 			}
 			else res.status(404).send('Not found.');
 		});

@@ -1,0 +1,407 @@
+<html>
+<head><title>SiSSYFiGHT 2000: Rankings</title>
+<style>
+body {
+  font-family: Helvetica, Arial, sans-serif; background-color: #999999; color: #333366;
+}
+#sf2kmain {
+  display: block;
+  position: relative;
+  width: 650px;
+  height: 6535px;
+  margin: 20px auto 0;
+  padding: 1 0 0 0;
+  line-height: 20px;
+  background: #CCCCFF;
+  color: #333366;
+  outline: 1px dotted #003366;
+  min-height: 500px;
+}
+#sf2kmainheader {
+  display: block;
+  position: relative;
+  margin: 20 0 0 20;
+  width: 630px;
+  height: 68px;
+}
+#sf2klogo {
+  display: block;
+  position: relative;
+  width: 132px;
+  height: 68px;
+  float: left;
+  margin: 0 0 0 0;
+}
+a {
+  color: #003366;
+  text-decoration: none;
+}
+#sf2kmenu {
+  display: block;
+  position: relative;
+  float: left;
+  width: 396px;
+  height: 86px;
+  margin: 0 0 0 10;
+  padding: 0 0 0 0;
+  font-size: 60%;
+  line-height: 100%;
+  font-weight: bold;
+}
+#sf2kmenuitem {
+  display: inline-block;
+  position: relative;
+  margin: 0 5 0 5;
+  float: left;
+  text-align: center;
+}
+#sf2kloginbox {
+  display: block;
+  position: relative;
+  top: -10px;
+  left: -10px;
+  float: right;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  text-align: right;
+  font-size: 60%;
+  color: #003366;
+  font-weight: bold;
+  line-height: 100%;
+  float: right;
+}
+#sf2khoqbox {
+  position: relative;
+  height: 220px;
+  width: 610px;
+  margin: 0 0 0 20;
+  padding: 0 0 0 0;
+  clear: both;
+  outline: 1px dashed #006699;
+}
+#sf2khoqlabel {
+  position: relative;
+  height: 170px;
+  width: 116px;
+  margin: 20 0 0 20;
+  padding: 5 5 5 5;
+  float: left;
+  text-align: center;
+  vertical-align: middle;
+}
+.sf2khoqcol {
+  position: relative;
+  height: 180px;
+  width: 185px;
+  margin: 20 10 0 20;
+  padding: 0 0 0 0;
+  float: left;
+}
+#sf2ktallrankbox1 {
+  position: relative;
+  width: 285px;
+  margin: 20 0 0 20;
+  padding: 0 0 0 0;
+  float: left;
+  outline: 1px dashed #006699;
+}
+#sf2ktallrankbox2 {
+  position: relative;
+  width: 305px;
+  margin: 20 0 0 20;
+  padding: 0 0 0 0;
+  float: left;
+  outline: 1px dashed #006699;
+}
+.sf2ktallranklabel {
+  position: relative;
+  width: 245px;
+  margin: 0 0 0 10;
+  padding: 5 5 0 5;
+  text-align: left;
+  vertical-align: middle;
+}
+.sf2ktallrankcol {
+  position: relative;
+  width: 185px;
+  margin: 0 10 0 40;
+  padding: 0 0 0 0;
+  float: left;
+}
+.sf2krankrow {
+  position: relative;
+  height: 54px;
+  width: 185px;
+  margin: 0 0 6 0;
+  padding: 0 0 0 0;
+}
+.sf2kmerow {
+  position: relative;
+  height: 54px;
+  width: 210px;
+  margin: 0 0 10 0;
+  padding: 0 0 0 0;
+}
+.sf2kmebug {
+  position: absolute;
+  top: 20px;
+  left: -10px;
+  height: 54px;
+  width: 30px;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  font-size: 70%;
+  line-height: 100%;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+.sf2kmeportrait {
+  position: relative;
+  display: inline-block;
+  height: 54px;
+  width: 46px;
+  margin: 0 0 0 25;
+  padding: 0 0 0 0;
+  font-size: 60%;
+  line-height: 60%;
+  font-weight: bold;
+}
+.sf2krankdata {
+  position: relative;
+  display: inline-block;
+  height: 39px;
+  width: 129px;
+  margin: 4 0 0 0;
+  padding: 10 5 0 5;
+  outline: 1px solid #006699;
+  float: right;
+  vertical-align: middle;
+}
+.sf2khelpbug {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: 15px;
+  width: 15px;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  float: right;
+  background: url(/imgs/helpbug.png);
+  color: #FFFFFF;
+  font-weight: bolder;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 75%;
+  line-height: 130%;
+  z-index: 1;
+}
+.sf2kmyinfobug {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 12px;
+  width: 12px;
+  margin: 0 0 0 0;
+  padding: 0 0 2 2;
+  float: right;
+  background-color: #003366;
+  color: #FFFFFF;
+  font-weight: bolder;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 75%;
+  line-height: 120%;
+  z-index: 1;
+}
+.sf2khelppop {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
+  background: #003366;
+  padding: 0 10 5 10; 
+  text: #FFFFFF;
+  border: 2px solid;
+  font-weight: normal;
+  border-radius: 8px;
+  border-color: #003366;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 100%;
+  line-height: 130%;
+}
+#sf2khoqpop {
+  width: 280px;
+}
+#sf2ktallpop {
+  width: 250px;
+}
+.sf2kmyinfopop {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background: #003366;
+  padding: 0 10 5 10; 
+  text: #FFFFFF;
+  border: 2px solid;
+  font-weight: normal;
+  border-radius: 8px;
+  border-color: #003366;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 100%;
+  line-height: 130%;
+}
+.sf2kphoto {
+	padding: 7 0 0 7;
+}
+.sf2krankbug {
+  position: absolute;
+  top: 19px;
+  left: -10px;
+  height: 15px;
+  width: 15px;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  background: url(/imgs/rankbug.png);
+    color: #FFFFFF;
+  font-weight: bolder;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 75%;
+  line-height: 130%;
+  float: left;
+}
+.ranking-title {
+  font-size: 80%;
+  line-height: 100%;
+  font-weight: bolder;
+  color: #003366;
+}
+.ranking-descriptor {
+  color: #003366;
+  font-size: 70%;
+  line-height: 110%;
+}
+.rankdata-name {
+  color: #003366;
+  font-size: 90%;
+  line-height: 110%;
+  vertical-align: middle;
+  font-weight: bold;
+}
+.rankdata-points {
+  color: #002255;
+  font-size: 70%;
+  line-height: 110%;
+  vertical-align: middle;
+}
+.sf2ksortbar {
+  font-size: 70%;
+  line-height: 110%;
+  text-align: right;
+}
+#sf2kmonthlycol {
+  position: relative;
+  margin: 180 0 0 0;
+  padding: 0 10 0 0;
+  font-size: 70%;
+  line-height: 110%;
+  text-align: center;
+  vertical-align: top;
+}
+
+</style>
+</head>
+<body>
+    <script src="/site/jquery-2.0.3.js"></script>
+    <script>
+    $( document ).ready(function() {
+        $( ".sf2khelppop" ).hide();
+        $( ".sf2kmyinfopop" ).hide();
+        $( ".sf2khelpbug" ).mouseenter(function ( event ) {
+            $( this ).children( ".sf2khelppop" ).show();
+        })
+        $( ".sf2khelpbug" ).mouseleave(function ( event ) {
+            $( this ).children( ".sf2khelppop" ).hide();
+        })
+        $( ".sf2kmyinfobug" ).mouseenter(function ( event ) {
+            $( this ).children( ".sf2kmyinfopop" ).show();
+        })
+        $( ".sf2kmyinfobug" ).mouseleave(function ( event ) {
+            $( this ).children( ".sf2kmyinfopop" ).hide();
+        })
+    });
+ 
+    </script>
+<div id="sf2kmain">
+<div id="sf2kmainheader">
+    <div id="sf2klogo"><img src="/imgs/titlesm.gif" width=132 height=68 border=0></div>
+<div id="sf2kmenu"><div id="sf2kmenuitem"><BR><a href="index.html"><img src="/imgs/play-header.png" width=36 height=9 border=0><br><img src="/imgs/icon_play.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><a href="help.html"><img src="/imgs/help-header.png" width=34 height=9 border=0><BR><img src="/imgs/icon_help.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><a href="rankings.html"><img src="/imgs/rankings-header.png" width=70 height=9 border=0><BR><img src="/imgs/icon_rankings.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><a href="honorcode.html"><img src="/imgs/honorcode-header.png" width=46 height=18 border=0><BR><img src="/imgs/icon_honor.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><a href="source.html"><img src="/imgs/sf2ksource-header.png" width=57 height=18 border=0><BR><img src="/imgs/icon_source.png" border=0 vspace=3></a></div><div id="sf2kmenuitem"><BR><a href="credits.html"><img src="/imgs/credits-header.png" width=57 height=9 border=0><BR><img src="/imgs/icon_credits.png" border=0 vspace=3></a></div></div>
+    <div id="sf2kloginbox">FifteenLetterJo<BR><img src="/imgs/portrait_sample.gif" border=0><BR>LOGOUT</div></div>
+
+    <div id="sf2ktallrankbox1">
+        <div class="sf2ktallranklabel">
+            <P><span class="ranking-title">CURRENT HIGH SCORES<BR><span class="ranking-descriptor">for {rankings.currentmonth}</span></P>
+            <P class="ranking-descriptor">Top Brownie Points so far this month.<br>{rankings.daystogo} left until the list is locked!</P>
+        </div>
+       <div class="sf2ktallrankcol">
+            <!--
+	        <div class="sf2ksortbar">
+                <strong>SORT BY:</strong>&nbsp;&nbsp;POINTS&nbsp;&nbsp;WIN%
+            </div>
+            -->
+            <script>
+	            function numberRankings(selector) {
+		            var nodes = document.querySelectorAll(selector);
+		            for (var i=0, length=nodes.length; i < length; i++) {
+			            nodes[i].innerHTML = i+1
+		            }
+	            }
+	        </script>
+            {for player in rankings.currentrankings}
+            <div class="sf2krankrow">
+                <img class="sf2kphoto" src="/imgs/miniface/face{player.avatar.skincolor}-{player.avatar.face}.png"><div class="sf2krankdata">
+                    <span class="rankdata-name">{player.nickname}</span><BR>
+                    <span class="rankdata-points">{player.month_points} pts. / {player.month_win_pct} wins</span>
+                </div>
+                <div class="sf2krankbug sf2kcurrentmonthrankbug"></div>
+            </div>
+            {/for}
+            <script>
+	            numberRankings('.sf2kcurrentmonthrankbug');
+            </script>
+        </div>
+        <div class="sf2khelpbug">?<div class="sf2khelppop" id="sf2ktallpop"><p>These are the players who have earned the most <strong>brownie points</strong> so far this month. You earn brownie points by playing and finishing matches: you get 10 points just for playing, and if you win you get a bonus of 20 points for each girl you beat. Your brownie points are reset every month.</p>
+
+<p>The <strong>Current High Scores</strong> for the month are locked at 4am EST on the first day of each month. At that moment, the players on the Current High Scores list become the <strong>SiSSYFiGHTERS of the Month</strong> - and the Current High Scores list (and everyone’s brownie points) are reset. For example, on February 1 at 4am EST, the players on the Current High Scores list become the SiSSYFiGHTERS of the Month for January and all current brownie points go back to zero. </p></div></div>
+    </div>
+    <div id="sf2ktallrankbox2">
+        <div class="sf2ktallranklabel">
+            <P><span class="ranking-title">SiSSYFiGHTers of the Month<BR><span class="ranking-descriptor">{rankings.previousmonth}</span></P>
+            <P class="ranking-descriptor">The top 100 players who earned<br>the most Brownie Points last month</P>
+        </div>
+       <div class="sf2ktallrankcol">
+          <i>coming soon!</i>
+        </div>
+        <div id="sf2kmonthlycol">
+            <!--
+	        <p><strong><span style="text-decoration: underline;line-height:160%">ARCHIVES</span></strong><br>
+            <A HREF="#">May 2015</A><br>
+            <A HREF="#">Apr 2015</A><br>
+            <A HREF="#">Mar 2015</A><br>
+            <A HREF="#">Feb 2015</A><br></p>
+            -->
+        </div>
+        <div class="sf2khelpbug">?<div class="sf2khelppop" id="sf2ktallpop"><p>These are the players who earned the most <strong>brownie points</strong> last month. You earn brownie points by playing and finishing matches: you get 10 points just for playing, and if you win you get a bonus of 20 points for each girl you beat. Your brownie points are reset every month.</p>
+
+<p>The links on the side of the <strong>SiSSYFiGHTERS of the Month</strong> list take you to archives of the lists of past monthly winners.</p></div></div>
+    </div>
+</div>
+<br clear=all>test<br>
+</body>
+</html>
