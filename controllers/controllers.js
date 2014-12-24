@@ -101,9 +101,12 @@ module.exports = function(app) {
 					rankings: {}
 				};
 				
+				var userid = undefined;
+				
 				if (req.session.user) {
 					context.loggedIn = 1;
 					context.nickname = req.session.user.nickname;
+					userid = req.session.user.id;
 				}
 				else {
 					context.loggedIn = 0;
@@ -112,7 +115,7 @@ module.exports = function(app) {
 				
 				
 				if (req.params.page == 'rankings.html') {
-					Rankings.thisMonth(100, function(error, rankings) {
+					Rankings.thisMonth(100, userid, function(error, rankings) {
 						if (error) context.rankings.failed = true;
 						else context.rankings.currentrankings = rankings;
 						context.rankings.currentmonth = moment().format('MMMM YYYY');
