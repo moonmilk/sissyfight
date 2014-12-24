@@ -350,30 +350,62 @@ a {
             <P class="ranking-descriptor">Top Brownie Points so far this month.<br>{rankings.daystogo} left until the list is locked!</P>
         </div>
        <div class="sf2ktallrankcol">
-            <!--
 	        <div class="sf2ksortbar">
-                <strong>SORT BY:</strong>&nbsp;&nbsp;POINTS&nbsp;&nbsp;WIN%
+                <strong>SORT BY:</strong>&nbsp;&nbsp;<a href="#" onclick="return sortColumn('#ranking_thismonth', byPoints)">POINTS</a>&nbsp;&nbsp;<a href="#"  onclick="return sortColumn('#ranking_thismonth', byPct)">WIN%</a>
             </div>
-            -->
             <script>
-	            function numberRankings(selector) {
-		            var nodes = document.querySelectorAll(selector);
+	            function numberRankings(parent_selector) {
+		            var nodes = $(parent_selector).children('.sf2krankrow');
+		            var rank = 0, lastPoints = -1, lastPct = -1;
 		            for (var i=0, length=nodes.length; i < length; i++) {
-			            nodes[i].innerHTML = i+1
+			            var node = nodes[i];
+			            var points = parseInt(node.getAttribute('data_points'));
+			            var pct = parseInt(node.getAttribute('data_pct'));
+
+			            if (points != lastPoints || pct != lastPct) rank = i;
+			            lastPoints = points;
+			            lastPct = pct;
+			            
+			            $(node).find('.sf2krankbug').html(rank+1);
 		            }
 	            }
+	            // since js sort isn't stable, use other attribute as secondary sort key
+	            function byPoints(a, b) {
+		            var an = parseInt(a.getAttribute('data_points')) + parseInt(a.getAttribute('data_pct')) / 100000.0;
+		            var bn = parseInt(b.getAttribute('data_points')) + parseInt(b.getAttribute('data_pct')) / 100000.0;
+					if (an < bn) return 1;
+					else if (an > bn) return -1;
+					else return 0;
+	            }
+	            function byPct(a, b) {
+		            var an = parseInt(a.getAttribute('data_pct')) + parseInt(a.getAttribute('data_points')) / 100000.0;
+		            var bn = parseInt(b.getAttribute('data_pct')) + parseInt(b.getAttribute('data_points')) / 100000.0;
+					if (an < bn) return 1;
+					else if (an > bn) return -1;
+					else return 0;
+	            }
+	            function sortColumn(parent_selector, sort_function) {
+		            var par = $(parent_selector);
+					var kids = par.children('.sf2krankrow');
+					kids.sort(sort_function);
+					kids.detach().appendTo(par);
+					numberRankings(parent_selector);
+					return false;
+	            }
 	        </script>
-            {for player in rankings.currentrankings}
-            <div class="sf2krankrow">
-                <img class="sf2kphoto" src="/imgs/miniface/face{player.avatar.skincolor}-{player.avatar.face}.png"><div class="sf2krankdata">
-                    <span class="rankdata-name">{player.nickname}</span><BR>
-                    <span class="rankdata-points">{player.month_points} pts. / {player.month_win_pct} wins</span>
-                </div>
-                <div class="sf2krankbug sf2kcurrentmonthrankbug"></div>
+	        <div id="ranking_thismonth">
+	            {for player in rankings.currentrankings}
+	            <div class="sf2krankrow" data_points={player.month_points} data_pct={player.month_win_pct}>
+	                <img class="sf2kphoto" src="/imgs/miniface/face{player.avatar.skincolor}-{player.avatar.face}.png"><div class="sf2krankdata">
+	                    <span class="rankdata-name">{player.nickname}</span><BR>
+	                    <span class="rankdata-points">{player.month_points} pts. / {player.month_win_pct}% wins</span>
+	                </div>
+	                <div class="sf2krankbug sf2kcurrentmonthrankbug"></div>
+	            </div>
+	            {/for}
             </div>
-            {/for}
             <script>
-	            numberRankings('.sf2kcurrentmonthrankbug');
+	            numberRankings('#ranking_thismonth');
             </script>
         </div>
         <div class="sf2khelpbug">?<div class="sf2khelppop" id="sf2ktallpop"><p>These are the players who have earned the most <strong>brownie points</strong> so far this month. You earn brownie points by playing and finishing matches: you get 10 points just for playing, and if you win you get a bonus of 20 points for each girl you beat. Your brownie points are reset every month.</p>
