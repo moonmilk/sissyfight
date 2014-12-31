@@ -446,6 +446,11 @@ a {
             		</div>
             	{/if}
             {/if}
+            
+	        <div class="sf2ksortbar">
+                <strong>SORT BY:</strong>&nbsp;&nbsp;<a href="#" onclick="return sortColumn('#ranking_past', byPoints)">POINTS</a>&nbsp;&nbsp;<a href="#"  onclick="return sortColumn('#ranking_past', byPct)">WIN%</a>
+            </div>
+            
             <div id="ranking_past">
 	            {for player in rankings.lastmonth_top}
 	            <div class="sf2krankrow" data_points={player.month_points} data_pct={player.month_win_pct}>
