@@ -125,10 +125,13 @@ Rankings.pastMonth = function(month, userid, callback) {
 		if (error) callback(error);
 		
 		else {
+			// organize records by month and decode avatar json
 			var monthlyResults = {};
 			_.each(results, function(record) {
 				if (!monthlyResults[record.record_month]) monthlyResults[record.record_month] = [];
 				monthlyResults[record.record_month].push(record);
+				// decode avatar
+				if (record.avatar.length > 0) record.avatar = JSON.parse(record.avatar);
 			});
 			callback(null, monthlyResults);
 		}

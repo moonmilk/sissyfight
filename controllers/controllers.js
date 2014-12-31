@@ -116,9 +116,13 @@ module.exports = function(app) {
 				
 				if (req.params.page == 'rankings.html') {
 					Rankings.everything(userid, function(error, rankings) {
-						console.log("the callback!", rankings);
+						
 						if (error) context.rankings.failed = true;
-						else context.rankings = rankings;
+						else {
+							context.rankings = rankings;
+							context.rankings.lastmonth_top = rankings.past_top['2014-12'];
+							context.rankings.lastmonth_user = rankings.past_user['2014-12'];
+						}
 						
 						context.rankings.currentmonth = moment().format('MMMM YYYY');
 						var daystogo = 1 + moment().daysInMonth() - moment().date();
