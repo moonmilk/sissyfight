@@ -426,7 +426,27 @@ a {
             <P class="ranking-descriptor">The players who earned the most<br/>Brownie Points last month</P>
         </div>
         <div class="sf2ktallrankcol">
-	        <div id="ranking_past">
+	        {if rankings.lastmonth_user}
+	        <div class="sf2kmerow">
+                <div class="sf2kmebug">YOU<BR>{rankings.lastmonth_user.win_pct_rank}</div>
+                <div class="sf2kmeportrait"><img src="/imgs/miniface/face{rankings.lastmonth_user.avatar.skincolor}-{rankings.lastmonth_user.avatar.face}.png" border=0></div>
+                <div class="sf2krankdata">
+	                <span class="rankdata-name">{rankings.lastmonth_user.nickname}</span><BR>
+					<span class="rankdata-points">{rankings.lastmonth_user.month_points} pts. / {rankings.lastmonth_user.month_win_pct}% wins</span>
+                </div>
+            </div>
+            {else}
+            	{if rankings.current_user}
+            		<div class="sf2kmerow">
+	            		<div class="sf2kmebug">YOU<BR>{rankings.lastmonth_user.win_pct_rank}</div>
+	            		<div class="sf2kmeportrait"><img src="/imgs/miniface/face{rankings.current_user.avatar.skincolor}-{rankings.current_user.avatar.face}.png" border=0></div>
+	            		<div class="sf2krankdata">
+		            		<span class="rankdata-points">You didn't play last month.</span><BR/>
+	            		</div>
+            		</div>
+            	{/if}
+            {/if}
+            <div id="ranking_past">
 	            {for player in rankings.lastmonth_top}
 	            <div class="sf2krankrow" data_points={player.month_points} data_pct={player.month_win_pct}>
 	                <img class="sf2kphoto" src="/imgs/miniface/face{player.avatar.skincolor}-{player.avatar.face}.png"><div class="sf2krankdata">

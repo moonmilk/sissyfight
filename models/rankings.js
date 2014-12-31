@@ -93,7 +93,7 @@ Rankings.thisMonthUserInfo = function(userid, callback) {
 // players of the month 
 //		for given past month (in format "2014-12"), or all months if month is null
 //		and for given userid, or all *ranked* users if userid is null
-// returns records grouped by month: {"2014-12":[records], "2014-11":[records], ...}
+// returns records grouped by month: {"2014-12":[records], "2014-11":[records], ...} or {"2014-12":{single user record}, ...}
 Rankings.pastMonth = function(month, userid, callback) {
 	var whereTerms = [], queryArgs = {};
 	if (month) {
@@ -128,8 +128,11 @@ Rankings.pastMonth = function(month, userid, callback) {
 			// organize records by month and decode avatar json
 			var monthlyResults = {};
 			_.each(results, function(record) {
-				if (!monthlyResults[record.record_month]) monthlyResults[record.record_month] = [];
-				monthlyResults[record.record_month].push(record);
+				if (userid) monthlyResults[record.record_month] = record; // don't package single user results in array
+				else {
+					if (!monthlyResults[record.record_month]) monthlyResults[record.record_month] = [];
+					monthlyResults[record.record_month].push(record);
+				}
 				// decode avatar
 				if (record.avatar.length > 0) record.avatar = JSON.parse(record.avatar);
 			});

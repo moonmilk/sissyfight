@@ -122,9 +122,12 @@ module.exports = function(app) {
 							context.rankings = rankings;
 							context.rankings.lastmonth_top = rankings.past_top['2014-12'];
 							context.rankings.lastmonth_user = rankings.past_user['2014-12'];
+							
+							context.rankings.previousmonth = moment().subtract(1, "months").format('MMMM YYYY');
 						}
 						
 						context.rankings.currentmonth = moment().format('MMMM YYYY');
+						
 						var daystogo = 1 + moment().daysInMonth() - moment().date();
 						context.rankings.daystogo = daystogo + (" day" + ((daystogo == 1) ? "" : "s"));
 						
