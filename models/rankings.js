@@ -4,13 +4,35 @@
 var db = require('../database');
 var User = require('./user');
 var _ = require('lodash');
+var async = require('async');
 
 function Rankings() {
 	
 }
 
-// return this month's top (100) ranked players, plus data for user if given
-Rankings.thisMonth = function(limit, userid, callback) {
+// everything! current high scores, all past months, current user.
+Rankings.everything = function(userid, callback) {
+	var tasks = {};
+	tasks.current_top = function(cb) {
+		Rankings.thisMonth(100, cb);
+	};
+	tasks.past_top = function(cb) {
+		Rankings.pastMonth(null, null, cb);
+	}
+
+	if (userid) {
+		tasks.current_user = function(cb) {
+			Rankings.thisMonthUserInfo(userid, cb);
+		};
+		tasks.past_user = function(cb) {
+			Rankings.pastMonth(null, userid, cb);
+		};
+	}
+	async.parallel(tasks, callback);
+}
+
+// return this month's top (100) ranked players
+Rankings.thisMonth = function(limit, callback) {
 	if (!limit) limit=100;
 	
 	var top = User.findAll({
@@ -33,12 +55,11 @@ Rankings.thisMonth = function(limit, userid, callback) {
 		_.each(results, function(player) {
 			if (player.avatar.length > 0) player.avatar = JSON.parse(player.avatar);
 		});
-		if (userid) Rankings.thisMonthUserInfo(results, userid, callback);
-		else callback(null, {top:results, user:null});
+		callback(null, results);
 	});
 }
 
-Rankings.thisMonthUserInfo = function(topresults, userid, callback) {
+Rankings.thisMonthUserInfo = function(userid, callback) {
 	var query = "SELECT a1.id, a1.nickname, a1.avatar, "
 				+ "a1.month_points, a1.month_games, a1.month_wins, a1.month_wins_solo, "
 				+ "a1.alltime_points, a1.alltime_games, a1.alltime_wins, a1.alltime_wins_solo, "
@@ -63,9 +84,63 @@ Rankings.thisMonthUserInfo = function(topresults, userid, callback) {
 			// if no games this month, no rank
 			if (userresults.month_games == 0) userresults.points_rank = undefined;
 			
-			callback(null, {top:topresults, user:userresults});
+			callback(null, userresults);
 		}
 	});
 }
+
+
+// players of the month 
+//		for given past month (in format "2014-12"), or all months if month is null
+//		and for given userid, or all *ranked* users if userid is null
+// returns records grouped by month: {"2014-12":[records], "2014-11":[records], ...}
+Rankings.pastMonth = function(month, userid, callback) {
+	var whereTerms = [], queryArgs = {};
+	if (month) {
+		whereTerms.push("month=:month ");
+		queryArgs.month = month;
+	}
+	if (userid) {
+		whereTerms.push("Users.id=:userid ");
+		queryArgs.userid = userid;
+	}
+	else {
+		// if single user not specified, only retrieve ranked users
+		whereTerms.push("MonthlyScores.month_win_pct_rank > 0 ");
+	}
+
+	var query = "SELECT MonthlyScores.record_month, "
+				+	"Users.id, Users.nickname, Users.avatar, "
+				+ 	"MonthlyScores.month_points, MonthlyScores.month_games, MonthlyScores.month_wins, MonthlyScores.month_wins_solo, "	
+				+ 	"ROUND(100*MonthlyScores.month_win_pct) as month_win_pct, "
+				+ 	"ROUND(100 * Users.alltime_wins / Users.alltime_games) as alltime_win_pct, "
+				+ 	"ROUND(100 * Users.alltime_wins_solo / Users.alltime_games) as alltime_win_solo_pct, "
+				+ 	"ROUND(100 * (Users.alltime_wins-Users.alltime_wins_solo) / Users.alltime_games) as alltime_win_team_pct, "
+				+ 	"MonthlyScores.month_win_pct_rank "
+				+ "FROM MonthlyScores INNER JOIN Users USING (id) "
+				+ 	"WHERE " + whereTerms.join(" AND ")
+				+ "ORDER BY record_month DESC, month_win_pct_rank ASC";
+				
+	db.sequelize.query(query, null, {raw:true}, queryArgs).complete(function(error, results) {
+		if (error) callback(error);
+		
+		else {
+			var monthlyResults = {};
+			_.each(results, function(record) {
+				if (!monthlyResults[record.record_month]) monthlyResults[record.record_month] = [];
+				monthlyResults[record.record_month].push(record);
+			});
+			callback(null, monthlyResults);
+		}
+	});
+}
+
+
+
+// get months for which historic score data is available
+Rankings.getMonths = function(callback) {
+	db.sequelize.query("SELECT DISTINCT record_month FROM MonthlyScores ORDER BY record_month DESC").complete(callback);
+}
+
 
 module.exports = Rankings;

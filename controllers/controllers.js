@@ -115,15 +115,17 @@ module.exports = function(app) {
 				
 				
 				if (req.params.page == 'rankings.html') {
-					Rankings.thisMonth(100, userid, function(error, rankings) {
+					Rankings.everything(userid, function(error, rankings) {
+						console.log("the callback!", rankings);
 						if (error) context.rankings.failed = true;
-						else context.rankings.currentrankings = rankings;
+						else context.rankings = rankings;
+						
 						context.rankings.currentmonth = moment().format('MMMM YYYY');
 						var daystogo = 1 + moment().daysInMonth() - moment().date();
 						context.rankings.daystogo = daystogo + (" day" + ((daystogo == 1) ? "" : "s"));
 						
 						res.render('pages/rankings.html', context);
-					})
+					});
 				}
 				
 				
