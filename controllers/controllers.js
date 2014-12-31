@@ -121,7 +121,7 @@ module.exports = function(app) {
 						else {
 							context.rankings = rankings;
 							context.rankings.lastmonth_top = rankings.past_top['2014-12'];
-							context.rankings.lastmonth_user = rankings.past_user['2014-12'];
+							context.rankings.lastmonth_user = rankings.past_user ? rankings.past_user['2014-12'] : undefined;
 							
 							context.rankings.previousmonth = moment().subtract(1, "months").format('MMMM YYYY');
 						}
