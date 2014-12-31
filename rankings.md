@@ -8,17 +8,19 @@ All leaderboard stats are based on monthly scores - a player's all-time wins and
 
 To generate monthly records (technique for doing ranking in SQL is from http://www.1keydata.com/sql/sql-rank.html):
 
-	# Copy players' monthly scores to MonthlyScores table and compute ranking by points (example query for jan 1, 2015)
-	INSERT INTO MonthlyScores (id, record_month, month_points, month_games, month_wins, month_wins_solo, month_points_rank, month_win_pct)
-	SELECT a1.id, "2014-12-01", a1.month_points, a1.month_games, a1.month_wins, a1.month_wins_solo, count(a2.month_points) month_points_rank, (a1.month_wins / a1.month_games)
-		FROM Users a1, Users a2
-		WHERE a1.month_games > 0 AND a2.month_games > 0 AND (a1.month_points < a2.month_points OR (a1.month_points=a2.month_points AND a1.id = a2.id))
-		GROUP BY a1.id, a1.month_points
-	ON DUPLICATE KEY UPDATE record_month = record_month	
-	
-	# Then reset players' monthly scores to 0 for next month
-	UPDATE Users 
-	SET month_points=0, month_games=0, month_wins=0, month_wins_solo=0
+```sql
+# Copy players' monthly scores to MonthlyScores table and compute ranking by points (example query for jan 1, 2015)
+INSERT INTO MonthlyScores (id, record_month, month_points, month_games, month_wins, month_wins_solo, month_points_rank, month_win_pct)
+SELECT a1.id, "2014-12-01", a1.month_points, a1.month_games, a1.month_wins, a1.month_wins_solo, count(a2.month_points) month_points_rank, (a1.month_wins / a1.month_games)
+	FROM Users a1, Users a2
+	WHERE a1.month_games > 0 AND a2.month_games > 0 AND (a1.month_points < a2.month_points OR (a1.month_points=a2.month_points AND a1.id = a2.id))
+	GROUP BY a1.id, a1.month_points
+ON DUPLICATE KEY UPDATE record_month = record_month	
+
+# Then reset players' monthly scores to 0 for next month
+UPDATE Users 
+SET month_points=0, month_games=0, month_wins=0, month_wins_solo=0
+```
 	
 	
 ## Current High Scores
