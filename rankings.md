@@ -11,7 +11,7 @@ To generate monthly records (technique for doing ranking in SQL is from http://w
 ```sql
 # Copy players' monthly scores to MonthlyScores table and compute ranking by points (example query for jan 1, 2015)
 INSERT INTO MonthlyScores (id, record_month, month_points, month_games, month_wins, month_wins_solo, month_points_rank, month_win_pct)
-SELECT a1.id, "2014-12-01", a1.month_points, a1.month_games, a1.month_wins, a1.month_wins_solo, count(a2.month_points) month_points_rank, (a1.month_wins / a1.month_games)
+SELECT a1.id, "2014-12", a1.month_points, a1.month_games, a1.month_wins, a1.month_wins_solo, count(a2.month_points) month_points_rank, (a1.month_wins / a1.month_games)
 	FROM Users a1, Users a2
 	WHERE a1.month_games > 0 AND a2.month_games > 0 AND (a1.month_points < a2.month_points OR (a1.month_points=a2.month_points AND a1.id = a2.id))
 	GROUP BY a1.id, a1.month_points
@@ -67,13 +67,16 @@ GROUP BY a1.month_points
 
 At the end of each month, the sissyfighters-of-the-month (SoM) are chosen: take the players ranked up to 25 by points earned that month (could be more than 25 players if there's a tie), then rank by win percentage. *We might increase the size of the SoM list in the future if more people start playing the game.*
 
+Each player who makes it into the SoM list earns fame points based on their position in the SoM ranks: 25 points for 1st place, 24 for 2nd place, etc. We need to store the points in the table rather than computing them on the fly, because if we change the size of the SoM list in the future, the point structure will also change (e.g. if we expand the list to 50, it will be 50 points for 1st place down to 1 point for 50th place).
+
 ```sql
 # for testing to see what the top 25 looks like (not ranked)
 SELECT * FROM (
 	SELECT month_points, month_points_rank, month_games, month_wins, month_win_pct FROM MonthlyScores 
-	WHERE record_month="2014-12-01" AND month_points_rank > 0 AND month_points_rank <= 25
+	WHERE record_month="2014-12" AND month_points_rank > 0 AND month_points_rank <= 25
 ) topByPoints
 ORDER BY month_win_pct DESC
+```
 
 # for updating the records with rank-by-win-percent for those whose rank-by-points is up to 25:
 UPDATE MonthlyScores,
@@ -82,17 +85,23 @@ UPDATE MonthlyScores,
 	FROM 
 		(SELECT id, month_win_pct from MonthlyScores
 			WHERE month_points_rank > 0 AND month_points_rank <= 25
-				AND record_month = "2014-12-01" 
+				AND record_month = "2014-12" 
 		) a1, 
 		(SELECT id, month_win_pct from MonthlyScores
 			WHERE month_points_rank > 0 AND month_points_rank <= 25
-				AND record_month = "2014-12-01" 
+				AND record_month = "2014-12" 
 		) a2
 	WHERE a1.month_win_pct <= a2.month_win_pct OR (a1.month_win_pct = a2.month_win_pct AND a1.id = a2.id)
 	GROUP BY a1.id, a1.month_win_pct
 	ORDER BY a1.month_win_pct DESC, a1.id DESC
 ) rankedTable
-SET month_win_pct_rank = computed_rank
+SET month_win_pct_rank = computed_rank, month_fame_points = 26 - computed_rank
 WHERE id = rank_id
-	AND record_month = "2014-12-01"
+	AND record_month = "2014-12"
 ```
+
+
+## Hall of Queens
+
+The Hall of Queens displays the top 100(?) players ordered by the sum of their fame points over all months.
+
