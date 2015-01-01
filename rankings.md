@@ -78,6 +78,7 @@ SELECT * FROM (
 ORDER BY month_win_pct DESC
 ```
 
+```sql
 # for updating the records with rank-by-win-percent for those whose rank-by-points is up to 25:
 UPDATE MonthlyScores,
 (
