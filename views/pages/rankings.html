@@ -73,7 +73,8 @@ a {
 }
 #sf2khoqbox {
   position: relative;
-  height: 220px;
+  min-height: 220px;
+  overflow: hidden;
   width: 610px;
   margin: 0 0 0 20;
   padding: 0 0 0 0;
@@ -92,12 +93,29 @@ a {
 }
 .sf2khoqcol {
   position: relative;
-  height: 180px;
-  width: 185px;
+  min-height: 180px;
+  width: 400px;
   margin: 20 10 0 20;
   padding: 0 0 0 0;
   float: left;
 }
+
+.sf2khoqrow {
+  display: none;
+  height: 54px;
+  width: 185px;
+  margin: 0 0 6 0;
+  padding: 0 0 0 0;
+
+}
+.sf2khoqrow:nth-child(odd) {
+  clear: left;
+}
+.sf2khoqrow:nth-child(-n+6) {
+  display: inline-block;
+  padding-right: 10;
+}
+
 #sf2ktallrankbox1 {
   position: relative;
   width: 285px;
@@ -261,9 +279,9 @@ a {
 	padding: 7 0 0 7;
 }
 .sf2krankbug {
-  position: absolute;
-  top: 19px;
-  left: -10px;
+  position: relative;
+  top: -30px;
+  left: -6px;
   height: 15px;
   width: 15px;
   margin: 0 0 0 0;
@@ -273,9 +291,9 @@ a {
   font-weight: bolder;
   text-align: center;
   vertical-align: middle;
-  font-size: 75%;
+  font-size: 70%;
   line-height: 130%;
-  float: left;
+  
 }
 .ranking-title {
   font-size: 80%;
@@ -339,8 +357,87 @@ a {
     });
  
     </script>
+
+<script>
+    function numberRankings(parent_selector) {
+        var nodes = $(parent_selector).children('.sf2krankrow');
+        var rank = 0, lastPoints = -1, lastPct = -1;
+        for (var i=0, length=nodes.length; i < length; i++) {
+            var node = nodes[i];
+            var points = parseInt(node.getAttribute('data_points'));
+            var pct = parseInt(node.getAttribute('data_pct'));
+
+            if (points != lastPoints || pct != lastPct) rank = i;
+            lastPoints = points;
+            lastPct = pct;
+            
+            $(node).find('.sf2krankbug').html(rank+1);
+        }
+    }
+    // since js sort isn't stable, use other attribute as secondary sort key
+    function byPoints(a, b) {
+        var an = parseInt(a.getAttribute('data_points')) + parseInt(a.getAttribute('data_pct')) / 100000.0;
+        var bn = parseInt(b.getAttribute('data_points')) + parseInt(b.getAttribute('data_pct')) / 100000.0;
+		if (an < bn) return 1;
+		else if (an > bn) return -1;
+		else return 0;
+    }
+    function byPct(a, b) {
+        var an = parseInt(a.getAttribute('data_pct')) + parseInt(a.getAttribute('data_points')) / 100000.0;
+        var bn = parseInt(b.getAttribute('data_pct')) + parseInt(b.getAttribute('data_points')) / 100000.0;
+		if (an < bn) return 1;
+		else if (an > bn) return -1;
+		else return 0;
+    }
+    function sortColumn(parent_selector, sort_function) {
+        var par = $(parent_selector);
+		var kids = par.children('.sf2krankrow');
+		kids.sort(sort_function);
+		kids.detach().appendTo(par);
+		numberRankings(parent_selector);
+		return false;
+    }
+    
+    var hofAllSeen = false;
+    function hofSeeAll() {
+	    if (hofAllSeen) {
+		    $('.sf2krankrow').css('display', 'none');
+		    $('.sf2krankrow:nth-child(-n+6)').css('display', 'inline-block').css('padding-right', 10);
+		    hofAllSeen = false;
+		}
+	    else {
+		    $('.sf2krankrow').css('display', 'inline-block').css('padding-right', 10);
+		    hofAllSeen = true;
+		}
+    }
+</script>
+
+
 <div id="sf2kmain">
 {>includes.mainheader}
+    <div id="sf2khoqbox">
+        <div id="sf2khoqlabel">
+            <P class="ranking-title"><img src="/imgs/queencrown.png" vspace=3><BR>HALL OF<BR>QUEENS</P>
+            <P class="ranking-descriptor">The players who have<br>been SiSSYFiGHTERS<br>of the month the most.  </P>
+            <a href="#" onclick="return hofSeeAll();"><img src="/imgs/button_see_all_queens.png" width="66" height="19"></a>
+        </div>
+        <div class="sf2khoqcol">
+	    {for player in rankings.hall_of_fame}
+            <div class="sf2khoqrow sf2krankrow" data_points={player.total_fame} data_pct={player.alltime_win_pct}>
+                <img class="sf2kphoto" src="/imgs/miniface/face{player.avatar.skincolor}-{player.avatar.face}.png" border=0><div class="sf2krankdata">
+                    <span class="rankdata-name">{player.nickname}</span><BR>
+                    <span class="rankdata-points">{player.total_fame} Q-pts. / {player.alltime_win_pct}% wins</span>
+                </div>
+                <div class="sf2krankbug">{player.rank}</div>
+            </div>
+        {/for}
+        </div>
+
+        <div class="sf2khelpbug">?<div class="sf2khelppop" id="sf2khoqpop"><p>The exalted <strong>Hall of Queens</strong> lists the very top SiSSYFiGHT players. Hall of Queens players are ranked by their <strong>queen points</strong>, or <strong>Q-pts</strong>.</p>
+
+<p>You earn queen points every time you make it onto a <strong>SiSSYFiGHTER of the Month</strong> list. The number 1 player earns 25 queen points, the number 2 player earns 24 queen points, etc. - on down to the 25th player, who earns 1 queen point. Your total Q-pts are all of the queen points you have earned playing SiSSYFiGHT.</p></div></div>
+    </div>
+ 
     <div id="sf2ktallrankbox1">
         <div class="sf2ktallranklabel">
             <P><span class="ranking-title">CURRENT HIGH SCORES<BR><span class="ranking-descriptor">for {rankings.currentmonth}</span></P>
@@ -361,46 +458,7 @@ a {
 	        <div class="sf2ksortbar">
                 <strong>SORT BY:</strong>&nbsp;&nbsp;<a href="#" onclick="return sortColumn('#ranking_thismonth', byPoints)">POINTS</a>&nbsp;&nbsp;<a href="#"  onclick="return sortColumn('#ranking_thismonth', byPct)">WIN%</a>
             </div>
-            <script>
-	            function numberRankings(parent_selector) {
-		            var nodes = $(parent_selector).children('.sf2krankrow');
-		            var rank = 0, lastPoints = -1, lastPct = -1;
-		            for (var i=0, length=nodes.length; i < length; i++) {
-			            var node = nodes[i];
-			            var points = parseInt(node.getAttribute('data_points'));
-			            var pct = parseInt(node.getAttribute('data_pct'));
 
-			            if (points != lastPoints || pct != lastPct) rank = i;
-			            lastPoints = points;
-			            lastPct = pct;
-			            
-			            $(node).find('.sf2krankbug').html(rank+1);
-		            }
-	            }
-	            // since js sort isn't stable, use other attribute as secondary sort key
-	            function byPoints(a, b) {
-		            var an = parseInt(a.getAttribute('data_points')) + parseInt(a.getAttribute('data_pct')) / 100000.0;
-		            var bn = parseInt(b.getAttribute('data_points')) + parseInt(b.getAttribute('data_pct')) / 100000.0;
-					if (an < bn) return 1;
-					else if (an > bn) return -1;
-					else return 0;
-	            }
-	            function byPct(a, b) {
-		            var an = parseInt(a.getAttribute('data_pct')) + parseInt(a.getAttribute('data_points')) / 100000.0;
-		            var bn = parseInt(b.getAttribute('data_pct')) + parseInt(b.getAttribute('data_points')) / 100000.0;
-					if (an < bn) return 1;
-					else if (an > bn) return -1;
-					else return 0;
-	            }
-	            function sortColumn(parent_selector, sort_function) {
-		            var par = $(parent_selector);
-					var kids = par.children('.sf2krankrow');
-					kids.sort(sort_function);
-					kids.detach().appendTo(par);
-					numberRankings(parent_selector);
-					return false;
-	            }
-	        </script>
 	        <div id="ranking_thismonth">
 	            {for player in rankings.current_top}
 	            <div class="sf2krankrow" data_points={player.month_points} data_pct={player.month_win_pct}>

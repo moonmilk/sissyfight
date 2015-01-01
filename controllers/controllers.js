@@ -117,7 +117,10 @@ module.exports = function(app) {
 				if (req.params.page == 'rankings.html') {
 					Rankings.everything(userid, function(error, rankings) {
 						
-						if (error) context.rankings.failed = true;
+						if (error) {
+							context.rankings.failed = true;
+							console.log("RANKINGS sql error", error);
+						}
 						else {
 							context.rankings = rankings;
 							context.rankings.lastmonth_top = rankings.past_top['2014-12'];

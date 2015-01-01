@@ -10,7 +10,7 @@ function Rankings() {
 	
 }
 
-// everything! current high scores, all past months, current user.
+// everything! current high scores, all past months, current user, top from hall of fame
 Rankings.everything = function(userid, callback) {
 	var tasks = {};
 	tasks.current_top = function(cb) {
@@ -18,6 +18,9 @@ Rankings.everything = function(userid, callback) {
 	};
 	tasks.past_top = function(cb) {
 		Rankings.pastMonth(null, null, cb);
+	}
+	tasks.hall_of_fame = function(cb) {
+		Rankings.hallOfFame(100, cb);
 	}
 
 	if (userid) {
@@ -147,6 +150,38 @@ Rankings.pastMonth = function(month, userid, callback) {
 Rankings.getMonths = function(callback) {
 	db.sequelize.query("SELECT DISTINCT record_month FROM MonthlyScores ORDER BY record_month DESC").complete(callback);
 }
+
+
+// Hall of Fame: top (100) users with the most fame points
+Rankings.hallOfFame = function(limit, callback) {
+	if (!limit) limit = 100;
+
+	var query = "SELECT SUM(MonthlyScores.month_fame_points) as total_fame, "
+				+	"Users.id, Users.nickname, Users.avatar, "
+				+ 	"ROUND(100 * Users.alltime_wins / Users.alltime_games) as alltime_win_pct, "
+				+ 	"ROUND(100 * Users.alltime_wins_solo / Users.alltime_games) as alltime_win_solo_pct, "
+				+ 	"ROUND(100 * (Users.alltime_wins-Users.alltime_wins_solo) / Users.alltime_games) as alltime_win_team_pct "
+				+ "FROM Users INNER JOIN MonthlyScores USING(id) "
+				+ "GROUP BY id "
+				+ "HAVING total_fame > 0 "
+				+ "ORDER BY total_fame DESC "
+				+ "LIMIT :limit ";
+	
+	db.sequelize.query(query, null, {raw:true}, {limit: limit}).complete(function(error, results) {
+		if (error) callback(error);
+		else {
+			var rank = 1;
+			_.each(results, function(record) {
+				// decode avatar
+				if (record.avatar.length > 0) record.avatar = JSON.parse(record.avatar);
+				record.rank = rank++;
+			});		
+			callback(null, results);
+		}
+	});
+	
+}
+
 
 
 module.exports = Rankings;
