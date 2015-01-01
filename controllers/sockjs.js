@@ -76,7 +76,7 @@ exports.init = function(app, sockjs) {
 		var conn = this;
 		if (conn.room) conn.room.leave(conn, null);
 		if (conn.user) delete userConnections[conn.user.id];
-		if (conn.user) console.log("Socket: user " + conn.user.nickname + " disconnected.");
+		if (conn.user) console.log("Socket: user " + conn.user.nickname + " disconnected - " + JSON.stringify(data));
 	}
 	
 
