@@ -64,7 +64,7 @@ module.exports = function(app) {
 			schoolpop4: schools['suzy'].getPopulation()
 		};
 		
-		if (req.session.user) {
+		if (req.session && req.session.user) {
 			context.loggedIn = 1;
 			context.nickname = req.session.user.nickname;
 		}
