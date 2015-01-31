@@ -17,6 +17,7 @@ var qs = require('querystring');
 var moment = require('moment');
 var whiskers = require('whiskers');
 var fs = require('fs');
+var _ = require('lodash');
 
 var Hashids = require("hashids"),
     hashids = new Hashids("tokens");
@@ -123,10 +124,31 @@ module.exports = function(app) {
 						}
 						else {
 							context.rankings = rankings;
-							context.rankings.lastmonth_top = rankings.past_top['2014-12'];
-							context.rankings.lastmonth_user = rankings.past_user ? rankings.past_user['2014-12'] : undefined;
 							
-							context.rankings.previousmonth = moment().subtract(1, "months").format('MMMM YYYY');
+							var pastmonth = moment().subtract(1, "months");
+							var pastmonth_key = pastmonth.format('YYYY-MM');
+							
+							// show older month if data exists
+							if (req.query['month']) {
+								if (rankings.past_top[req.query.month]) {
+									pastmonth_key = req.query.month;
+									pastmonth = moment(new Date(pastmonth_key+"-03"));
+								}
+							}
+							
+							// archives
+							var archives = [];
+							_.each(rankings.past_top, function(data, month_tag) {
+								var month_text = moment(new Date(month_tag+"-03")).format('MMM YYYY');
+								archives.push({text:month_text, tag:month_tag});
+							});
+							context.rankings.archives = _.sortBy(archives, 'tag').reverse();
+							
+							
+							context.rankings.lastmonth_top = rankings.past_top[pastmonth_key];
+							context.rankings.lastmonth_user = rankings.past_user ? rankings.past_user[pastmonth_key] : undefined;
+							
+							context.rankings.previousmonth = pastmonth.format('MMMM YYYY');
 						}
 						
 						context.rankings.currentmonth = moment().format('MMMM YYYY');

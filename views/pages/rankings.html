@@ -499,7 +499,7 @@ a {
 	            		<div class="sf2kmebug">YOU<BR>{rankings.lastmonth_user.win_pct_rank}</div>
 	            		<div class="sf2kmeportrait"><img src="/imgs/miniface/face{rankings.current_user.avatar.skincolor}-{rankings.current_user.avatar.face}.png" border=0></div>
 	            		<div class="sf2krankdata">
-		            		<span class="rankdata-points">You didn't play last month.</span><BR/>
+		            		<span class="rankdata-points">You didn't play that month.</span><BR/>
 	            		</div>
             		</div>
             	{/if}
@@ -525,13 +525,11 @@ a {
             </script>
         </div>
         <div id="sf2kmonthlycol">
-            <!--
 	        <p><strong><span style="text-decoration: underline;line-height:160%">ARCHIVES</span></strong><br>
-            <A HREF="#">May 2015</A><br>
-            <A HREF="#">Apr 2015</A><br>
-            <A HREF="#">Mar 2015</A><br>
-            <A HREF="#">Feb 2015</A><br></p>
-            -->
+	        {for archivemonth in rankings.archives}
+	        	<a href="?month={archivemonth.tag}">{archivemonth.text}</a><br>
+	        {/for}
+            </p>
         </div>
         <div class="sf2khelpbug">?<div class="sf2khelppop" id="sf2ktallpop"><p>These are the players who earned the most <strong>brownie points</strong> last month. You earn brownie points by playing and finishing matches: you get 10 points just for playing, and if you win you get a bonus of 20 points for each girl you beat. Your brownie points are reset every month.</p>
 
