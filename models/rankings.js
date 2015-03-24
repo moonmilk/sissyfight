@@ -5,6 +5,7 @@ var db = require('../database');
 var User = require('./user');
 var _ = require('lodash');
 var async = require('async');
+var moment = require('moment');
 
 function Rankings() {
 	
@@ -184,6 +185,55 @@ Rankings.hallOfFame = function(limit, callback) {
 	
 }
 
+
+// Rollover: update rankings at the first of each month
+Rankings.rollover = function(callback) {
+	var queries = [];
+	var lastMonth = moment().subtract(1, "months").format('YYYY-MM');
+
+	// Copy players' monthly scores to MonthlyScores table and compute ranking by points 	
+	queries.push(
+		"INSERT INTO MonthlyScores (id, record_month, month_points, month_games, month_wins, month_wins_solo, month_points_rank, month_win_pct) "
+		+ "SELECT a1.id, :LAST_MONTH, a1.month_points, a1.month_games, a1.month_wins, a1.month_wins_solo, count(a2.month_points) month_points_rank, (a1.month_wins / a1.month_games) "
+		+ "FROM Users a1, Users a2 "
+		+ "WHERE a1.month_games > 0 AND a2.month_games > 0 AND (a1.month_points < a2.month_points OR (a1.month_points=a2.month_points AND a1.id = a2.id)) "
+		+ "GROUP BY a1.id, a1.month_points "
+		+ "ON DUPLICATE KEY UPDATE record_month = record_month ";
+	);
+	
+	// Then reset players' monthly scores to 0 for next month
+	queries.push(
+		"UPDATE Users SET month_points=0, month_games=0, month_wins=0, month_wins_solo=0";
+	);
+	
+	// Finally update the records with rank-by-win-percent for those whose rank-by-points is up to 25:
+	queries.push(
+		"UPDATE MonthlyScores, "
+		+ "( " 
+		+ "		SELECT a1.id as rank_id, count(a2.month_win_pct) as computed_rank "
+		+ "		FROM "
+		+ "			(SELECT id, month_win_pct from MonthlyScores "
+		+ "				WHERE month_points_rank > 0 AND month_points_rank <= 25 "
+		+ "				AND record_month = :LAST_MONTH "
+		+ "			) a1, "
+		+ "			(SELECT id, month_win_pct from MonthlyScores "
+		+ "				WHERE month_points_rank > 0 AND month_points_rank <= 25 "
+		+ " 			AND record_month = :LAST_MONTH "
+		+ "			) a2 "
+		+ "		WHERE a1.month_win_pct <= a2.month_win_pct OR (a1.month_win_pct = a2.month_win_pct AND a1.id = a2.id) "
+		+ "		GROUP BY a1.id, a1.month_win_pct "
+		+ "		ORDER BY a1.month_win_pct DESC, a1.id DESC "
+		+ ") rankedTable "
+		+ "SET month_win_pct_rank = computed_rank, month_fame_points = 26 - computed_rank "
+		+ "WHERE id = rank_id "
+		+ "AND record_month = :LAST_MONTH ";	
+	);
+	
+	// make it happen!
+	async.eachSeries(queries, function(query, cb) {
+		db.sequelize.query(query, null, {raw:true}, {LAST_MONTH: lastMonth}).complete(cb);
+	}, callback);
+}
 
 
 module.exports = Rankings;
