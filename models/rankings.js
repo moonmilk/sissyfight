@@ -198,12 +198,12 @@ Rankings.rollover = function(callback) {
 		+ "FROM Users a1, Users a2 "
 		+ "WHERE a1.month_games > 0 AND a2.month_games > 0 AND (a1.month_points < a2.month_points OR (a1.month_points=a2.month_points AND a1.id = a2.id)) "
 		+ "GROUP BY a1.id, a1.month_points "
-		+ "ON DUPLICATE KEY UPDATE record_month = record_month ";
+		+ "ON DUPLICATE KEY UPDATE record_month = record_month "
 	);
 	
 	// Then reset players' monthly scores to 0 for next month
 	queries.push(
-		"UPDATE Users SET month_points=0, month_games=0, month_wins=0, month_wins_solo=0";
+		"UPDATE Users SET month_points=0, month_games=0, month_wins=0, month_wins_solo=0"
 	);
 	
 	// Finally update the records with rank-by-win-percent for those whose rank-by-points is up to 25:
@@ -226,7 +226,7 @@ Rankings.rollover = function(callback) {
 		+ ") rankedTable "
 		+ "SET month_win_pct_rank = computed_rank, month_fame_points = 26 - computed_rank "
 		+ "WHERE id = rank_id "
-		+ "AND record_month = :LAST_MONTH ";	
+		+ "AND record_month = :LAST_MONTH "
 	);
 	
 	// make it happen!

@@ -24,6 +24,11 @@ var db = require('./database');
 var User = require('./models/user');
 
 
+// scheduling setup for monthly score rollover
+var Rankings = require('./models/rankings');
+var schedule = require('node-schedule');
+var scoreRolloverJob = schedule.scheduleJob({date: 1, hour:4, minute:0}, Rankings.rollover);
+
 
 // socksjs setup
 var sockjs_opts = {sockjs_url: "http://cdn.sockjs.org/sockjs-0.3.min.js"};

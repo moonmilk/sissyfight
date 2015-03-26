@@ -1,6 +1,6 @@
 {
   "name": "sissyfight",
-  "version": "0.0.1-96",
+  "version": "0.0.1-98",
   "domains": [
     "play.sissyfight.com"
   ],
@@ -23,6 +23,7 @@
     "lodash": "2.2.1",
     "moment": "2.7.0",
     "mysql": ">= 2.0.0-alpha8",
+    "node-schedule": "^0.2.6",
     "nodemailer": "^1.0.3",
     "passport": "*",
     "redis": "0.8.4",
